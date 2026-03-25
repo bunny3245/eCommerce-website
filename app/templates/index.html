@@ -1,70 +1,96 @@
 {% extends "base.html" %}
 
-{% block title %}Home | ÆTHER Perfume Store{% endblock %}
+{% block title %}Home | Perfumania{% endblock %}
 
 {% block content %}
-    <!-- Hero Section -->
-    <section class="hero">
-        <div class="hero-decorative-top"></div>
-        <div class="container">
-            <div class="hero-content">
-                <div class="hero-badge">LUXE COLLECTION</div>
-                <h1 class="hero-title">
-                    <span class="title-word">Scent</span>
-                    <span class="title-word highlight">Your</span>
-                    <span class="title-word">Story</span>
-                </h1>
-                <p class="hero-subtitle">Discover our curated collection of modern, elegant fragrances crafted with passion and precision</p>
-                <div class="hero-cta">
-                    <button class="btn-primary">Explore Collection</button>
-                    <button class="btn-secondary">Learn More</button>
-                </div>
-            </div>
-            <div class="hero-decorative-bottom"></div>
-        </div>
-    </section>
 
-    <!-- Products Grid -->
-    <section class="products-section">
-        <div class="container">
-            <div class="row">
-                {% for product in products %}
-                <div class="col-md-4">
-                    <div class="product-card modern">
-                        <div class="product-img">
+<section class="hero-section">
+    <div class="container">
+        <div class="row align-items-center min-vh-75">
+            <div class="col-lg-6 pe-lg-5 mb-5 mb-lg-0 z-1">
+                <p class="text-uppercase tracking-wider mb-3" style="letter-spacing: 2px; color: var(--accent-gold); font-size: 0.9rem; font-weight: 600;">New Collection</p>
+                <h1 class="hero-title fw-semibold">The Essence <br> <span class="fst-italic" style="color: var(--accent-gold);">of Elegance</span></h1>
+                <p class="lead mb-5" style="color: var(--text-muted); font-size: 1.1rem; max-width: 85%;">
+                    Discover signature scents crafted from the world's finest botanicals. A modern approach to traditional perfumery.
+                </p>
+                <a href="/shop" class="btn btn-luxury">Explore Fragrances</a>
+            </div>
+            <div class="col-lg-6 text-center position-relative">
+                <img src="https://images.unsplash.com/photo-1594035910387-fea47794261f?q=80&w=1000&auto=format&fit=crop" 
+                     alt="Luxury Perfume Bottle" 
+                     class="img-fluid rounded-4 shadow-lg" 
+                     style="max-height: 600px; object-fit: cover;">
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="features-strip">
+    <div class="container">
+        <div class="row text-center justify-content-center g-4">
+            <div class="col-12 col-md-4">
+                <div class="feature-icon"><i class="fas fa-box-open"></i></div>
+                <h6 class="text-uppercase mb-1 fw-bold" style="font-size: 0.85rem; letter-spacing: 1px;">Free Shipping</h6>
+                <p class="text-muted small mb-0">On all orders over 3,000 PKR</p>
+            </div>
+            <div class="col-12 col-md-4 border-md-start border-md-end">
+                <div class="feature-icon"><i class="fas fa-leaf"></i></div>
+                <h6 class="text-uppercase mb-1 fw-bold" style="font-size: 0.85rem; letter-spacing: 1px;">Sustainable</h6>
+                <p class="text-muted small mb-0">Eco-friendly luxury packaging</p>
+            </div>
+            <div class="col-12 col-md-4">
+                <div class="feature-icon"><i class="fas fa-shield-alt"></i></div>
+                <h6 class="text-uppercase mb-1 fw-bold" style="font-size: 0.85rem; letter-spacing: 1px;">Secure Checkout</h6>
+                <p class="text-muted small mb-0">100% protected payments</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="product-grid py-5 my-5">
+    <div class="container">
+        
+        <div class="d-flex justify-content-between align-items-end mb-5">
+            <div>
+                <h2 class="serif-text display-6 mb-0">Bestsellers</h2>
+            </div>
+            <a href="/shop" class="text-decoration-none text-dark fw-medium" style="border-bottom: 1px solid var(--accent-dark); padding-bottom: 2px;">View All</a>
+        </div>
+
+        <div class="row g-5">
+            {% for product in products %}
+            <div class="col-12 col-md-6 col-lg-4">
+                <div class="product-card">
+                    <a href="/product/{{ product.id }}" class="text-decoration-none">
+                        <div class="product-image-wrapper">
                             {% if product.image %}
                                 <img src="{{ product.image }}" alt="{{ product.name }}">
                             {% else %}
-                                <div class="placeholder">No Image</div>
+                                <i class="fas fa-spray-can text-muted" style="font-size: 4rem; opacity: 0.3;"></i>
                             {% endif %}
-                            <div class="product-overlay">
-                                <h3 class="product-name">{{ product.name }}</h3>
-                                <div class="product-price">${{ product.price }}</div>
-                            </div>
                         </div>
-                        <div class="product-actions text-center">
-                            <form action="/add-to-cart/{{ product.id }}" method="POST">
-                                <button type="submit" class="btn-add">Add to Cart</button>
-                            </form>
+                    </a>
+                    
+                    <div class="d-flex justify-content-between align-items-start">
+                        <div>
+                            <a href="/product/{{ product.id }}" class="text-decoration-none">
+                                <h3 class="product-title serif-text">{{ product.name }}</h3>
+                            </a>
+                            <p class="product-price mb-0">${{ product.price }}</p>
                         </div>
+                        
+                        <form action="/add-to-cart/{{ product.id }}" method="POST">
+                            <button type="submit" class="btn btn-outline-luxury rounded-circle p-0" style="width: 45px; height: 45px; display: flex; align-items: center; justify-content: center;" title="Add to Cart">
+                                <i class="fas fa-plus"></i>
+                            </button>
+                        </form>
                     </div>
                 </div>
-                {% endfor %}
             </div>
+            {% endfor %}
         </div>
-    </section>
+        
+    </div>
+</section>
 
-    <!-- Footer Section -->
-    <footer class="footer">
-        <div class="container">
-            <div class="footer-content">
-                <p>&copy; 2026 8THER Perfume Store. All rights reserved.</p>
-                <ul class="footer-links">
-                    <li><a href="#">Privacy Policy</a></li>
-                    <li><a href="#">Terms of Service</a></li>
-                    <li><a href="#">Contact Us</a></li>
-                </ul>
-            </div>
-        </div>
-    </footer>
 {% endblock %}

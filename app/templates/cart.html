@@ -1,63 +1,83 @@
 {% extends "base.html" %}
 
-{% block title %}Your Cart - Perfume Store{% endblock %}
+{% block title %}Your Bag - ÆTHER{% endblock %}
 
 {% block content %}
-<div class="container mt-5">
-    <h1 class="mb-4">Your Cart</h1>
+<section class="cart-section py-5" style="margin-top: 100px;">
+    <div class="container">
+        <h1 class="serif-text mb-5">Your Shopping Bag</h1>
 
-    {% if items and items|length > 0 %}
-    <div class="table-responsive">
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>Product</th>
-                    <th>Quantity</th>
-                    <th>Price</th>
-                    <th>Subtotal</th>
-                    <th>Action</th>
-                </tr>
-            </thead>
-            <tbody>
+        {% if items %}
+        <div class="row g-5">
+            <div class="col-lg-8">
                 {% for item in items %}
-                <tr>
-                    <td>
-                        {% if item.image %}
-                        <img src="{{ item.image }}" alt="{{ item.name }}" style="width: 50px; height: 50px; object-fit: cover;">
-                        {% endif %}
-                        {{ item.name }}
-                    </td>
-                    <td>{{ item.quantity }}</td>
-                    <td>${{ item.price }}</td>
-                    <td>${{ item.subtotal }}</td>
-                    <td>
-                        <form action="/remove-from-cart/{{ item.id }}" method="POST" style="display: inline;">
-                            <button type="submit" class="btn btn-sm btn-danger">Remove</button>
-                        </form>
-                    </td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    </div>
+                <div class="cart-card p-4 mb-4 d-flex align-items-center justify-content-between flex-wrap gap-3">
+                    <div class="d-flex align-items-center gap-4">
+                        <div class="product-image-small">
+                            {% if item.image %}
+                                <img src="{{ item.image }}" alt="{{ item.name }}">
+                            {% else %}
+                                <div class="h-100 w-100 d-flex align-items-center justify-content-center">🌸</div>
+                            {% endif %}
+                        </div>
+                        <div>
+                            <h5 class="serif-text mb-1">{{ item.name }}</h5>
+                            <p class="text-muted small mb-0">{{ item.variant or 'Classic' }}</p>
+                            <p class="fw-bold mt-2 mb-0" style="color: var(--forest-dark);">${{ item.price }}</p>
+                        </div>
+                    </div>
 
-    <div class="row mt-4">
-        <div class="col-md-6">
-            <a href="/" class="btn btn-secondary">Continue Shopping</a>
+                    <div class="d-flex align-items-center gap-4">
+                        <form action="/update-quantity/{{ item.cart_item_id }}" method="POST" class="d-flex align-items-center">
+                            <input type="number" name="quantity" min="1" value="{{ item.quantity }}" 
+                                   class="form-control form-control-sm text-center" style="width: 60px; border-color: var(--lemon-bright);">
+                            <button type="submit" class="btn btn-sm ms-2" style="color: var(--forest-dark);"><i class="fas fa-sync-alt"></i></button>
+                        </form>
+                        
+                        <div class="text-end" style="min-width: 80px;">
+                            <span class="fw-bold">${{ item.subtotal }}</span>
+                        </div>
+
+                        <form action="/remove-from-cart/{{ item.cart_item_id }}" method="POST">
+                            <button type="submit" class="btn btn-sm btn-outline-danger border-0"><i class="fas fa-trash"></i></button>
+                        </form>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+
+            <div class="col-lg-4">
+                <div class="card p-4 border-0 shadow-sm" style="border-radius: 20px; background: var(--forest-dark); color: var(--white);">
+                    <h4 class="serif-text mb-4" style="color: var(--lemon-bright);">Summary</h4>
+                    <div class="d-flex justify-content-between mb-2">
+                        <span>Subtotal</span>
+                        <span>${{ total }}</span>
+                    </div>
+                    <div class="d-flex justify-content-between mb-2">
+                        <span>Shipping</span>
+                        <span style="color: var(--lemon-bright);">Free</span>
+                    </div>
+                    <hr style="background-color: var(--lemon-bright);">
+                    <div class="d-flex justify-content-between mb-4 fs-5 fw-bold">
+                        <span>Total</span>
+                        <span>${{ total }}</span>
+                    </div>
+                    
+                    <form action="/checkout" method="POST">
+                        <button type="submit" class="btn btn-luxury w-100" style="background-color: var(--lemon-bright); color: var(--forest-dark);">
+                            Checkout Now
+                        </button>
+                    </form>
+                </div>
+            </div>
         </div>
-        <div class="col-md-6 text-end">
-            <h4>Total: <span style="color: #c4a27a;">${{ total }}</span></h4>
-            <form action="/checkout" method="POST">
-                <button type="submit" class="btn btn-primary">Proceed to Checkout</button>
-            </form>
+        {% else %}
+        <div class="text-center py-5">
+            <h3 class="serif-text">Your bag is as light as air.</h3>
+            <p class="text-muted">Explore our signature collections to find your scent.</p>
+            <a href="/" class="btn btn-luxury mt-3">Back to Shop</a>
         </div>
+        {% endif %}
     </div>
-    
-    {% else %}
-    <div class="alert alert-info">
-        <p>Your cart is empty.</p>
-        <a href="/" class="btn btn-primary">Continue Shopping</a>
-    </div>
-    {% endif %}
-</div>
+</section>
 {% endblock %}

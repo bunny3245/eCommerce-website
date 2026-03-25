@@ -89,14 +89,13 @@ def viewCart(request: Request, db : Session = Depends(get_db)):
    lets do it with RAW sql
    """
 
-   result = db.execute(text(""" SELECT p.id, p.name, p.image, p.price , ci.quantity ,(p.price * ci.quantity) as subtotal 
-                            FROM cart_items ci  
+   result = db.execute(text(""" SELECT ci.id AS cart_item_id, p.id AS product_id, p.name, p.image, p.price, ci.quantity, (p.price * ci.quantity) AS subtotal
+                            FROM cart_items ci
                             JOIN products p ON p.id = ci.product_id
-                            WHERE ci.cart_id = (SELECT id FROM cart WHERE customer_id = 1 )
+                            WHERE ci.cart_id = (SELECT id FROM cart WHERE customer_id = 1)
                             """))
 
    rows = result.fetchall()
-   print(rows)
 
    # Convert tuples to dictionaries for template
    items = []
@@ -104,15 +103,16 @@ def viewCart(request: Request, db : Session = Depends(get_db)):
     
    for row in rows:
       item = {
-         "id": row[0],
-         "name": row[1],
-         "image": row[2],
-         "price": row[3],
-         "quantity": row[4],
-         'subtotal': row[5]
+         "cart_item_id": row[0],
+         "product_id": row[1],
+         "name": row[2],
+         "image": row[3],
+         "price": row[4],
+         "quantity": row[5],
+         'subtotal': row[6]
      }
       items.append(item)
-      total += row[5]
+      total += row[6]
    
    return templates.TemplateResponse(request = request, name='cart.html',context ={
       'items': items,
@@ -120,15 +120,28 @@ def viewCart(request: Request, db : Session = Depends(get_db)):
    })
 
 
-@app.post('/remove-from-cart/{item_id}')
-def removeFromCart(request:Request, item_id : int, db : Session = Depends(get_db)):
+@app.post('/remove-from-cart/{cart_item_id}')
+def removeFromCart(request: Request, cart_item_id: int, db: Session = Depends(get_db)):
    """
-   just remove the products from cart iva product id
+   Remove the product from cart via cart_item id
    """
 
-   # Delete from cart_items where product id = $
-   db.query(CartItems).filter(CartItems.product_id == item_id).delete()
+   db.query(CartItems).filter(CartItems.id == cart_item_id).delete()
    db.commit()
    return RedirectResponse(url='/cart', status_code=303)
 
 
+@app.post('/update-quantity/{cart_item_id}')
+async def updateCartItem(request: Request, cart_item_id: int, db: Session = Depends(get_db)):
+   form_data = await request.form()
+   quantity = int(form_data.get('quantity', 1))
+   if quantity < 1:
+      quantity = 1
+
+   cart_item = db.query(CartItems).filter(CartItems.id == cart_item_id).first()
+   if not cart_item:
+      raise HTTPException(status_code=404, detail='Cart item not found')
+
+   cart_item.quantity = quantity
+   db.commit()
+   return RedirectResponse(url='/cart', status_code=303)
