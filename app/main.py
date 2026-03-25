@@ -89,7 +89,7 @@ def viewCart(request: Request, db : Session = Depends(get_db)):
    lets do it with RAW sql
    """
 
-   result = db.execute(text(""" SELECT p.name,p.image, p.price , ci.quantity ,(p.price * ci.quantity) as subtotal 
+   result = db.execute(text(""" SELECT p.id, p.name, p.image, p.price , ci.quantity ,(p.price * ci.quantity) as subtotal 
                             FROM cart_items ci  
                             JOIN products p ON p.id = ci.product_id
                             WHERE ci.cart_id = (SELECT id FROM cart WHERE customer_id = 1 )
@@ -104,16 +104,31 @@ def viewCart(request: Request, db : Session = Depends(get_db)):
     
    for row in rows:
       item = {
-         "name": row[0],
-         "image": row[1],
-         "price": row[2],
-         "quantity": row[3],
-         'subtotal': row[4]
+         "id": row[0],
+         "name": row[1],
+         "image": row[2],
+         "price": row[3],
+         "quantity": row[4],
+         'subtotal': row[5]
      }
       items.append(item)
-      total += row[4]
+      total += row[5]
    
    return templates.TemplateResponse(request = request, name='cart.html',context ={
       'items': items,
       'total':total
    })
+
+
+@app.post('/remove-from-cart/{item_id}')
+def removeFromCart(request:Request, item_id : int, db : Session = Depends(get_db)):
+   """
+   just remove the products from cart iva product id
+   """
+
+   # Delete from cart_items where product id = $
+   db.query(CartItems).filter(CartItems.product_id == item_id).delete()
+   db.commit()
+   return RedirectResponse(url='/cart', status_code=303)
+
+

@@ -30,17 +30,19 @@
             <div class="row">
                 {% for product in products %}
                 <div class="col-md-4">
-                    <div class="product-card">
+                    <div class="product-card modern">
                         <div class="product-img">
                             {% if product.image %}
                                 <img src="{{ product.image }}" alt="{{ product.name }}">
                             {% else %}
-                                🌙
+                                <div class="placeholder">No Image</div>
                             {% endif %}
+                            <div class="product-overlay">
+                                <h3 class="product-name">{{ product.name }}</h3>
+                                <div class="product-price">${{ product.price }}</div>
+                            </div>
                         </div>
-                        <div class="product-info">
-                            <h3 class="product-name">{{ product.name }}</h3>
-                            <div class="product-price">${{ product.price }}</div>
+                        <div class="product-actions text-center">
                             <form action="/add-to-cart/{{ product.id }}" method="POST">
                                 <button type="submit" class="btn-add">Add to Cart</button>
                             </form>

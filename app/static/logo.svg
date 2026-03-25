@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="120" height="120" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Perfumenia logo">
+  <defs>
+    <linearGradient id="g1" x1="0%" x2="100%" y1="0%" y2="100%">
+      <stop offset="0%" stop-color="#d4936d"/>
+      <stop offset="50%" stop-color="#7a4419"/>
+      <stop offset="100%" stop-color="#f8b195"/>
+    </linearGradient>
+    <filter id="f1" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="6" stdDeviation="8" flood-color="#000" flood-opacity="0.12"/>
+    </filter>
+  </defs>
+
+  <!-- perfume bottle mark -->
+  <g transform="translate(10,8)" filter="url(#f1)">
+    <rect x="20" y="16" width="60" height="68" rx="12" fill="url(#g1)"/>
+    <rect x="36" y="6" width="28" height="18" rx="6" fill="#fff" opacity="0.06"/>
+    <circle cx="50" cy="48" r="18" fill="#fff" opacity="0.06"/>
+    <rect x="46" y="2" width="8" height="8" rx="2" fill="#7a4419"/>
+  </g>
+
+  <!-- subtle floral accent -->
+  <path d="M18 88 C26 76, 42 76, 50 88" fill="none" stroke="#c49a6c" stroke-width="2" stroke-linecap="round" opacity="0.9"/>
+  <path d="M74 70 C80 62, 94 62, 100 70" fill="none" stroke="#c49a6c" stroke-width="2" stroke-linecap="round" opacity="0.9"/>
+
+</svg>
