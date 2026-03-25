@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+
+{% block title %}Home | ÆTHER Perfume Store{% endblock %}
+
+{% block content %}
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-decorative-top"></div>
+        <div class="container">
+            <div class="hero-content">
+                <div class="hero-badge">LUXE COLLECTION</div>
+                <h1 class="hero-title">
+                    <span class="title-word">Scent</span>
+                    <span class="title-word highlight">Your</span>
+                    <span class="title-word">Story</span>
+                </h1>
+                <p class="hero-subtitle">Discover our curated collection of modern, elegant fragrances crafted with passion and precision</p>
+                <div class="hero-cta">
+                    <button class="btn-primary">Explore Collection</button>
+                    <button class="btn-secondary">Learn More</button>
+                </div>
+            </div>
+            <div class="hero-decorative-bottom"></div>
+        </div>
+    </section>
+
+    <!-- Products Grid -->
+    <section class="products-section">
+        <div class="container">
+            <div class="row">
+                {% for product in products %}
+                <div class="col-md-4">
+                    <div class="product-card">
+                        <div class="product-img">
+                            {% if product.image %}
+                                <img src="{{ product.image }}" alt="{{ product.name }}">
+                            {% else %}
+                                🌙
+                            {% endif %}
+                        </div>
+                        <div class="product-info">
+                            <h3 class="product-name">{{ product.name }}</h3>
+                            <div class="product-price">${{ product.price }}</div>
+                            <form action="/add-to-cart/{{ product.id }}" method="POST">
+                                <button type="submit" class="btn-add">Add to Cart</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer Section -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <p>&copy; 2026 8THER Perfume Store. All rights reserved.</p>
+                <ul class="footer-links">
+                    <li><a href="#">Privacy Policy</a></li>
+                    <li><a href="#">Terms of Service</a></li>
+                    <li><a href="#">Contact Us</a></li>
+                </ul>
+            </div>
+        </div>
+    </footer>
+{% endblock %}
