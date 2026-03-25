@@ -114,6 +114,6 @@ def viewCart(request: Request, db : Session = Depends(get_db)):
       total += row[4]
    
    return templates.TemplateResponse(request = request, name='cart.html',context ={
-      'cart_items': items,
+      'items': items,
       'total':total
    })
