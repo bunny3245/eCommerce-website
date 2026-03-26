@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Response,Request,HTTPException, Depends
+from fastapi import FastAPI, Response,Request,HTTPException, Depends ,Form
 from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
@@ -9,6 +9,8 @@ from sqlalchemy.orm import Session
 from sqlalchemy import text
 from starlette.middleware.sessions import SessionMiddleware
 from app.auths.auths import router as auth_router  # Import your auth routes
+from app.mail import orderConfirmationEmail
+from datetime import datetime
 
 # app instance
 app = FastAPI()
@@ -169,25 +171,29 @@ def checkout(request: Request, db: Session = Depends(get_db)):
 
    return templates.TemplateResponse(request = request, name='checkout_form.html')
 
-# 
 
 @app.post('/confirm-order')
-def confirmOrder(request: Request, db: Session = Depends(get_db)):
+async def confirm_order(
+    request: Request,
+    name: str = Form(...),
+    email: str = Form(...),
+    phone: str = Form(...),
+    address: str = Form(...),
+    db: Session = Depends(get_db)
+):
     
-    # 1. Get cart by customer_id
+    # 1. Get cart
     cart = db.query(Cart).filter(Cart.customer_id == 1).first()
     if not cart:
-        return {"error": "No cart found"}
+        return {"error": "No cart found"}  # need to use flashes messages
     
-    cart_id = cart.id
-    
-    # 2. Get cart items with product details
+    # 2. Get cart items
     result = db.execute(text("""
         SELECT p.id, p.name, p.price, ci.quantity, (p.price * ci.quantity) as subtotal
         FROM products p
         JOIN cart_items ci ON p.id = ci.product_id
         WHERE ci.cart_id = :cart_id
-    """), {"cart_id": cart_id})
+    """), {"cart_id": cart.id})
     
     cart_items = result.fetchall()
     
@@ -195,34 +201,54 @@ def confirmOrder(request: Request, db: Session = Depends(get_db)):
         return {"error": "Cart is empty"}
     
     # 3. Calculate total
-    total = sum(item[4] for item in cart_items)  # item[4] is subtotal
+    total = sum(item[4] for item in cart_items)
     
-    # 4. Create order
+    # 4. Create order with customer details
     order = Order(
         customer_id=1,
+        customer_name=name,
+        customer_email=email,
+        customer_phone=phone,
+        shipping_address=address,
         total=total,
-        status="pending"
+        status="pending",
+        created_at=datetime.utcnow()
     )
     db.add(order)
     db.commit()
-    db.refresh(order)  # Get order.id
+    db.refresh(order)
     
     # 5. Create order_items
     for item in cart_items:
         order_item = OrderItems(
             order_id=order.id,
-            product_name=item[1],   # name
-            product_price=item[2],  # price
-            quantity=item[3]        # quantity
+            product_name=item[1],
+            product_price=item[2],
+            quantity=item[3]
         )
         db.add(order_item)
     
-    # 6. Delete cart items
-    db.execute(text("DELETE FROM cart_items WHERE cart_id = :cart_id"), {"cart_id": cart_id})
-    
+    # 6. Clear cart
+    db.execute(text("DELETE FROM cart_items WHERE cart_id = :cart_id"), {"cart_id": cart.id})
     db.commit()
     
-    return templates.TemplateResponse(request=request, name='cart.html')
+    
+    try:
+        await orderConfirmationEmail(email, order.id, name)
+    except:
+        print("Email not sent - configure email first")
+        HTTPException(status_code=302,detail='Email failed!')
+    
+    # 8. Return confirmation page
+    return templates.TemplateResponse(request = request, name= "order_confirmation.html",context = {
+        "request": request,
+        "order_id": order.id,
+        "customer_name": name,
+        "email": email,
+        "address": address,
+        "total": total,
+        "order_date": datetime.now().strftime("%B %d, %Y at %I:%M %p")
+    })
 
 
 

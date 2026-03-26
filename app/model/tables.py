@@ -72,6 +72,10 @@ class Order(Base):
 
       id = Column(Integer, primary_key = True)
       customer_id = Column(Integer, ForeignKey('customers.id'))
+      customer_name = Column(String)
+      customer_email = Column(String)
+      customer_phone = Column(Integer)
+      shipping_address= Column(String)
       total = Column(Integer)
       status = Column(String, default="pending")
       created_at = Column(DateTime, default=datetime.utcnow)

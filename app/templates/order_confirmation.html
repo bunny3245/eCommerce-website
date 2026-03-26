@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+
+{% block title %}Order Confirmed - Perfumania{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card text-center">
+                <div class="card-body py-5">
+                    <!-- Success Icon -->
+                    <div style="font-size: 80px; color: #28a745;">✓</div>
+                    
+                    <h1 class="mt-3">Thank You, {{ customer_name }}!</h1>
+                    <p class="lead">Your order has been confirmed.</p>
+                    
+                    <div class="alert alert-success mt-4">
+                        <strong>Order #{{ order_id }}</strong> has been placed successfully.
+                    </div>
+                    
+                    <p class="mt-3">A confirmation email has been sent to <strong>{{ email }}</strong></p>
+                    
+                    <hr class="my-4">
+                    
+                    <h4>What's Next?</h4>
+                    <p>We'll process your order and notify you when it ships.</p>
+                    
+                    <div class="mt-4">
+                        <a href="/" class="btn btn-primary">Continue Shopping</a>
+                        <a href="/orders/{{ order_id }}" class="btn btn-outline-secondary ms-2">View Order Details</a>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Order Summary (Optional) -->
+            <div class="card mt-4">
+                <div class="card-header">
+                    <h5 class="mb-0">Order Summary</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row mb-2">
+                        <div class="col-6"><strong>Order Number:</strong></div>
+                        <div class="col-6">#{{ order_id }}</div>
+                    </div>
+                    <div class="row mb-2">
+                        <div class="col-6"><strong>Date:</strong></div>
+                        <div class="col-6">{{ order_date }}</div>
+                    </div>
+                    <div class="row mb-2">
+                        <div class="col-6"><strong>Total Amount:</strong></div>
+                        <div class="col-6">{{ total }}</div>
+                    </div>
+                    <div class="row mb-2">
+                        <div class="col-6"><strong>Shipping Address:</strong></div>
+                        <div class="col-6">{{ address }}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

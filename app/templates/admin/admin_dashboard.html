@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Perfume Store | Admin</title>
+    <link rel="stylesheet" href="/static/admin_style.css">
+</head>
+<body>
+    <div class="container">
+        <nav class="sidebar">
+            <div class="logo">LUXE SCENT</div>
+            <ul>
+                <li><a href="#" class="active">Dashboard</a></li>
+                <li><a href="#">Products</a></li>
+                <li><a href="#">Orders</a></li>
+                <li><a href="#">Customers</a></li>
+            </ul>
+            <div class="sidebar-footer">
+                <a href="/logout">Logout</a>
+            </div>
+        </nav>
+
+        <main class="content">
+            <header>
+                <h1>Dashboard Overview</h1>
+                <div class="user-profile">Admin Name</div>
+            </header>
+
+            <section class="stats-grid">
+                <div class="card">
+                    <h3>Total Revenue</h3>
+                    <p class="stat-value">12,450</p>
+                </div>
+                <div class="card">
+                    <h3>Active Orders</h3>
+                    <p class="stat-value">24</p>
+                </div>
+                <div class="card">
+                    <h3>Top Seller</h3>
+                    <p class="stat-value">Midnight Rose</p>
+                </div>
+            </section>
+
+            <section class="management-section">
+                <h2>Recent Orders</h2>
+                <table class="modern-table">
+                    <thead>
+                        <tr>
+                            <th>Order ID</th>
+                            <th>Customer</th>
+                            <th>Product</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>#1001</td>
+                            <td>Jane Doe</td>
+                            <td>Oud Wood (50ml)</td>
+                            <td><span class="badge pending">Pending</span></td>
+                            <td>
+                                <form action="/complete-order/1001" method="POST" style="display:inline;">
+                                    <button type="submit" class="btn-primary">Mark Shipped</button>
+                                </form>
+                            </td>
+                        </tr>
+                        </tbody>
+                </table>
+            </section>
+        </main>
+    </div>
+</body>
+</html>
