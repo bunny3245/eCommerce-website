@@ -76,7 +76,7 @@
                             <a href="/product/{{ product.id }}" class="text-decoration-none">
                                 <h3 class="product-title serif-text">{{ product.name }}</h3>
                             </a>
-                            <p class="product-price mb-0">${{ product.price }}</p>
+                            <p class="product-price mb-0">{{ product.price }}</p>
                         </div>
                         
                         <form action="/add-to-cart/{{ product.id }}" method="POST">

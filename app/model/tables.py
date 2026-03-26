@@ -3,6 +3,22 @@ from app.database.db import Base
 from sqlalchemy.orm import relationship
 from datetime import datetime
 
+
+
+
+# customers table
+class Customer(Base):
+    __tablename__ = 'customers'
+    
+    id = Column(Integer, primary_key=True)
+    name = Column(String, nullable=False)
+    email = Column(String, unique=True)
+    phone = Column(String)
+    address = Column(String)
+    city = Column(String)
+    created_at = Column(DateTime, default=datetime.utcnow)
+
+# products
 class Product(Base):
    __tablename__='products'
 
@@ -42,3 +58,32 @@ class CartItems(Base):
     
    # This connects to Cart
    cart = relationship("Cart", back_populates="items")
+
+
+
+# ORDER SCHEMA
+
+
+
+class Order(Base):
+      __tablename__ = 'orders'
+
+      id = Column(Integer, primary_key = True)
+      customer_id = Column(Integer, ForeignKey('customers.id'))
+      total = Column(Integer)
+      status = Column(String, default="pending")
+      created_at = Column(DateTime, default=datetime.utcnow)
+
+
+   
+class OrderItems(Base):
+      __tablename__ = 'order_items'
+
+      id = Column(Integer,primary_key=True)
+      order_id = Column(Integer,ForeignKey('orders.id'))
+      product_name = Column(String, nullable=False)
+      product_price = Column(Integer,nullable=False)
+      quantity = Column(Integer, default = 1)
+
+
+      

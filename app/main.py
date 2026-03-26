@@ -3,7 +3,7 @@ from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
 import os
-from app.model.tables import  Product, Cart, CartItems
+from app.model.tables import  Product, Cart, CartItems, Customer,Order,OrderItems
 from app.database.db import get_db, Base, engine
 from sqlalchemy.orm import Session
 from sqlalchemy import text
@@ -78,6 +78,10 @@ def addToCart(request: Request,product_id : int, db : Session = Depends(get_db))
 
    return RedirectResponse(url='/',status_code=303)
 
+@app.get('/shop')
+def shop():
+   return RedirectResponse(url='/')
+
 
 @app.get('/cart')
 def viewCart(request: Request, db : Session = Depends(get_db)):
@@ -145,3 +149,67 @@ async def updateCartItem(request: Request, cart_item_id: int, db: Session = Depe
    cart_item.quantity = quantity
    db.commit()
    return RedirectResponse(url='/cart', status_code=303)
+
+
+
+# checkout-order-buy
+@app.get('/checkout')
+def checkout(request: Request, db: Session = Depends(get_db)):
+   """ Render a template with form: """
+
+   return templates.TemplateResponse(request = request, name='checkout_form.html')
+
+# 
+
+@app.post('/confirm-order')
+def confirmOrder(request: Request, db: Session = Depends(get_db)):
+    
+    # 1. Get cart by customer_id
+    cart = db.query(Cart).filter(Cart.customer_id == 1).first()
+    if not cart:
+        return {"error": "No cart found"}
+    
+    cart_id = cart.id
+    
+    # 2. Get cart items with product details
+    result = db.execute(text("""
+        SELECT p.id, p.name, p.price, ci.quantity, (p.price * ci.quantity) as subtotal
+        FROM products p
+        JOIN cart_items ci ON p.id = ci.product_id
+        WHERE ci.cart_id = :cart_id
+    """), {"cart_id": cart_id})
+    
+    cart_items = result.fetchall()
+    
+    if not cart_items:
+        return {"error": "Cart is empty"}
+    
+    # 3. Calculate total
+    total = sum(item[4] for item in cart_items)  # item[4] is subtotal
+    
+    # 4. Create order
+    order = Order(
+        customer_id=1,
+        total=total,
+        status="pending"
+    )
+    db.add(order)
+    db.commit()
+    db.refresh(order)  # Get order.id
+    
+    # 5. Create order_items
+    for item in cart_items:
+        order_item = OrderItems(
+            order_id=order.id,
+            product_name=item[1],   # name
+            product_price=item[2],  # price
+            quantity=item[3]        # quantity
+        )
+        db.add(order_item)
+    
+    # 6. Delete cart items
+    db.execute(text("DELETE FROM cart_items WHERE cart_id = :cart_id"), {"cart_id": cart_id})
+    
+    db.commit()
+    
+    return {"message": "Order placed!", "order_id": order.id}
