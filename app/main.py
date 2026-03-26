@@ -7,13 +7,20 @@ from app.model.tables import  Product, Cart, CartItems, Customer,Order,OrderItem
 from app.database.db import get_db, Base, engine
 from sqlalchemy.orm import Session
 from sqlalchemy import text
+from starlette.middleware.sessions import SessionMiddleware
+from app.auths.auths import router as auth_router  # Import your auth routes
 
 # app instance
 app = FastAPI()
 
-
 # create tables when app run
 Base.metadata.create_all(bind=engine)
+
+# Session middleware (MUST be added)
+app.add_middleware(SessionMiddleware, secret_key="your-secret-key-change-this")
+
+# Include auth routes with /auth prefix
+app.include_router(auth_router, prefix='/auth')
 
 # path to templates directory
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -42,7 +49,10 @@ def home(request: Request, db : Session = Depends(get_db)):
       'cart_count': cart_count
    })
 
-
+# get for auth page
+@app.get('/auths/login')
+def show_auth_page(request: Request):
+    return templates.TemplateResponse(request=request,name='auths/login.html')
 
 
 # add to cart
@@ -212,4 +222,11 @@ def confirmOrder(request: Request, db: Session = Depends(get_db)):
     
     db.commit()
     
-    return {"message": "Order placed!", "order_id": order.id}
+    return templates.TemplateResponse(request=request, name='cart.html')
+
+
+
+
+
+
+

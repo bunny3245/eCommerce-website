@@ -13,6 +13,8 @@ class Customer(Base):
     id = Column(Integer, primary_key=True)
     name = Column(String, nullable=False)
     email = Column(String, unique=True)
+    password = Column(String, nullable=False)
+    role = Column(String, default='customer')
     phone = Column(String)
     address = Column(String)
     city = Column(String)

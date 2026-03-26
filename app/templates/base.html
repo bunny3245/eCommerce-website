@@ -31,7 +31,40 @@
                 </ul>
             </div>
 
-            <div class="d-flex align-items-center">
+            <div class="d-flex align-items-center gap-3">
+                <!-- User Account Dropdown -->
+                <div class="dropdown">
+                    <button class="btn btn-link text-dark text-decoration-none p-0 dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="fas fa-user-circle fs-4"></i>
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end rounded-4 shadow-sm border-0 mt-2">
+                        {% if request.session.get('customer_id') %}
+                            <li class="px-3 py-2 border-bottom">
+                                <small class="text-muted d-block">{{ request.session.get('customer_name') }}</small>
+                                <small class="text-muted" style="font-size: 0.7rem;">{{ request.session.get('customer_email') }}</small>
+                            </li>
+                            
+                            <!-- Admin Menu (only visible to admin users) -->
+                            {% if request.session.get('role') == 'admin' %}
+                            <li><a class="dropdown-item py-2" href="/admin/dashboard"><i class="fas fa-chart-line me-2"></i> Dashboard</a></li>
+                            <li><a class="dropdown-item py-2" href="/admin/orders"><i class="fas fa-truck me-2"></i> Manage Orders</a></li>
+                            <li><a class="dropdown-item py-2" href="/admin/products"><i class="fas fa-box me-2"></i> Manage Products</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            {% endif %}
+                            
+                            <!-- Customer Menu (everyone sees) -->
+                            <!-- <li><a class="dropdown-item py-2" href="/profile"><i class="fas fa-user me-2"></i> My Profile</a></li> -->
+                            <li><a class="dropdown-item py-2" href="/orders"><i class="fas fa-box me-2"></i> My Orders</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item py-2 text-danger" href="/auths/logout"><i class="fas fa-sign-out-alt me-2"></i> Logout</a></li>
+                        {% else %}
+                            <li><a class="dropdown-item py-2" href="/auths/login"><i class="fas fa-sign-in-alt me-2"></i> Sign In</a></li>
+                            <li><a class="dropdown-item py-2" href="/auths/login"><i class="fas fa-user-plus me-2"></i> Create Account</a></li>
+                        {% endif %}
+                    </ul>
+                </div>
+
+                <!-- Cart Icon -->
                 <a href="/cart" class="position-relative text-dark text-decoration-none fs-5">
                     <i class="fas fa-shopping-bag"></i>
                     {% if cart_count and cart_count > 0 %}
