@@ -71,3 +71,9 @@ async def login(request: Request, db: Session = Depends(get_db)):
     request.session['customer_email']= user.email
 
     return RedirectResponse(url='/', status_code=303)
+
+
+@router.get('/logout')
+def logout(request: Request):
+    request.session.clear()
+    return RedirectResponse(url='/')

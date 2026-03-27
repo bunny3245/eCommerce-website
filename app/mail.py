@@ -11,33 +11,90 @@ conf = ConnectionConfig(
     MAIL_PASSWORD=os.getenv("MAIL_PASSWORD"),
     MAIL_FROM=os.getenv("MAIL_FROM"),
     MAIL_SERVER=os.getenv("MAIL_SERVER"),
-    MAIL_PORT=int(os.getenv("MAIL_PORT", 587)),
+    MAIL_PORT=os.getenv("MAIL_PORT", 587),
     MAIL_STARTTLS=True,
     MAIL_SSL_TLS=False,
 )
 
 fm = FastMail(conf)
 
-async def orderConfirmationEmail(to_email: str, order_id: int):
-    """Send simple order confirmation email"""
+async def orderConfirmationEmail(to_email: str, order_id: int, name: str):
+    """Professional Order Confirmation for Perfumania"""
     
     html = f"""
-    <h2>Order Confirmed!</h2>
-    <p>Thank you for your order. Order #{order_id} has been confirmed.</p>
-    <p>We'll notify you when it ships.</p>
-    <br>
-    <p>Perfumania</p>
+    <!DOCTYPE html>
+    <html>
+    <body style="margin: 0; padding: 0; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; background-color: #f4f4f4;">
+        <table width="100%" border="0" cellspacing="0" cellpadding="0" bgcolor="#f4f4f4">
+            <tr>
+                <td align="center" style="padding: 20px 0;">
+                    <table width="600" border="0" cellspacing="0" cellpadding="0" bgcolor="#ffffff" style="border-radius: 8px; overflow: hidden; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
+                        
+                        <tr>
+                            <td align="center" bgcolor="#1a1a1a" style="padding: 40px 0;">
+                                <h1 style="color: #c5a059; margin: 0; letter-spacing: 4px; font-size: 28px;">PERFUMANIA</h1>
+                                <p style="color: #ffffff; font-size: 12px; margin-top: 5px; text-transform: uppercase;">Luxury in every drop</p>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td style="padding: 40px 30px;">
+                                <h2 style="color: #333; margin-bottom: 20px;">Thank you for your order, {name}!</h2>
+                                <p style="color: #555; line-height: 1.6;">We're excited to let you know that your order <strong>#{order_id}</strong> has been received and is being prepared for shipment.</p>
+                                
+                                <div style="margin: 30px 0; padding: 20px; background-color: #f9f9f9; border-left: 4px solid #c5a059;">
+                                    <p style="margin: 0; color: #333;"><strong>Order Status:</strong> Processing</p>
+                                    <p style="margin: 5px 0 0 0; color: #333;"><strong>Expected Dispatch:</strong> Within 24-48 Hours</p>
+                                </div>
+
+                                <p style="color: #555; line-height: 1.6;">Once your luxury fragrance is on its way, we will send you another email with your tracking number.</p>
+                                
+                                <table border="0" cellspacing="0" cellpadding="0" style="margin-top: 30px;">
+                                    <tr>
+                                        <td align="center" bgcolor="#1a1a1a" style="border-radius: 4px;">
+                                            <a href="https://yourstore.com/orders/{order_id}" target="_blank" style="padding: 15px 25px; color: #ffffff; text-decoration: none; font-weight: bold; display: inline-block;">View My Order</a>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td style="padding: 0 30px 40px 30px;">
+                                <hr style="border: 0; border-top: 1px solid #eee; margin-bottom: 20px;">
+                                <p style="color: #888; font-size: 14px; margin: 0;">Best regards,</p>
+                                <p style="color: #333; font-weight: bold; margin: 5px 0 0 0;">Usama</p>
+                                <p style="color: #c5a059; font-size: 12px; margin: 0;">Founder, Perfumania</p>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td align="center" bgcolor="#f9f9f9" style="padding: 20px; color: #999; font-size: 11px;">
+                                &copy; 2026 Perfumania Luxury Ltd. | You received this email because you made a purchase on our store.
+                            </td>
+                        </tr>
+
+                    </table>
+                </td>
+            </tr>
+        </table>
+    </body>
+    </html>
     """
     
+    print(f'Sending professional email for Order #{order_id}...')
+    
     message = MessageSchema(
-        subject=f"Order Confirmed #{order_id}",
+        subject=f"Order Confirmed: Your Perfumania scent is on the way! (#{order_id})",
         recipients=[to_email],
         body=html,
         subtype=MessageType.html
     )
     
-    await fm.send_message(message)
-
+    try:
+        await fm.send_message(message)
+    except Exception as e:
+        print(f"Error: {e}")
 
 async def orderShippedEmail(to_email: str, order_id: int, tracking_number: str = None):
     """

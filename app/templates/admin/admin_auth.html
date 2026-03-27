@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Perfumania | Admin Auth</title>
+    <link rel="stylesheet" href="/static/admin_auth.css">
+</head>
+<body>
+    <div class="auth-wrapper">
+        <div class="auth-visual">
+            <div class="overlay">
+                <h1>PERFUMANIA</h1>
+                <p>Internal Administration Portal</p>
+            </div>
+        </div>
+
+        <div class="auth-content">
+            
+            <div id="login" class="form-container">
+                <h2>Welcome Back</h2>
+                <p class="subtitle">Please enter your admin credentials</p>
+                
+                <form action="/admin/login" method="POST">
+                    <div class="input-group">
+                        <label>Email Address</label>
+                        <input type="email" name="username" required placeholder="admin@perfumania.com">
+                    </div>
+                    <div class="input-group">
+                        <label>Password</label>
+                        <input type="password" name="password" required placeholder="••••••••">
+                    </div>
+                    <button type="submit" class="btn-auth">Access Dashboard</button>
+                </form>
+                <p class="switch-text">New admin? <a href="#register">Request Account</a></p>
+            </div>
+
+            <div id="register" class="form-container">
+                <h2>Create Admin</h2>
+                <p class="subtitle">Register a new store administrator</p>
+                
+                <form action="/admin/register" method="POST">
+                    <div class="input-group">
+                        <label>Full Name</label>
+                        <input type="text" name="full_name" required placeholder="Usama ...">
+                    </div>
+                    <div class="input-group">
+                        <label>Email Address</label>
+                        <input type="email" name="email" required placeholder="admin@perfumania.com">
+                    </div>
+                    <div class="input-group">
+                        <label>Secure Password</label>
+                        <input type="password" name="password" required placeholder="••••••••">
+                    </div>
+                    <button type="submit" class="btn-auth">Create Account</button>
+                </form>
+                <p class="switch-text">Already have access? <a href="#login">Login here</a></p>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        // Get form containers
+        const loginForm = document.getElementById('login');
+        const registerForm = document.getElementById('register');
+
+        // Function to show login, hide register
+        function showLogin() {
+            loginForm.style.display = 'block';
+            registerForm.style.display = 'none';
+        }
+
+        // Function to show register, hide login
+        function showRegister() {
+            registerForm.style.display = 'block';
+            loginForm.style.display = 'none';
+        }
+
+        // Handle hash changes
+        window.addEventListener('hashchange', () => {
+            if (window.location.hash === '#register') {
+                showRegister();
+            } else {
+                showLogin();
+            }
+        });
+
+        // Check initial hash on page load
+        if (window.location.hash === '#register') {
+            showRegister();
+        } else {
+            showLogin();
+        }
+    </script>
+</body>
+</html>

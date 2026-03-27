@@ -11,6 +11,9 @@ from starlette.middleware.sessions import SessionMiddleware
 from app.auths.auths import router as auth_router  # Import your auth routes
 from app.mail import orderConfirmationEmail
 from datetime import datetime
+from app.admin.admin_auths import admin_route
+from app.admin.admin_panel import admin_router
+
 
 # app instance
 app = FastAPI()
@@ -23,6 +26,9 @@ app.add_middleware(SessionMiddleware, secret_key="your-secret-key-change-this")
 
 # Include auth routes with /auth prefix
 app.include_router(auth_router, prefix='/auth')
+
+app.include_router(admin_route)
+app.include_router(admin_router)
 
 # path to templates directory
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -39,11 +45,15 @@ def home(request: Request, db : Session = Depends(get_db)):
    Here: fetch products and return to frontend
 
    """
+
+   # get current user id
+   customer_id = request.session.get('customer_id')
+
    products = db.query(Product).filter().all()
    print(products)
 
    # Get cart count
-   cart = db.query(Cart).filter(Cart.customer_id == 1).first()
+   cart = db.query(Cart).filter(Cart.customer_id == customer_id).first()
    cart_count = sum(item.quantity for item in cart.items) if cart else 0
 
    return templates.TemplateResponse(request=request, name="index.html", context={
@@ -64,12 +74,14 @@ def addToCart(request: Request,product_id : int, db : Session = Depends(get_db))
    here: just get product id and insert this into cart table... 
 
    """
+   # get current user id
+   customer_id = request.session.get('customer_id')
 
    # find or create cart
-   cart = db.query(Cart).filter(Cart.id == 1).first()
+   cart = db.query(Cart).filter(Cart.customer_id == customer_id).first()
 
    if not cart:
-      cart = Cart(customer_id=1)
+      cart = Cart(customer_id=customer_id)
       db.add(cart)
       db.commit()
       db.refresh(cart)
@@ -182,8 +194,10 @@ async def confirm_order(
     db: Session = Depends(get_db)
 ):
     
+    # get current user id
+    customer_id = request.session.get('customer_id')
     # 1. Get cart
-    cart = db.query(Cart).filter(Cart.customer_id == 1).first()
+    cart = db.query(Cart).filter(Cart.customer_id == customer_id).first()
     if not cart:
         return {"error": "No cart found"}  # need to use flashes messages
     
@@ -235,8 +249,8 @@ async def confirm_order(
     
     try:
         await orderConfirmationEmail(email, order.id, name)
-    except:
-        print("Email not sent - configure email first")
+    except Exception as e:
+        print("Email not sent - configure email first: Error",e)
         HTTPException(status_code=302,detail='Email failed!')
     
     # 8. Return confirmation page
@@ -252,7 +266,12 @@ async def confirm_order(
 
 
 
-
-
-
+@app.post('/complete-order')
+def completeOrder(request=Request, db: Session = Depends(get_db)):
+   """
+   1: Change the order status to 'delivered'
+   2: Send customer shipping email, like your ordered has been shipped..
+   3: lafra khatam.
+   """
+   return "Hi,,, I am Not completed yet!"
 

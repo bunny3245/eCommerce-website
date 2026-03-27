@@ -1,0 +1,98 @@
+:root {
+    --gold: #c5a059;
+    --black: #1a1a1a;
+    --grey: #f4f4f4;
+    --white: #ffffff;
+}
+
+body, html {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    background: var(--grey);
+}
+
+.auth-wrapper {
+    display: flex;
+    height: 100vh;
+}
+
+/* Left Visual Side */
+.auth-visual {
+    flex: 1.2;
+    background: url('https://images.unsplash.com/photo-1541643600914-78b084683601?auto=format&fit=crop&q=80&w=1000') no-repeat center center;
+    background-size: cover;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+}
+
+.overlay {
+    background: rgba(0,0,0,0.6);
+    padding: 40px;
+    text-align: center;
+    backdrop-filter: blur(5px);
+}
+
+.overlay h1 {
+    letter-spacing: 8px;
+    margin: 0;
+    border-bottom: 2px solid var(--gold);
+    padding-bottom: 10px;
+}
+
+/* Right Form Side */
+.auth-content {
+    flex: 1;
+    background: var(--white);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 40px;
+}
+
+.form-container {
+    width: 100%;
+    max-width: 400px;
+    display: none; /* Hide by default */
+}
+
+/* The Magic: Show the one that is linked in the URL */
+#login:target, #register:target { display: block; }
+/* Default if no hash in URL */
+.form-container:first-child { display: block; }
+#register:target ~ #login { display: none; }
+
+h2 { font-size: 2rem; margin-bottom: 5px; color: var(--black); }
+.subtitle { color: #888; margin-bottom: 30px; }
+
+.input-group { margin-bottom: 20px; }
+.input-group label { display: block; font-size: 0.9rem; margin-bottom: 8px; font-weight: bold; }
+.input-group input {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    box-sizing: border-box;
+    font-size: 1rem;
+}
+
+.btn-auth {
+    width: 100%;
+    padding: 15px;
+    background: var(--black);
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.btn-auth:hover { background: var(--gold); }
+
+.switch-text { margin-top: 20px; text-align: center; color: #666; }
+.switch-text a { color: var(--gold); text-decoration: none; font-weight: bold; }

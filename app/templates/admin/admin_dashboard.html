@@ -3,72 +3,97 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Perfume Store | Admin</title>
+    <title>Luxe Scent | Admin</title>
     <link rel="stylesheet" href="/static/admin_style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
 </head>
 <body>
     <div class="container">
         <nav class="sidebar">
             <div class="logo">LUXE SCENT</div>
             <ul>
-                <li><a href="#" class="active">Dashboard</a></li>
-                <li><a href="#">Products</a></li>
-                <li><a href="#">Orders</a></li>
-                <li><a href="#">Customers</a></li>
+                <li><a href="#" class="active">📊 Dashboard</a></li>
+                <li><a href="#">📦 Orders</a></li>
+                <li><a href="#">👤 Customers</a></li>
+                <li><a href="#">✨ Products</a></li>
             </ul>
-            <div class="sidebar-footer">
-                <a href="/logout">Logout</a>
+            <div style="margin-top: auto;">
+                <a href="/logout" style="color: #f87171;">Logout</a>
             </div>
         </nav>
 
         <main class="content">
             <header>
-                <h1>Dashboard Overview</h1>
-                <div class="user-profile">Admin Name</div>
+                <div>
+                    <h1 style="font-size: 1.25rem;">Command Center</h1>
+                    <p style="font-size: 0.85rem; color: var(--text-muted);">Welcome, {{ request.session.get('admin_name') }}</p>
+                </div>
+                <div class="user-profile">
+                    <span style="font-size: 0.8rem; font-weight: 600; background: #eef2ff; color: #4f46e5; padding: 6px 12px; border-radius: 8px;">Administrator</span>
+                </div>
             </header>
 
-            <section class="stats-grid">
-                <div class="card">
-                    <h3>Total Revenue</h3>
-                    <p class="stat-value">12,450</p>
-                </div>
-                <div class="card">
-                    <h3>Active Orders</h3>
-                    <p class="stat-value">24</p>
-                </div>
-                <div class="card">
-                    <h3>Top Seller</h3>
-                    <p class="stat-value">Midnight Rose</p>
-                </div>
-            </section>
-
+            {% if recent_orders %}
             <section class="management-section">
-                <h2>Recent Orders</h2>
-                <table class="modern-table">
-                    <thead>
-                        <tr>
-                            <th>Order ID</th>
-                            <th>Customer</th>
-                            <th>Product</th>
-                            <th>Status</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>#1001</td>
-                            <td>Jane Doe</td>
-                            <td>Oud Wood (50ml)</td>
-                            <td><span class="badge pending">Pending</span></td>
-                            <td>
-                                <form action="/complete-order/1001" method="POST" style="display:inline;">
-                                    <button type="submit" class="btn-primary">Mark Shipped</button>
-                                </form>
-                            </td>
-                        </tr>
+                <div class="section-header">
+                    <h2 style="font-size: 1rem;">Pending Shipments</h2>
+                    <div style="display: flex; gap: 10px;">
+                        <input type="text" placeholder="Search orders..." style="padding: 6px 12px; border: 1px solid var(--border); border-radius: 6px; font-size: 0.8rem;">
+                        <button style="font-size: 0.8rem; background: none; border: 1px solid var(--border); padding: 6px 12px; border-radius: 6px; cursor: pointer;">Export</button>
+                    </div>
+                </div>
+
+                <div class="table-scroll-area">
+                    <table class="modern-table">
+                        <thead>
+                            <tr>
+                                <th>Order Ref</th>
+                                <th>Customer Info</th>
+                                <th>Shipping Address</th>
+                                <th>Manifest</th>
+                                <th>Total Bill</th>
+                                <th>Status</th>
+                                <th style="text-align: right;">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for item in recent_orders %}
+                            <tr>
+                                <td><span class="ref-pill">#{{ item.id }}</span></td>
+                                <td>
+                                    <div style="font-weight: 600;">{{ item.customer_name }}</div>
+                                </td>
+                                <td>
+                                    <div style="color: var(--text-muted); font-size: 0.8rem; max-width: 180px;">
+                                        {{ item.shipping_address }}
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="bundle-container">
+                                        <strong style="color: var(--accent); font-size: 0.75rem;">{{ item.total_items }} ITEMS</strong><br>
+                                        {{ item.bundle }}
+                                    </div>
+                                </td>
+                                <td>
+                                    <div style="font-weight: 800;">{{ item.total_price }}</div>
+                                </td>
+                                <td><span class="status-badge pending">{{ item.status }}</span></td>
+                                <td style="text-align: right;">
+                                    <form action="/admin/complete-order/{{ item.order_num }}" method="POST">
+                                        <button type="submit" class="btn-ship">Ship Order</button>
+                                    </form>
+                                </td>
+                            </tr>
+                            {% endfor %}
                         </tbody>
-                </table>
+                    </table>
+                </div>
             </section>
+            {% else %}
+            <div style="margin: 3rem; text-align: center; color: var(--text-muted);">
+                <p>No pending orders found. You're all caught up!</p>
+            </div>
+            {% endif %}
         </main>
     </div>
 </body>
