@@ -16,3 +16,18 @@ def verifyPassword(plain_password: str, hashed_password: str)-> bool:
    return pwd_context.verify(plain_password,hashed_password)
 
 
+
+""" tracking_id generata"""
+
+import secrets 
+import string
+
+
+def GenerateTrackingID():
+    """
+    create a random 8 digits id.. using string and secrets module
+    """
+    suffix = ''.join(secrets.choice(string.ascii_uppercase + string.digits) for _ in range(8))
+    tracking_id = f'PERF-{suffix}'
+    return tracking_id
+

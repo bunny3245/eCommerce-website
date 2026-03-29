@@ -13,16 +13,21 @@ from app.mail import orderConfirmationEmail
 from datetime import datetime
 from app.admin.admin_auths import admin_route
 from app.admin.admin_panel import admin_router
+from dotenv import load_dotenv
+
 
 
 # app instance
 app = FastAPI()
 
+# LOAD DOTENV
+load_dotenv()
+
 # create tables when app run
 Base.metadata.create_all(bind=engine)
 
 # Session middleware (MUST be added)
-app.add_middleware(SessionMiddleware, secret_key="your-secret-key-change-this")
+app.add_middleware(SessionMiddleware, secret_key=os.getenv('SECRET_KEY'))
 
 # Include auth routes with /auth prefix
 app.include_router(auth_router, prefix='/auth')
@@ -264,14 +269,4 @@ async def confirm_order(
         "order_date": datetime.now().strftime("%B %d, %Y at %I:%M %p")
     })
 
-
-
-@app.post('/complete-order')
-def completeOrder(request=Request, db: Session = Depends(get_db)):
-   """
-   1: Change the order status to 'delivered'
-   2: Send customer shipping email, like your ordered has been shipped..
-   3: lafra khatam.
-   """
-   return "Hi,,, I am Not completed yet!"
 

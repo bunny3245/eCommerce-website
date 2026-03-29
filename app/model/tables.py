@@ -90,6 +90,7 @@ class Order(Base):
       shipping_address= Column(String)
       total = Column(Integer)
       status = Column(String, default="pending")
+      tracking_id = Column(String)
       created_at = Column(DateTime, default=datetime.utcnow)
 
 

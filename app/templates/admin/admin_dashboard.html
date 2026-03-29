@@ -6,6 +6,18 @@
     <title>Luxe Scent | Admin</title>
     <link rel="stylesheet" href="/static/admin_style.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <style>
+        /* Modern Tab Styling */
+        .tab-container { display: flex; gap: 20px; margin-bottom: 20px; border-bottom: 1px solid #eee; }
+        .tab-btn { 
+            padding: 10px 20px; border: none; background: none; cursor: pointer;
+            font-weight: 600; color: #64748b; border-bottom: 2px solid transparent; transition: 0.3s;
+        }
+        .tab-btn.active { color: #4f46e5; border-bottom: 2px solid #4f46e5; }
+        .hidden { display: none; }
+        .btn-deliver { background: #10b981; color: white; border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 0.8rem; }
+        .status-badge.shipped { background: #dbeafe; color: #1e40af; }
+    </style>
 </head>
 <body>
     <div class="container">
@@ -33,16 +45,19 @@
                 </div>
             </header>
 
-            {% if recent_orders %}
-            <section class="management-section">
-                <div class="section-header">
-                    <h2 style="font-size: 1rem;">Pending Shipments</h2>
-                    <div style="display: flex; gap: 10px;">
-                        <input type="text" placeholder="Search orders..." style="padding: 6px 12px; border: 1px solid var(--border); border-radius: 6px; font-size: 0.8rem;">
-                        <button style="font-size: 0.8rem; background: none; border: 1px solid var(--border); padding: 6px 12px; border-radius: 6px; cursor: pointer;">Export</button>
-                    </div>
+            {% if message %}
+                <div id="flash-msg" style="background: #dcfce7; color: #166534; padding: 15px; margin: 10px 0; border-radius: 8px; border: 1px solid #bbf7d0;">
+                    <strong>Success!</strong> {{ message }}
                 </div>
+            {% endif %}
 
+            <div class="tab-container">
+                <button class="tab-btn active" onclick="switchTab('pending')">Pending Shipments</button>
+                <button class="tab-btn" onclick="switchTab('shipped')">In Transit (Shipped)</button>
+            </div>
+
+            <section id="pending-section" class="management-section">
+                {% if recent_orders %}
                 <div class="table-scroll-area">
                     <table class="modern-table">
                         <thead>
@@ -52,34 +67,19 @@
                                 <th>Shipping Address</th>
                                 <th>Manifest</th>
                                 <th>Total Bill</th>
-                                <th>Status</th>
                                 <th style="text-align: right;">Actions</th>
                             </tr>
                         </thead>
                         <tbody>
-                            {% for item in recent_orders %}
+                            {% for item in recent_orders if item.status == 'pending' %}
                             <tr>
-                                <td><span class="ref-pill">#{{ item.id }}</span></td>
-                                <td>
-                                    <div style="font-weight: 600;">{{ item.customer_name }}</div>
-                                </td>
-                                <td>
-                                    <div style="color: var(--text-muted); font-size: 0.8rem; max-width: 180px;">
-                                        {{ item.shipping_address }}
-                                    </div>
-                                </td>
-                                <td>
-                                    <div class="bundle-container">
-                                        <strong style="color: var(--accent); font-size: 0.75rem;">{{ item.total_items }} ITEMS</strong><br>
-                                        {{ item.bundle }}
-                                    </div>
-                                </td>
-                                <td>
-                                    <div style="font-weight: 800;">{{ item.total_price }}</div>
-                                </td>
-                                <td><span class="status-badge pending">{{ item.status }}</span></td>
+                                <td><span class="ref-pill">#{{ item[0] }}</span></td>
+                                <td><div style="font-weight: 600;">{{ item[1] }}</div></td>
+                                <td><div style="color: var(--text-muted); font-size: 0.8rem; max-width: 180px;">{{ item[2] }}</div></td>
+                                <td><div class="bundle-container"><strong style="color: var(--accent); font-size: 0.75rem;">{{ item[5] or 0 }} ITEMS</strong><br>{{ item[4] or 'No details' }}</div></td>
+                                <td><div style="font-weight: 800;">Rs. {{ item[6] or 0 }}</div></td>
                                 <td style="text-align: right;">
-                                    <form action="/admin/complete-order/{{ item.order_num }}" method="POST">
+                                    <form action="/admin/complete-order/{{ item[0] }}" method="POST">
                                         <button type="submit" class="btn-ship">Ship Order</button>
                                     </form>
                                 </td>
@@ -88,13 +88,64 @@
                         </tbody>
                     </table>
                 </div>
+                {% else %}
+                <p style="text-align: center; padding: 20px;">No pending orders.</p>
+                {% endif %}
             </section>
-            {% else %}
-            <div style="margin: 3rem; text-align: center; color: var(--text-muted);">
-                <p>No pending orders found. You're all caught up!</p>
-            </div>
-            {% endif %}
+
+            <section id="shipped-section" class="management-section hidden">
+                <div class="table-scroll-area">
+                    <table class="modern-table">
+                        <thead>
+                            <tr>
+                                <th>Order Ref</th>
+                                <th>Customer Info</th>
+                                <th>Status</th>
+                                <th style="text-align: right;">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for item in recent_orders if item.status == 'shipped' or 'Shipped' %}
+                            <tr>
+                                <td><span class="ref-pill">#{{ item[0] }}</span></td>
+                                <td><div style="font-weight: 600;">{{ item[1] }}</div></td>
+                                <td><span class="status-badge shipped">In Transit</span></td>
+                                <td style="text-align: right;">
+                                    <form action="/admin/deliver-order/{{ item[0] }}" method="POST">
+                                        <button type="submit" class="btn-deliver">Mark Delivered</button>
+    
+                                    </form>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </section>
         </main>
     </div>
+
+    <script>
+        function switchTab(tab) {
+            // Update Buttons
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+
+            // Update Sections
+            if (tab === 'pending') {
+                document.getElementById('pending-section').classList.remove('hidden');
+                document.getElementById('shipped-section').classList.add('hidden');
+            } else {
+                document.getElementById('pending-section').classList.add('hidden');
+                document.getElementById('shipped-section').classList.remove('hidden');
+            }
+        }
+
+        // Auto-hide flash message after 3 seconds
+        setTimeout(() => {
+            const msg = document.getElementById('flash-msg');
+            if(msg) msg.style.display = 'none';
+        }, 3000);
+    </script>
 </body>
 </html>
