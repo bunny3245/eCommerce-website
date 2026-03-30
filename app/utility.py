@@ -29,5 +29,6 @@ def GenerateTrackingID():
     """
     suffix = ''.join(secrets.choice(string.ascii_uppercase + string.digits) for _ in range(8))
     tracking_id = f'PERF-{suffix}'
+   
     return tracking_id
 

@@ -95,148 +95,80 @@ async def orderConfirmationEmail(to_email: str, order_id: int, name: str):
         await fm.send_message(message)
     except Exception as e:
         print(f"Error: {e}")
-
 async def orderShippedEmail(to_email: str, order_id: int, tracking_number: str = None):
-    """
-    Send order shipped notification email
-    """
-    
+    # REPLACE THIS with your actual hosted logo URL
+    logo_url = "https://placehold.co/400x100/c4a27a/ffffff?text=PERFUMANIA"
+    base_url = "http://localhost:8000"
+
     html = f"""
     <!DOCTYPE html>
-    <html>
+    <html lang="en">
     <head>
         <meta charset="UTF-8">
-        <title>Order Shipped</title>
-        <style>
-            body {{
-                font-family: Arial, sans-serif;
-                margin: 0;
-                padding: 0;
-                background-color: #f9f5f0;
-            }}
-            .container {{
-                max-width: 600px;
-                margin: 20px auto;
-                background: white;
-                border-radius: 12px;
-                overflow: hidden;
-                box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            }}
-            .header {{
-                background: #c4a27a;
-                color: white;
-                padding: 25px;
-                text-align: center;
-            }}
-            .header h1 {{
-                margin: 0;
-                font-size: 24px;
-            }}
-            .content {{
-                padding: 30px;
-            }}
-            .order-box {{
-                background: #f9f5f0;
-                padding: 15px;
-                border-radius: 8px;
-                margin: 20px 0;
-                text-align: center;
-            }}
-            .order-number {{
-                font-size: 28px;
-                font-weight: bold;
-                color: #c4a27a;
-            }}
-            .tracking {{
-                background: #f0f0f0;
-                padding: 12px;
-                border-radius: 6px;
-                margin: 20px 0;
-                text-align: center;
-            }}
-            .tracking-code {{
-                font-size: 18px;
-                font-weight: bold;
-                letter-spacing: 2px;
-            }}
-            .button {{
-                display: inline-block;
-                background: #c4a27a;
-                color: white;
-                padding: 12px 30px;
-                text-decoration: none;
-                border-radius: 25px;
-                margin-top: 20px;
-            }}
-            .footer {{
-                background: #f5f2ef;
-                padding: 20px;
-                text-align: center;
-                font-size: 12px;
-                color: #999;
-            }}
-        </style>
     </head>
-    <body>
-        <div class="container">
-            <div class="header">
-                <h1>✨ Your Order Has Shipped! ✨</h1>
-            </div>
-            
-            <div class="content">
-                <p>Good news! Your order is on its way.</p>
-                
-                <div class="order-box">
-                    <p>Order Number:</p>
-                    <div class="order-number">#{order_id}</div>
-                </div>
-                """
-    
-    if tracking_number:
-        html += f"""
-                <div class="tracking">
-                    <p><strong>Tracking Number:</strong></p>
-                    <div class="tracking-code">{tracking_number}</div>
-                    <p style="margin-top: 10px;">Track your package using this number</p>
-                </div>
-                """
-    else:
-        html += """
-                <div class="tracking">
-                    <p>Tracking information will be updated soon.</p>
-                </div>
-                """
-    
-    html += """
-                <div style="text-align: center;">
-                    <a href="http://localhost:8000/orders/{{ order_id }}" class="button">Track Order</a>
-                </div>
-                
-                <p style="margin-top: 25px;">Estimated delivery: 3-5 business days</p>
-                <p>Thank you for shopping with us!</p>
-            </div>
-            
-            <div class="footer">
-                <p>Perfumania — Timeless Fragrances</p>
-                <p>Questions? Contact us at support@perfumania.com</p>
-            </div>
-        </div>
+    <body style="margin: 0; padding: 0; background-color: #f4f4f4; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;">
+        <table border="0" cellpadding="0" cellspacing="0" width="100%">
+            <tr>
+                <td align="center" style="padding: 20px 0;">
+                    <table border="0" cellpadding="0" cellspacing="0" width="600" style="background-color: #ffffff; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 10px rgba(0,0,0,0.05);">
+                        
+                        <tr>
+                            <td align="center" style="padding: 40px 0 20px 0; background-color: #ffffff;">
+                                <img src="{logo_url}" alt="Perfumania" width="180" style="display: block; border: 0;">
+                                <h1 style="color: #1a1a1a; font-size: 22px; margin-top: 20px; letter-spacing: 1px; text-transform: uppercase;">Order Shipped</h1>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td style="padding: 0 40px 40px 40px; color: #444444; line-height: 1.6; font-size: 16px;">
+                                <p>Hello,</p>
+                                <p>Great news! Your luxury fragrance is officially on its way. We've packed your order with care and it has been handed over to our courier.</p>
+                                
+                                <div style="margin: 30px 0; padding: 20px; border: 1px solid #e0e0e0; border-radius: 8px; text-align: center; background-color: #fafafa;">
+                                    <span style="display: block; color: #888; font-size: 12px; text-transform: uppercase; margin-bottom: 5px;">Order Reference</span>
+                                    <strong style="font-size: 24px; color: #c4a27a;">#{order_id}</strong>
+                                </div>
+
+                                {f'''
+                                <div style="margin-bottom: 30px; text-align: center;">
+                                    <p style="margin-bottom: 10px;"><strong>Tracking Number:</strong></p>
+                                    <code style="background: #eee; padding: 5px 10px; border-radius: 4px; font-size: 18px; color: #333;">{tracking_number}</code>
+                                </div>
+                                ''' if tracking_number else ''}
+
+                                <div align="center">
+                                    <a href="{base_url}/orders/{order_id}" 
+                                       style="background-color: #c4a27a; color: #ffffff; padding: 15px 35px; text-decoration: none; border-radius: 4px; font-weight: bold; display: inline-block;">
+                                       TRACK YOUR JOURNEY
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td style="padding: 30px; background-color: #1a1a1a; color: #ffffff; text-align: center; font-size: 12px;">
+                                <p style="margin: 0 0 10px 0;"><strong>PERFUMANIA</strong></p>
+                                <p style="margin: 0; color: #888;">Timeless Scents. Delivered to your Door.</p>
+                                <hr style="border: 0; border-top: 1px solid #333; margin: 20px 0;">
+                                <p style="color: #666;">If you have any questions, reply to this email or visit our support center.</p>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+        </table>
     </body>
     </html>
     """
     
-    # Fix the URL placeholder
-    html = html.replace("{{ order_id }}", str(order_id))
-    
     message = MessageSchema(
-        subject=f'📦 Order Shipped #{order_id} - Perfumania',
+        subject=f'✨ Your Perfumania Order #{order_id} is on the way!',
         recipients=[to_email],
         body=html,
         subtype=MessageType.html
     )
     
     await fm.send_message(message)
-
 
 
 

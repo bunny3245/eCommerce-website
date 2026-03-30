@@ -13,6 +13,7 @@ from app.mail import orderConfirmationEmail
 from datetime import datetime
 from app.admin.admin_auths import admin_route
 from app.admin.admin_panel import admin_router
+from app.auths.auths import router
 from dotenv import load_dotenv
 
 
@@ -31,6 +32,8 @@ app.add_middleware(SessionMiddleware, secret_key=os.getenv('SECRET_KEY'))
 
 # Include auth routes with /auth prefix
 app.include_router(auth_router, prefix='/auth')
+
+app.include_router(router)
 
 app.include_router(admin_route)
 app.include_router(admin_router)
@@ -185,7 +188,7 @@ async def updateCartItem(request: Request, cart_item_id: int, db: Session = Depe
 @app.get('/checkout')
 def checkout(request: Request, db: Session = Depends(get_db)):
    """ Render a template with form: """
-
+   
    return templates.TemplateResponse(request = request, name='checkout_form.html')
 
 
