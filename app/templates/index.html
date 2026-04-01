@@ -21,7 +21,7 @@
 
     .hero-title { font-weight: 800; font-size: 4rem; letter-spacing: -1px; line-height: 1.1; }
     .text-gold { color: var(--luxury-gold); }
-    
+
     .btn-luxury {
         background: var(--luxury-gold);
         color: #000;
@@ -34,32 +34,53 @@
     }
     .btn-luxury:hover { background: #fff; transform: translateY(-3px); }
 
-    /* Product Cards - Minimalist */
+    /* Product Cards - Modern Layout */
     .product-card {
         border: none;
         background: transparent;
         transition: 0.4s;
-        margin-bottom: 40px;
+        margin-bottom: 30px;
+        text-align: center;
     }
     .product-image-container {
         background: #f1f1f1;
         aspect-ratio: 1/1;
         overflow: hidden;
-        margin-bottom: 20px;
+        margin-bottom: 15px;
         position: relative;
+        border-radius: 10px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     }
     .product-image-container img {
         width: 100%; height: 100%; object-fit: cover; transition: 0.6s;
     }
-    .product-card:hover img { transform: scale(1.08); }
+    .product-card:hover img { transform: scale(1.1); }
 
     .add-btn-overlay {
         position: absolute; bottom: 0; left: 0; right: 0;
         background: rgba(0,0,0,0.8); color: white;
-        padding: 12px; text-align: center; opacity: 0; transition: 0.3s;
+        padding: 10px; text-align: center; opacity: 0; transition: 0.3s;
         text-transform: uppercase; font-size: 0.8rem; font-weight: 700;
+        border-radius: 0 0 10px 10px;
     }
     .product-card:hover .add-btn-overlay { opacity: 1; }
+
+    .product-card h4 {
+        font-size: 1rem;
+        font-weight: 700;
+        margin-bottom: 5px;
+    }
+    .product-card p {
+        color: var(--luxury-gold);
+        font-weight: 600;
+        font-size: 0.9rem;
+    }
+
+    .products-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 20px;
+    }
 </style>
 
 <section class="hero-section">
@@ -85,21 +106,19 @@
             <a href="/shop" class="text-dark text-decoration-none fw-bold" style="border-bottom: 2px solid var(--luxury-gold);">View All</a>
         </div>
 
-        <div class="row">
+        <div class="products-grid">
             {% for product in products %}
-            <div class="col-md-4">
-                <div class="product-card">
-                    <a href="/product/{{ product.id }}" class="text-decoration-none text-dark">
-                        <div class="product-image-container">
-                            <img src="{{ product.image or 'https://via.placeholder.com/400' }}" alt="{{ product.name }}">
-                            <form action="/add-to-cart/{{ product.id }}" method="POST">
-                                <button type="submit" class="add-btn-overlay border-0 w-100">Quick Add to Bag</button>
-                            </form>
-                        </div>
-                        <h4 style="font-size: 1.1rem; font-weight: 700; margin-bottom: 5px;">{{ product.name }}</h4>
-                        <p style="color: var(--luxury-gold); font-weight: 600;">Rs. {{ product.price }}</p>
-                    </a>
-                </div>
+            <div class="product-card">
+                <a href="/product/{{ product.id }}" class="text-decoration-none text-dark">
+                    <div class="product-image-container">
+                        <img src="{{ product.image or 'https://via.placeholder.com/400' }}" alt="{{ product.name }}">
+                        <form action="/add-to-cart/{{ product.id }}" method="POST">
+                            <button type="submit" class="add-btn-overlay border-0 w-100">Quick Add to Bag</button>
+                        </form>
+                    </div>
+                    <h4>{{ product.name }}</h4>
+                    <p>Rs. {{ product.price }}</p>
+                </a>
             </div>
             {% endfor %}
         </div>
