@@ -15,7 +15,7 @@
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; }
         body { background: var(--bg); color: var(--text-main); min-height: 100vh; display: flex; justify-content: center; }
         
-        .main-container { width: 100%; max-width: 1100px; padding: 60px 20px; }
+        .main-container { width: 100%; max-width: 1200px; padding: 60px 20px; }
 
         /* Unique Header Section */
         .vault-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 40px; border-bottom: 1px solid var(--border); padding-bottom: 20px; }
@@ -46,10 +46,10 @@
         /* Search & Table */
         .search-bar { width: 100%; padding: 15px; background: var(--glass); border: 1px solid var(--border); border-radius: 12px; color: white; margin-bottom: 20px; }
         
-        .table-wrap { background: var(--surface); border-radius: 20px; border: 1px solid var(--border); overflow: hidden; }
+        .table-wrap { background: var(--surface); border-radius: 20px; border: 1px solid var(--border); overflow-x: auto; }
         table { width: 100%; border-collapse: collapse; }
         th { padding: 18px; text-align: left; color: var(--text-dim); font-size: 0.65rem; text-transform: uppercase; background: rgba(255,255,255,0.01); }
-        td { padding: 18px; border-top: 1px solid var(--border); font-size: 0.9rem; }
+        td { padding: 18px; border-top: 1px solid var(--border); font-size: 0.9rem; vertical-align: middle; }
 
         /* Buttons */
         .btn-deploy { 
@@ -57,7 +57,44 @@
             border-radius: 12px; cursor: pointer; font-weight: 800; width: 100%; transition: 0.3s;
         }
         .btn-deploy:hover { transform: scale(1.01); filter: brightness(1.1); }
-        .btn-del { color: #ff4757; background: none; border: none; cursor: pointer; font-weight: 700; font-size: 0.75rem; }
+        
+        .btn-del { 
+            background: #ff4757; 
+            color: white; 
+            border: none; 
+            padding: 8px 16px; 
+            border-radius: 8px; 
+            cursor: pointer; 
+            font-weight: 600; 
+            font-size: 0.75rem;
+            transition: all 0.2s;
+        }
+        .btn-del:hover { 
+            background: #ff3333; 
+            transform: translateY(-1px);
+        }
+        
+        .product-image {
+            width: 60px;
+            height: 60px;
+            object-fit: cover;
+            border-radius: 8px;
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 60px;
+            color: var(--text-dim);
+        }
+        
+        .message {
+            background: rgba(196, 162, 122, 0.1);
+            border: 1px solid var(--accent);
+            color: var(--accent);
+            padding: 12px 20px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+        }
     </style>
 </head>
 <body>
@@ -72,6 +109,10 @@
                 <p style="font-weight: 800; color: var(--accent);">V.2.0.6</p>
             </div>
         </header>
+
+        {% if message %}
+        <div class="message">{{ message }}</div>
+        {% endif %}
 
         <section class="glass-card">
             <form action="/admin/add-product" method="POST" enctype="multipart/form-data">
@@ -95,11 +136,18 @@
                 </div>
                 <div class="input-box" style="margin-bottom: 25px;">
                     <label>Upload Imagery</label>
-                    <input type="file" name="perf_image" accept="image/*" capture="environment" required style="border: 1px dashed var(--accent);">
+                    <input type="file" name="perf_image" accept="image/*" required style="border: 1px dashed var(--accent);">
                 </div>
                 <button type="submit" class="btn-deploy">Deploy to Marketplace</button>
             </form>
         </section>
+        
+        {% if message %}
+        <div id="msg-box" class="msg-box">
+            <span class="msg-close" onclick="closeMessage()">✕</span>
+            {{ message }}
+        </div>
+        {% endif %}
 
         <input type="text" id="vaultSearch" class="search-bar" placeholder="Filter scents by name..." onkeyup="filterTable()">
         
@@ -107,25 +155,49 @@
             <table id="vaultTable">
                 <thead>
                     <tr>
-                        <th>Scent Name</th>
+                        <th>ID</th>
+                        <th>Name</th>
                         <th>Price</th>
-                        <th>Quantity</th>
-                        <th style="text-align: right;">Management</th>
+                        <th>Stock</th>
+                        <th>Image</th>
+                        <th style="text-align: center;">Action</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {% for prod in products %}
-                    <tr>
-                        <td><strong>{{ prod[1] }}</strong></td>
-                        <td>Rs. {{ prod[2] }}</td>
-                        <td><span style="color: var(--accent);">{{ prod[5] }} units</span></td>
-                        <td style="text-align: right;">
-                            <form action="/admin/delete-product/{{ prod[0] }}" method="POST">
-                                <button type="submit" class="btn-del">Delete</button>
-                            </form>
-                        </td>
-                    </tr>
-                    {% endfor %}
+                    {% if products %}
+                        {% for product in products %}
+                        <tr>
+                            <td>{{ product.id }}</td>
+                            <td><strong>{{ product.name }}</strong></td>
+                            <td>Rs. {{ product.price }}</td>
+                            <td>
+                                {% if product.stock > 10 %}
+                                    <span style="color: #10b981;">{{ product.stock }} units</span>
+                                {% elif product.stock > 0 %}
+                                    <span style="color: #f59e0b;">{{ product.stock }} units</span>
+                                {% else %}
+                                    <span style="color: #ff4757;">Out of Stock</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if product.image %}
+                                    <img src="{{ product.image }}" alt="{{ product.name }}" class="product-image">
+                                {% else %}
+                                    <span style="color: var(--text-dim);">No image</span>
+                                {% endif %}
+                            </td>
+                            <td style="text-align: center;">
+                                <form action="/admin/delete-product/{{ product.id }}" method="POST" onsubmit="return confirm('Are you sure you want to delete {{ product.name }}? This action cannot be undone.');">
+                                    <button type="submit" class="btn-del">Delete</button>
+                                </form>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    {% else %}
+                        <tr>
+                            <td colspan="6" class="empty-state">No products found. Add your first product above!</td>
+                        </tr>
+                    {% endif %}
                 </tbody>
             </table>
         </div>
@@ -146,6 +218,16 @@
                 }
             }
         }
+        
+        // Auto-hide message after 5 seconds
+        setTimeout(function() {
+            const msgBox = document.querySelector('.message');
+            if (msgBox) {
+                msgBox.style.transition = 'opacity 0.5s';
+                msgBox.style.opacity = '0';
+                setTimeout(() => msgBox.remove(), 500);
+            }
+        }, 5000);
     </script>
 </body>
 </html>

@@ -15,6 +15,7 @@ from datetime import datetime
 from sqlalchemy import func
 # from app.main import templates
 from app.utility import GenerateTrackingID
+from pathlib import Path
 
 
 
@@ -30,55 +31,66 @@ templates = Jinja2Templates(directory=os.path.join(BASE_DIR,'templates'))
 def adminHome(request: Request, db: Session = Depends(get_db)):
    return templates.TemplateResponse(request=request, name='admin/admin_dashboard.html')
 
-
 @admin_router.get('/admin_dashboard')
-def adminDashboard(request: Request,msg : str = None, db: Session = Depends(get_db)):
+def adminDashboard(request: Request, msg: str = None, db: Session = Depends(get_db)):
+    """
+    Fetch dashboard data including orders and products
+    """
+    try:
+        # 1. Fetch orders
+        recent_orders = db.query(
+            Order.id,
+            Order.customer_name,
+            Order.shipping_address,
+            Order.status,
+            func.string_agg(OrderItems.product_name, ',').label('bundle'),
+            func.sum(OrderItems.quantity).label('total_items'),
+            func.sum(OrderItems.product_price * OrderItems.quantity).label('total_price'),
+        ).outerjoin(OrderItems, Order.id == OrderItems.order_id) \
+         .group_by(Order.id, Order.customer_name, Order.shipping_address, Order.status) \
+         .order_by(Order.id.desc()) \
+         .all()
+        
+       # fetch products
+        product_query = db.query(Product).order_by(Product.id.desc()).all()
+        
+        products = []
 
-   """
-   1: Fetch current pending orders details from backend
-
-   """
-   recent_orders = db.query(
-      Order.id,
-      Order.customer_name,
-      Order.shipping_address,
-      Order.status,
-      func.string_agg(OrderItems.product_name,',').label('bundle'),
-
-      func.sum(OrderItems.quantity).label('total_items'),
-      func.sum(OrderItems.product_price * OrderItems.quantity).label('total_price'),
-
-   ).outerjoin(OrderItems, Order.id == OrderItems.order_id) \
-    .outerjoin(Product, OrderItems.product_id == Product.id) \
-    .group_by(Order.id,Order.customer_name, Order.shipping_address,Order.status).filter(Order.status == 'pending') \
-    .order_by(Order.id.desc()) \
-    .all()
-    
-   """
-   fetch total revenue 
-
-
-   """
-   # totalRevenue = db.query(OrderItems.product_price * OrderItems.quantity).label('total_revenue').outerjoin(Order, Order.id == OrderItems.order_id) \
-   # .filter(Order.status == 'delivered')
-
-
-   """
-   fetch all products from product table.
-   """
-   # products = db.query(Product).all()
-   result = db.execute(text('SELECT id,name,price,image FROM products'))
-   products = result.fetchall()
-   print(type(products))
-   if not products:
-      products = 'No products in the vault'
-
-   return templates.TemplateResponse(request = request , name='admin/admin_dashboard.html', context={
-
-      'recent_orders': recent_orders,
-      'products' : products,
-      'message' : msg
-   })
+        for prod in product_query:
+           products.append({
+              'id':prod.id,
+              'name' :prod.name,
+              'price':prod.price,
+              'stock':prod.stock,
+              'image':prod.image
+           })
+           
+        print(f'debugg phase 2 fetchedd')
+       
+        return templates.TemplateResponse(
+            request=request,
+            name='admin/admin_dashboard.html',
+            context={
+                'recent_orders': recent_orders,
+                'products': products,
+                'message': msg
+            }
+        )
+        
+    except Exception as e:
+        print(f"Error in adminDashboard: {e}")
+        import traceback
+        traceback.print_exc()
+        
+        return templates.TemplateResponse(
+            request=request,
+            name='admin/admin_dashboard.html',
+            context={
+                'recent_orders': [],
+                'products': [],
+                'error': str(e)
+            }
+        )
 
 
 # 1. Make sure this matches your HTML exactly
@@ -136,55 +148,103 @@ async def deliverOrder(order_id : int, request : Request , db : Session = Depend
    add new products in the vault.
    """
 @admin_router.get('/admin/products-vault')
-def productVault(request : Request, db : Session = Depends(get_db)):
-   """
-   Call products vault page...
+def productVault(request: Request, db: Session = Depends(get_db)):
+    """
+    Fetch products and render the product vault page.
+    """
+    try:
+        # Fetch products from the database
+        product_query = db.query(Product).all()
 
-   """
-   return templates.TemplateResponse(request=request, name='/admin/product_vault.html')
+        products = [
+            {
+                'id': prod.id,
+                'name': prod.name,
+                'price': prod.price,
+                'stock': prod.stock,
+                'image': prod.image
+            }
+            for prod in product_query
+        ]
+
+        return templates.TemplateResponse(
+            request=request,
+            name='admin/product_vault.html',
+            context={
+                'products': products
+            }
+        )
+    except Exception as e:
+        print(f"Error in productVault: {e}")
+        return templates.TemplateResponse(
+            request=request,
+            name='admin/product_vault.html',
+            context={
+                'products': [],
+                'error': str(e)
+            }
+        )
 
 
 
 @admin_router.post('/admin/add-product')
-def addNewProduct(request : Request , db : Session = Depends(get_db),
-                  name : str = Form(...),
-                  price : int = Form(...),
-                  perf_image : UploadFile = File(...),
-                  stock : int = Form(...),
-                  description : str = Form(...)):
-   """
-   get data: from Form(...),
-   process : image logic/paths
-   add: to database.
+def addNewProduct(request: Request, db: Session = Depends(get_db),
+                  name: str = Form(...),
+                  price: int = Form(...),
+                  perf_image: UploadFile = File(...),
+                  stock: int = Form(...),
+                  description: str = Form(...)):
+    """
+    Get data: from Form(...),
+    Process: image logic/paths
+    Add: to database.
+    """
+    BASE_DIR = Path(__file__).resolve().parent.parent
+    UPLOAD_FILE = BASE_DIR / 'static' / 'uploads'
+
+    # Ensure the upload directory exists
+    UPLOAD_FILE.mkdir(parents=True, exist_ok=True)
+
+    FILE_PATH = os.path.join(UPLOAD_FILE, perf_image.filename)
+
+    # Save the image to the uploads directory
+    with open(FILE_PATH, 'wb') as buffer:
+        shutil.copyfileobj(perf_image.file, buffer)
+
+    # Save relative image path to the database
+    db_img_path = f'/static/uploads/{perf_image.filename}'
+
+    new_product = Product(
+        name=name,
+        price=price,
+        image=db_img_path,
+        stock=stock,
+        description=description
+    )
+
+    db.add(new_product)
+    db.commit()
+
+    return RedirectResponse(url='/admin_dashboard?msg=Product+Added', status_code=303)
 
 
-   """
-   print(perf_image)
-   # show the path where the image will live
-   UPLOAD_FILE = 'static/uploads'
-   # check if this folder is not 
-   os.makedirs(UPLOAD_FILE,exist_ok=True) # exist_ok will ensure if it exist dont make duplicate
-   FILE_PATH = os.path.join(UPLOAD_FILE,perf_image.filename)
 
-   # now open the file and physically save the image to hard drive
-   with open(FILE_PATH,'wb') as buffer:
-      shutil.copyfileobj(perf_image.file, buffer)
+""" Delete product... """
 
-
-   # now INSERT into db 
-   # save image path to db
-   db_img_path = f'/{FILE_PATH}'
-
-   new_product = Product(
-      name = name,
-      price = price,
-      image = db_img_path,
-      stock = stock,
-      description = description
-      
-   )
-   db.add(new_product)
-   db.commit()
-
-   return RedirectResponse(url='/admin_dashboard?msg=Lafra+Khatam!+Product+Added',status_code=303)
-
+@admin_router.post('/admin/delete-product/{product_id}')
+def delete_product(product_id: int, db: Session = Depends(get_db)):
+    try:
+        # Method 1: Using ORM (Recommended)
+        product = db.query(Product).filter(Product.id == product_id).first()
+        
+        if product:
+            db.delete(product)
+            db.commit()
+            return RedirectResponse(url="/admin/products-vault?msg=Product+Deleted", status_code=303)
+        else:
+            return RedirectResponse(url="/admin/products-vault?msg=Product+Not+Found", status_code=303)
+            
+    except Exception as e:
+        print(f"Error deleting product: {e}")
+        db.rollback()
+        return RedirectResponse(url="/admin/products-vault?msg=Error+Deleting+Product", status_code=303)

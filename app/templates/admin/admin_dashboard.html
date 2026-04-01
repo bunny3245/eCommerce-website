@@ -42,8 +42,39 @@
         /* --- Main Content --- */
         .main-content { flex-grow: 1; padding: 40px 60px; overflow-y: auto; }
         
-        header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 40px; }
+        header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
         .admin-badge { background: var(--glass); border: 1px solid var(--border); padding: 8px 16px; border-radius: 100px; font-size: 0.75rem; color: var(--accent); }
+
+        /* --- Success Message --- */
+        .msg-box {
+            background: rgba(16, 185, 129, 0.15);
+            border: 1px solid #10b981;
+            color: #10b981;
+            padding: 12px 20px;
+            border-radius: 12px;
+            font-size: 0.85rem;
+            margin-bottom: 30px;
+            font-weight: 600;
+            position: relative;
+            animation: slideDown 0.3s ease-out;
+        }
+        
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .msg-box.fade-out {
+            opacity: 0;
+            transform: translateY(-10px);
+            transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+        }
 
         /* --- Modern Stats Row --- */
         .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-bottom: 40px; }
@@ -70,10 +101,33 @@
         .btn-action { 
             background: var(--accent); color: #000; border: none; padding: 10px 20px; 
             border-radius: 10px; font-weight: 800; font-size: 0.7rem; cursor: pointer; text-transform: uppercase;
+            transition: all 0.2s ease;
         }
-        .btn-action:hover { opacity: 0.9; transform: translateY(-1px); }
+        .btn-action:hover { opacity: 0.9; transform: translateY(-1px); cursor: pointer; }
         
         .hidden { display: none; }
+        
+        /* Empty state styling */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--text-dim);
+            font-size: 0.9rem;
+        }
+        
+        /* Close button for message */
+        .msg-close {
+            float: right;
+            cursor: pointer;
+            margin-left: 20px;
+            font-weight: bold;
+            opacity: 0.7;
+            transition: opacity 0.2s;
+        }
+        
+        .msg-close:hover {
+            opacity: 1;
+        }
     </style>
 </head>
 <body>
@@ -96,10 +150,17 @@
             <div class="admin-badge">System: Active</div>
         </header>
 
+        {% if message %}
+        <div id="msg-box" class="msg-box">
+            <span class="msg-close" onclick="closeMessage()">✕</span>
+            {{ message }}
+        </div>
+        {% endif %}
+
         <div class="stats-grid">
             <div class="stat-card">
                 <span>Total Revenue</span>
-                <h2>Rs. 84,200</h2>
+                <h2>No fetched</h2>
             </div>
             <div class="stat-card">
                 <span>Active Orders</span>
@@ -117,10 +178,12 @@
         </div>
 
         <section id="pending-section" class="table-container">
+            {% set pending_orders = recent_orders|selectattr('status', 'equalto', 'pending')|list %}
+            {% if pending_orders %}
             <table>
                 <thead>
                     <tr>
-                        <th>Order</th>
+                        <th>Order ID</th>
                         <th>Customer</th>
                         <th>Bill</th>
                         <th style="text-align: right;">Command</th>
@@ -133,7 +196,7 @@
                         <td><strong>{{ item[1] }}</strong></td>
                         <td>Rs. {{ item[6] or 0 }}</td>
                         <td style="text-align: right;">
-                            <form action="/admin/complete-order/{{ item[0] }}" method="POST">
+                            <form action="/admin/complete-order/{{ item[0] }}" method="POST" onsubmit="return confirm('Authorize shipment for order #{{ item[0] }}?');">
                                 <button type="submit" class="btn-action">Authorize Shipment</button>
                             </form>
                         </td>
@@ -141,9 +204,14 @@
                     {% endfor %}
                 </tbody>
             </table>
+            {% else %}
+            <div class="empty-state">✨ No pending shipments. All orders are processed!</div>
+            {% endif %}
         </section>
 
         <section id="shipped-section" class="table-container hidden">
+            {% set shipped_orders = recent_orders|selectattr('status', 'in', ['Shipped', 'shipped'])|list %}
+            {% if shipped_orders %}
             <table>
                 <thead>
                     <tr>
@@ -160,7 +228,7 @@
                         <td><strong>{{ item[1] }}</strong></td>
                         <td><span style="color: #60a5fa;">● In Transit</span></td>
                         <td style="text-align: right;">
-                            <form action="/admin/deliver-order/{{ item[0] }}" method="POST">
+                            <form action="/admin/deliver-order/{{ item[0] }}" method="POST" onsubmit="return confirm('Confirm delivery for order #{{ item[0] }}?');">
                                 <button type="submit" class="btn-action" style="background: #10b981;">Confirm Delivery</button>
                             </form>
                         </td>
@@ -168,14 +236,20 @@
                     {% endfor %}
                 </tbody>
             </table>
+            {% else %}
+            <div class="empty-state">🚚 No orders in transit at the moment.</div>
+            {% endif %}
         </section>
     </main>
 
     <script>
+        // Tab switching function
         function switchTab(type, element) {
+            // Update active tab styling
             document.querySelectorAll('.tab-link').forEach(t => t.classList.remove('active'));
             element.classList.add('active');
 
+            // Show/hide sections
             if (type === 'pending') {
                 document.getElementById('pending-section').classList.remove('hidden');
                 document.getElementById('shipped-section').classList.add('hidden');
@@ -184,6 +258,54 @@
                 document.getElementById('shipped-section').classList.remove('hidden');
             }
         }
+        
+        // Close message manually
+        function closeMessage() {
+            const msgBox = document.getElementById('msg-box');
+            if (msgBox) {
+                msgBox.classList.add('fade-out');
+                setTimeout(() => {
+                    if (msgBox && msgBox.parentNode) {
+                        msgBox.remove();
+                    }
+                }, 500);
+            }
+        }
+        
+        // Auto-hide success message after 5 seconds
+        document.addEventListener('DOMContentLoaded', function() {
+            const msgBox = document.getElementById('msg-box');
+            if (msgBox) {
+                // Auto-hide after 5 seconds
+                setTimeout(function() {
+                    if (msgBox && document.body.contains(msgBox)) {
+                        msgBox.classList.add('fade-out');
+                        setTimeout(function() {
+                            if (msgBox && msgBox.parentNode) {
+                                msgBox.remove();
+                            }
+                        }, 500);
+                    }
+                }, 5000);
+            }
+        });
+        
+        // Optional: Add confirmation for all forms
+        document.addEventListener('DOMContentLoaded', function() {
+            const forms = document.querySelectorAll('form');
+            forms.forEach(form => {
+                if (!form.hasAttribute('onsubmit')) {
+                    form.addEventListener('submit', function(e) {
+                        const button = this.querySelector('button[type="submit"]');
+                        const action = button ? button.innerText : 'this action';
+                        if (!confirm(`Are you sure you want to perform ${action}?`)) {
+                            e.preventDefault();
+                            return false;
+                        }
+                    });
+                }
+            });
+        });
     </script>
 </body>
 </html>
