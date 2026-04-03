@@ -1,21 +1,24 @@
 :root {
-    --gold: #c5a059;
-    --black: #1a1a1a;
-    --grey: #f4f4f4;
-    --white: #ffffff;
+    --luxury-gold: #c4a27a;
+    --deep-dark: #0a0a0b;
+    --soft-white: #f9f5f0;
+    --highlight-pink: #ff6f91;
 }
 
-body, html {
+body {
     margin: 0;
     padding: 0;
     height: 100%;
-    font-family: 'Helvetica Neue', Arial, sans-serif;
-    background: var(--grey);
+    font-family: 'Inter', sans-serif;
+    background-color: var(--soft-white);
+    color: var(--deep-dark);
 }
 
 .auth-wrapper {
     display: flex;
     height: 100vh;
+    align-items: center;
+    justify-content: center;
 }
 
 /* Left Visual Side */
@@ -96,3 +99,16 @@ h2 { font-size: 2rem; margin-bottom: 5px; color: var(--black); }
 
 .switch-text { margin-top: 20px; text-align: center; color: #666; }
 .switch-text a { color: var(--gold); text-decoration: none; font-weight: bold; }
+
+/* Updated admin authentication styles */
+.auth-card {
+    background: var(--soft-white);
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.auth-card h1 {
+    color: var(--luxury-gold);
+    font-weight: bold;
+}

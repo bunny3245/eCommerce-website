@@ -188,6 +188,8 @@ async def updateCartItem(request: Request, cart_item_id: int, db: Session = Depe
 @app.get('/checkout')
 def checkout(request: Request, db: Session = Depends(get_db)):
    """ Render a template with form: """
+   if request.session.get('role') != 'customer':
+      return RedirectResponse(url='/login',status_code=403)
    
    return templates.TemplateResponse(request = request, name='checkout_form.html')
 
@@ -201,6 +203,8 @@ async def confirm_order(
     address: str = Form(...),
     db: Session = Depends(get_db)
 ):
+    if not request.session.get('customer_id'):
+       return RedirectResponse(url='/login',status_code=403)
     
     # get current user id
     customer_id = request.session.get('customer_id')
@@ -273,3 +277,47 @@ async def confirm_order(
     })
 
 
+""" users orders """
+@app.get('/orders')
+def myOrders(request: Request, db: Session = Depends(get_db)):
+   
+   # Check if user is logged in
+   if not request.session.get('customer_id'):
+      return RedirectResponse(url='/login', status_code=303)
+   
+   customer_id = request.session.get('customer_id')
+   my_orders = []
+   
+   try:
+      result = db.execute(text("""
+         SELECT o.id, oi.product_name, oi.product_price, o.created_at, (oi.product_price * oi.quantity) as subtotal, p.image
+         FROM order_items oi 
+         JOIN orders o ON o.id = oi.order_id
+         JOIN products p ON p.id = oi.product_id
+         WHERE o.customer_id = :customer_id 
+         ORDER BY o.created_at DESC
+      """), {
+         'customer_id': customer_id
+      })
+      
+      my_orders = result.fetchall()
+      
+      if not my_orders:
+         print("No orders found for customer:", customer_id)
+
+   except Exception as e:
+      print('Error fetching orders:', e)
+      # Optionally add flash message here
+
+   return templates.TemplateResponse(request=request, name='myorders.html', context={
+      'my_orders': my_orders
+   })
+
+# about/stories etc..
+@app.get('/about')
+def ourStory(request : Request):
+   """
+      return our story page
+   """
+   
+   return templates.TemplateResponse(request=request, name='our_story.html')

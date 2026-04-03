@@ -8,14 +8,18 @@
     --white: #ffffff;
     --border: #e2e8f0;
     --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+    --luxury-gold: #c4a27a;
+    --deep-dark: #0a0a0b;
+    --soft-white: #f9f5f0;
+    --highlight-pink: #ff6f91;
 }
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
 body {
-    font-family: 'Inter', -apple-system, sans-serif;
-    background-color: var(--bg-main);
-    color: var(--text-main);
+    font-family: 'Inter', sans-serif;
+    background-color: var(--soft-white);
+    color: var(--deep-dark);
     height: 100vh;
     overflow: hidden; /* Lock the screen */
 }
@@ -25,11 +29,11 @@ body {
 /* Sidebar: Fixed height, no scroll */
 .sidebar {
     width: 260px;
-    background: var(--sidebar-bg);
+    background: var(--deep-dark);
     display: flex;
     flex-direction: column;
-    padding: 1.5rem;
-    color: var(--white);
+    padding: 1rem;
+    color: var(--soft-white);
 }
 
 .logo {
@@ -43,8 +47,9 @@ body {
 .sidebar ul { list-style: none; }
 .sidebar ul li { margin-bottom: 0.5rem; }
 .sidebar a {
-    color: #94a3b8;
+    color: var(--luxury-gold);
     text-decoration: none;
+    font-weight: bold;
     padding: 0.75rem 1rem;
     display: block;
     border-radius: 8px;
@@ -163,3 +168,33 @@ header {
 /* Scrollbar Styling */
 .table-scroll-area::-webkit-scrollbar { width: 6px; }
 .table-scroll-area::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+
+/* Updated admin dashboard styles */
+.dashboard-content {
+    padding: 2rem;
+    background: var(--soft-white);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+}
+
+/* Admin Dashboard Modernization */
+.dashboard-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+    padding: 2rem;
+}
+
+.dashboard-card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    box-shadow: var(--shadow);
+    padding: 1.5rem;
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.dashboard-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+}

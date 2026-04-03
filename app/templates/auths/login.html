@@ -1,148 +1,128 @@
 {% extends "base.html" %}
 
-{% block title %}Account - ÆTHER{% endblock %}
+{% block title %}Account - Perfumania{% endblock %}
 
 {% block content %}
 
-<div class="container mt-5">
-    <div class="row">
-        <div class="col-md-10 mx-auto">
-            <div class="row g-0 shadow-lg rounded-4 overflow-hidden">
+<div class="container mt-5 mb-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6 col-lg-5">
+            <div class="card border-0 shadow-sm rounded-4">
                 
-                <!-- Left Side - Image/Brand (40%) -->
-                <div class="col-md-5" style="background: linear-gradient(135deg, #2c2c2c 0%, #c49a6c 100%);">
-                    <div class="p-5 text-white h-100 d-flex flex-column justify-content-center">
-                        <h1 class="display-5 fw-bold mb-4">ÆTHER</h1>
-                        <p class="lead mb-4">Scent Your Story</p>
-                        <div class="mt-4">
-                            <div class="mb-3">
-                                <i class="bi bi-flower1 me-2"></i> Luxury Fragrances
-                            </div>
-                            <div class="mb-3">
-                                <i class="bi bi-gem me-2"></i> Premium Quality
-                            </div>
-                            <div>
-                                <i class="bi bi-truck me-2"></i> Free Shipping
-                            </div>
-                        </div>
-                    </div>
+                <!-- Header -->
+                <div class="text-center pt-4 pb-2">
+                    <h2 class="fw-bold" style="color: #1a1a1a;">Welcome</h2>
+                    <p class="text-muted small">Sign in or create an account</p>
                 </div>
                 
-                <!-- Right Side - Forms (60%) -->
-                <div class="col-md-7 bg-white">
-                    <div class="p-5">
-                        
-                        <!-- Tab Buttons -->
-                        <div class="d-flex gap-3 mb-5 border-bottom">
-                            <button class="btn btn-link text-decoration-none p-3 fs-5 fw-semibold active-tab" 
-                                    onclick="showLogin()" id="loginTab">
+                <!-- Forms -->
+                <div class="card-body p-4">
+                    
+                    <!-- Login Form -->
+                    <div id="loginForm">
+                        <form action="/auth/login" method="POST">
+                            <div class="mb-3">
+                                <input type="email" name="email" class="form-control py-2" 
+                                       placeholder="Email address" required>
+                            </div>
+                            <div class="mb-4">
+                                <input type="password" name="password" class="form-control py-2" 
+                                       placeholder="Password" required>
+                            </div>
+                            <button type="submit" class="btn w-100 py-2 rounded-3 fw-semibold"
+                                    style="background: #1a1a1a; color: white;">
                                 Sign In
                             </button>
-                            <button class="btn btn-link text-decoration-none p-3 fs-5 fw-semibold text-muted" 
-                                    onclick="showRegister()" id="registerTab">
+                        </form>
+                        
+                        <div class="text-center mt-4">
+                            <span class="text-muted small">Don't have an account? </span>
+                            <a href="#" onclick="showRegister(); return false;" 
+                               style="color: #1a1a1a; text-decoration: none; font-weight: 500;">
+                                Create Account
+                            </a>
+                        </div>
+                    </div>
+                    
+                    <!-- Register Form -->
+                    <div id="registerForm" style="display: none;">
+                        <form action="/auth/register" method="POST">
+                            <div class="mb-2">
+                                <input type="text" name="name" class="form-control py-2" 
+                                       placeholder="Full name" required>
+                            </div>
+                            <div class="mb-2">
+                                <input type="email" name="email" class="form-control py-2" 
+                                       placeholder="Email address" required>
+                            </div>
+                            <div class="mb-2">
+                                <input type="tel" name="phone" class="form-control py-2" 
+                                       placeholder="Phone number">
+                            </div>
+                            <div class="mb-2">
+                                <textarea name="address" rows="2" class="form-control" 
+                                          placeholder="Address"></textarea>
+                            </div>
+                            <div class="mb-2">
+                                <input name="city" class="form-control py-2" 
+                                       placeholder="City">
+                            </div>
+                            <div class="mb-3">
+                                <input type="password" name="password" class="form-control py-2" 
+                                       placeholder="Password" required>
+                            </div>
+                            <button type="submit" class="btn w-100 py-2 rounded-3 fw-semibold"
+                                    style="background: #1a1a1a; color: white;">
                                 Create Account
                             </button>
-                        </div>
+                        </form>
                         
-                        <!-- Login Form -->
-                        <div id="loginForm">
-                            <form action="/auth/login" method="POST">
-                                <div class="mb-4">
-                                    <label class="form-label fw-semibold">Email Address</label>
-                                    <input type="email" name="email" class="form-control form-control-lg rounded-4" 
-                                           style="background: #f8f5f0; border: none;" required>
-                                </div>
-                                <div class="mb-4">
-                                    <label class="form-label fw-semibold">Password</label>
-                                    <input type="password" name="password" class="form-control form-control-lg rounded-4" 
-                                           style="background: #f8f5f0; border: none;" required>
-                                </div>
-                                <button type="submit" class="btn w-100 py-3 rounded-4 fw-semibold"
-                                        style="background: #2c2c2c; color: white;">
-                                    Sign In
-                                </button>
-                            </form>
+                        <div class="text-center mt-4">
+                            <span class="text-muted small">Already have an account? </span>
+                            <a href="#" onclick="showLogin(); return false;" 
+                               style="color: #1a1a1a; text-decoration: none; font-weight: 500;">
+                                Sign In
+                            </a>
                         </div>
-                        
-                        <!-- Register Form -->
-                        <div id="registerForm" style="display: none;">
-                            <form action="/auth/register" method="POST">
-                                <div class="mb-3">
-                                    <label class="form-label fw-semibold">Full Name</label>
-                                    <input type="text" name="name" class="form-control form-control-lg rounded-4" 
-                                           style="background: #f8f5f0; border: none;" required>
-                                </div>
-                                <div class="mb-3">
-                                    <label class="form-label fw-semibold">Email Address</label>
-                                    <input type="email" name="email" class="form-control form-control-lg rounded-4" 
-                                           style="background: #f8f5f0; border: none;" required>
-                                </div>
-                                <div class="mb-3">
-                                    <label class="form-label fw-semibold">Phone Number</label>
-                                    <input type="tel" name="phone" class="form-control form-control-lg rounded-4" 
-                                           style="background: #f8f5f0; border: none;">
-                                </div>
-                                <div class="mb-3">
-                                    <label class="form-label fw-semibold">Address</label>
-                                    <textarea name="address" rows="2" class="form-control rounded-4" 
-                                              style="background: #f8f5f0; border: none;"></textarea>
-                                </div>
-                                <div class="mb-4">
-                                    <label class="form-label fw-semibold">City</label>
-                                    <textarea name="city" rows="3" class="form-control rounded-4" 
-                                              style="background: #f8f5f0; border: none;"></textarea>
-                                </div>
-                                <div class="mb-5">
-                                    <label class="form-label fw-semibold">Password</label>
-                                    <input type="password" name="password" class="form-control form-control-lg rounded-4" 
-                                           style="background: #f8f5f0; border: none;" required>
-                                </div>
-                                <button type="submit" class="btn w-100 py-3 rounded-4 fw-semibold"
-                                        style="background: #c49a6c; color: white;">
-                                    Create Account
-                                </button>
-                            </form>
-                        </div>
-                        
                     </div>
+                    
                 </div>
             </div>
         </div>
     </div>
 </div>
 
-<!-- JavaScript for Tabs -->
 <script>
     function showLogin() {
         document.getElementById('loginForm').style.display = 'block';
         document.getElementById('registerForm').style.display = 'none';
-        document.getElementById('loginTab').classList.add('active-tab');
-        document.getElementById('registerTab').classList.remove('active-tab');
-        document.getElementById('loginTab').style.color = '#c49a6c';
-        document.getElementById('registerTab').style.color = '#6c757d';
     }
     
     function showRegister() {
         document.getElementById('loginForm').style.display = 'none';
         document.getElementById('registerForm').style.display = 'block';
-        document.getElementById('registerTab').classList.add('active-tab');
-        document.getElementById('loginTab').classList.remove('active-tab');
-        document.getElementById('registerTab').style.color = '#c49a6c';
-        document.getElementById('loginTab').style.color = '#6c757d';
     }
 </script>
 
 <style>
-    .active-tab {
-        color: #c49a6c !important;
-        border-bottom: 2px solid #c49a6c;
+    .form-control {
+        background: #f8f9fa;
+        border: 1px solid #e0e0e0;
+        border-radius: 8px;
     }
-    .btn-link:hover {
-        color: #c49a6c !important;
+    
+    .form-control:focus {
+        background: white;
+        border-color: #1a1a1a;
+        box-shadow: none;
     }
-    input:focus, textarea:focus {
-        outline: none;
-        box-shadow: 0 0 0 2px rgba(196, 154, 108, 0.3) !important;
+    
+    .btn {
+        transition: none;
+    }
+    
+    .btn:hover {
+        opacity: 0.9;
     }
 </style>
 

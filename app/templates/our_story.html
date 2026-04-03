@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+   <meta charset="UTF-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <title>Our Story | Perfumania - Premium Fragrances from the Mountains</title>
+   <style>
+      * {
+         margin: 0;
+         padding: 0;
+         box-sizing: border-box;
+      }
+
+      body {
+         font-family: 'Segoe UI', 'Georgia', 'Times New Roman', serif;
+         background-color: #faf9f6;
+         color: #2c2c2c;
+         line-height: 1.6;
+      }
+
+      /* Elegant Header */
+      .header {
+         background: linear-gradient(135deg, #0f2027 0%, #203a43 50%, #2c5364 100%);
+         color: white;
+         padding: 2rem 0;
+         text-align: center;
+         border-bottom: 3px solid #c9a03d;
+      }
+
+      .logo {
+         font-size: 2.5rem;
+         font-weight: 300;
+         letter-spacing: 8px;
+         font-family: 'Segoe UI', 'Georgia', serif;
+      }
+
+      .logo span {
+         color: #c9a03d;
+         font-weight: 600;
+      }
+
+      .tagline {
+         font-size: 0.9rem;
+         letter-spacing: 3px;
+         margin-top: 0.5rem;
+         opacity: 0.9;
+      }
+
+      /* Hero Section with Mountain Background */
+      .hero {
+         background-image: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.5)), 
+                           url('https://images.pexels.com/photos/417074/pexels-photo-417074.jpeg?auto=compress&cs=tinysrgb&w=1600');
+         background-size: cover;
+         background-position: center 30%;
+         height: 70vh;
+         display: flex;
+         align-items: center;
+         justify-content: center;
+         text-align: center;
+         color: white;
+         position: relative;
+      }
+
+      .hero-text h1 {
+         font-size: 4.5rem;
+         font-weight: 400;
+         letter-spacing: 6px;
+         margin-bottom: 1rem;
+         text-shadow: 3px 3px 12px rgba(0,0,0,0.5);
+         font-family: 'Segoe UI', serif;
+      }
+
+      .hero-text p {
+         font-size: 1.3rem;
+         font-style: italic;
+         max-width: 650px;
+         margin: 0 auto;
+         text-shadow: 1px 1px 4px rgba(0,0,0,0.5);
+      }
+
+      /* Main Content */
+      .container {
+         max-width: 1200px;
+         margin: 0 auto;
+         padding: 4rem 2rem;
+      }
+
+      .story-grid {
+         display: grid;
+         grid-template-columns: 1fr 1fr;
+         gap: 3rem;
+         align-items: center;
+         margin-bottom: 4rem;
+      }
+
+      .story-text h2 {
+         font-size: 2.2rem;
+         font-weight: 400;
+         color: #1a3c34;
+         margin-bottom: 1.5rem;
+         position: relative;
+         padding-bottom: 1rem;
+      }
+
+      .story-text h2:after {
+         content: '';
+         position: absolute;
+         bottom: 0;
+         left: 0;
+         width: 70px;
+         height: 3px;
+         background: #c9a03d;
+      }
+
+      .story-text p {
+         margin-bottom: 1.2rem;
+         font-size: 1.05rem;
+         color: #3a3a3a;
+      }
+
+      .story-image img {
+         width: 100%;
+         border-radius: 16px;
+         box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+         transition: transform 0.3s ease;
+         object-fit: cover;
+         height: 400px;
+      }
+
+      .story-image img:hover {
+         transform: scale(1.02);
+      }
+
+      /* Mountain Quote Section */
+      .quote-section {
+         background: linear-gradient(135deg, #e8e0d0 0%, #ddd2bf 100%);
+         padding: 4rem 2rem;
+         text-align: center;
+         margin: 3rem 0;
+         border-radius: 20px;
+         position: relative;
+         overflow: hidden;
+      }
+
+      .quote-section:before {
+         content: '🏔️';
+         font-size: 8rem;
+         opacity: 0.1;
+         position: absolute;
+         bottom: -20px;
+         right: -20px;
+         transform: rotate(-10deg);
+      }
+
+      .quote-section blockquote {
+         font-size: 1.8rem;
+         font-style: italic;
+         color: #1a3c34;
+         max-width: 800px;
+         margin: 0 auto;
+         font-weight: 400;
+         position: relative;
+         z-index: 1;
+      }
+
+      .quote-section .author {
+         margin-top: 1.5rem;
+         font-size: 1rem;
+         letter-spacing: 2px;
+         color: #c9a03d;
+         font-weight: 600;
+      }
+
+      /* Values Section */
+      .values {
+         text-align: center;
+         margin: 4rem 0;
+      }
+
+      .values h2 {
+         font-size: 2.2rem;
+         font-weight: 400;
+         margin-bottom: 2.5rem;
+         color: #1a3c34;
+      }
+
+      .values-grid {
+         display: grid;
+         grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+         gap: 2rem;
+      }
+
+      .value-card {
+         padding: 2rem;
+         background: white;
+         border-radius: 16px;
+         box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+         transition: all 0.3s ease;
+         border-bottom: 3px solid #c9a03d;
+      }
+
+      .value-card:hover {
+         transform: translateY(-5px);
+         box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+      }
+
+      .value-icon {
+         font-size: 2.8rem;
+         margin-bottom: 1rem;
+      }
+
+      .value-card h3 {
+         font-size: 1.3rem;
+         margin-bottom: 0.8rem;
+         color: #1a3c34;
+      }
+
+      .value-card p {
+         color: #666;
+         font-size: 0.95rem;
+      }
+
+      /* Mountain Location Card */
+      .location-card {
+         background: linear-gradient(135deg, #1a3c34 0%, #0f2922 100%);
+         color: white;
+         padding: 3rem;
+         border-radius: 20px;
+         text-align: center;
+         margin-top: 3rem;
+         position: relative;
+         overflow: hidden;
+      }
+
+      .location-card:after {
+         content: '⛰️';
+         font-size: 6rem;
+         opacity: 0.1;
+         position: absolute;
+         bottom: -10px;
+         left: 20px;
+      }
+
+      .location-card h3 {
+         font-size: 1.8rem;
+         font-weight: 400;
+         margin-bottom: 1rem;
+      }
+
+      .location-card p {
+         font-size: 1.1rem;
+         margin-bottom: 0.5rem;
+         opacity: 0.9;
+      }
+
+      .location-card .highlight {
+         color: #c9a03d;
+         font-weight: 600;
+      }
+
+      /* Footer */
+      .footer {
+         background: #0f2027;
+         color: #aaa;
+         text-align: center;
+         padding: 2rem;
+         margin-top: 3rem;
+         font-size: 0.9rem;
+      }
+
+      /* Responsive */
+      @media (max-width: 768px) {
+           .story-grid {
+                grid-template-columns: 1fr;
+           }
+           
+           .hero-text h1 {
+                font-size: 2.5rem;
+                letter-spacing: 3px;
+           }
+           
+           .hero {
+                height: 50vh;
+           }
+           
+           .container {
+                padding: 2rem 1rem;
+           }
+           
+           .quote-section blockquote {
+                font-size: 1.3rem;
+           }
+           
+           .story-image img {
+                height: 280px;
+           }
+      }
+   </style>
+</head>
+<body>
+
+   <div class="header">
+      <div class="logo">PERFU<span>MANIA</span></div>
+      <div class="tagline">LUXURY FRAGRANCES | FROM THE MOUNTAINS TO THE WORLD</div>
+   </div>
+
+   <div class="hero">
+      <div class="hero-text">
+         <h1>Our Story</h1>
+         <p>Crafted with mountain purity, worn with timeless confidence</p>
+      </div>
+   </div>
+
+   <div class="container">
+      <div class="story-grid">
+         <div class="story-text">
+            <h2>From the Valleys of Mansehra to Your Senses</h2>
+            <p>High in the misty peaks of <strong>Oghi, Mansehra</strong>, surrounded by towering pines and crisp mountain air, a young dreamer named <strong>Usama Khan</strong> discovered his life's calling. The pristine beauty of Khyber Pakhtunkhwa's landscape — the wildflowers, the fresh rain on pine needles, the earthy scent after snowmelt — awakened his passion for capturing nature's finest aromas.</p>
+            <p>In 2020, with nothing but determination and an intimate understanding of fragrance chemistry, Usama founded <strong>Perfumania</strong>. What started as a small workshop in his hometown has grown into a trusted name across Pakistan, bringing luxury-grade perfumes to people who appreciate quality without the designer price tag.</p>
+            <p>Every bottle we create carries the spirit of our mountains — pure, authentic, and unforgettable. We believe that a fragrance is more than just a scent; it's a memory waiting to be made, a story waiting to be told.</p>
+         </div>
+         <div class="story-image">
+            <img src="https://images.pexels.com/photos/262978/pexels-photo-262978.jpeg?auto=compress&cs=tinysrgb&w=800" alt="Beautiful mountain landscape of Mansehra">
+         </div>
+      </div>
+
+      <div class="quote-section">
+         <blockquote>
+            "The mountains taught me patience. The pines taught me freshness. And our people taught me that everyone deserves to smell extraordinary."
+         </blockquote>
+         <div class="author">— USAMA KHAN, FOUNDER OF PERFUMANIA</div>
+      </div>
+
+      <div class="story-grid">
+         <div class="story-image">
+            <img src="https://images.pexels.com/photos/1834405/pexels-photo-1834405.jpeg?auto=compress&cs=tinysrgb&w=800" alt="Perfume crafting and natural ingredients">
+         </div>
+         <div class="story-text">
+            <h2>Crafting Excellence, One Drop at a Time</h2>
+            <p>Usama's journey took him far beyond the hills of Mansehra. From the attar houses of Kannauj, India to the perfume labs of Grasse, France — he studied, experimented, and perfected the art of fragrance making.</p>
+            <p>At Perfumania, we blend Eastern tradition with modern sophistication. Our perfumes are long-lasting, skin-safe, and crafted using ethically sourced ingredients. Whether you need a bold oud for special occasions or a fresh, citrusy scent for daily wear, we have something that speaks to your soul.</p>
+            <p>We're proud to be a <strong>100% Pakistani-owned brand</strong>, proving that world-class quality doesn't have to come with a foreign price tag.</p>
+         </div>
+      </div>
+
+      <div class="values">
+         <h2>Our Mountain Philosophy</h2>
+         <div class="values-grid">
+            <div class="value-card">
+               <div class="value-icon">🏔️</div>
+               <h3>Pure as Mountain Air</h3>
+               <p>We use natural extracts and avoid harsh chemicals. Your skin deserves the best.</p>
+            </div>
+            <div class="value-card">
+               <div class="value-icon">💧</div>
+               <h3>Long-Lasting Freshness</h3>
+               <p>Our formulations are designed to stay with you all day, just like mountain memories.</p>
+            </div>
+            <div class="value-card">
+               <div class="value-icon">🤲</div>
+               <h3>Rooted in Community</h3>
+               <p>We're not just a business — we're your neighbors from Mansehra serving Pakistan.</p>
+            </div>
+            <div class="value-card">
+               <div class="value-icon">⭐</div>
+               <h3>Luxury for All</h3>
+               <p>Premium quality at honest prices. Because everyone deserves to feel special.</p>
+            </div>
+         </div>
+      </div>
+
+      <div class="location-card">
+         <h3>📍 From Our Home to Yours</h3>
+         <p>Nestled in the beautiful hills of <span class="highlight">Oghi, Mansehra</span> — Khyber Pakhtunkhwa, Pakistan</p>
+         <p>Usama Khan personally welcomes you to experience the Perfumania collection.</p>
+         <p style="margin-top: 1.5rem; font-size: 1rem;">✨ <strong>Visit us or order online</strong> ✨</p>
+         <p style="margin-top: 1rem; font-size: 0.95rem;">📧 hello@perfumania.pk | 📞 +92 345 6789012</p>
+         <p style="margin-top: 0.3rem; font-size: 0.85rem;">🌐 www.perfumania.pk | 📍 Shop #12, Main Bazar Oghi, Mansehra</p>
+      </div>
+   </div>
+
+   <div class="footer">
+      <p>© 2026 Perfumania — Crafted with mountain love in Mansehra, Pakistan. All rights reserved.</p>
+      <p style="margin-top: 0.5rem; font-size: 0.8rem;">🏔️ Inspired by the pure air of KPK | Made for the world 🏔️</p>
+   </div>
+
+</body>
+</html>
