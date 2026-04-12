@@ -12,7 +12,6 @@
         --gray-light: #f5f5f5;
     }
 
-    /* Remove any heavy animations */
     * {
         -webkit-font-smoothing: antialiased;
     }
@@ -21,7 +20,7 @@
         background: var(--soft-white);
     }
 
-    /* Hero Section - Clean */
+    /* Hero Section */
     .hero-section {
         background: linear-gradient(135deg, #fef9f0 0%, #fff5e8 100%);
         padding: 80px 0;
@@ -112,7 +111,7 @@
         letter-spacing: 1px;
     }
 
-    /* Products Section - Simple & Fast */
+    /* Products Section */
     .products-section {
         background: var(--soft-white);
         padding: 60px 0 80px;
@@ -162,7 +161,6 @@
         gap: 12px;
     }
 
-    /* Product Cards - Keep original size */
     .products-grid {
         display: grid;
         grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
@@ -178,6 +176,7 @@
         text-decoration: none;
         display: block;
         box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+        position: relative;
     }
 
     .product-card:hover {
@@ -201,6 +200,23 @@
 
     .product-card:hover .product-image-container img {
         transform: scale(1.03);
+    }
+
+    /* New Tag */
+    .new-tag {
+        position: absolute;
+        top: 12px;
+        left: 12px;
+        background: #c4a27a;
+        color: #000;
+        padding: 4px 12px;
+        border-radius: 20px;
+        font-size: 0.7rem;
+        font-weight: 700;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        z-index: 2;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
     }
 
     .add-btn-overlay {
@@ -258,6 +274,15 @@
         margin: 0;
     }
 
+    .empty-message {
+        text-align: center;
+        padding: 3rem;
+        background: white;
+        border-radius: 12px;
+        color: #666;
+        font-size: 0.9rem;
+    }
+
     @media (max-width: 768px) {
         .hero-section {
             padding: 60px 0;
@@ -283,9 +308,14 @@
         .product-name {
             font-size: 0.85rem;
         }
+        .new-tag {
+            font-size: 0.6rem;
+            padding: 3px 10px;
+        }
     }
 </style>
 
+<!-- Hero Section -->
 <section class="hero-section">
     <div class="container">
         <div class="row align-items-center">
@@ -313,31 +343,34 @@
     </div>
 </section>
 
+<!-- Male Collection -->
 <section class="products-section">
     <div class="container">
         <div class="section-header">
-            <span class="section-subtitle">✦ CURATED COLLECTION ✦</span>
-            <h2 class="section-title">The Bestsellers</h2>
+            <span class="section-subtitle">✦ FOR HIM ✦</span>
+            <h2 class="section-title">Male Collection</h2>
             <div class="section-divider"></div>
         </div>
 
         <div class="d-flex justify-content-end mb-4">
-            <a href="/shop" class="view-all-link">
-                View All Collection 
+            <a href="/collection/male" class="view-all-link">
+                View All Male Collection 
                 <span>→</span>
             </a>
         </div>
 
+        {% if male_products %}
         <div class="products-grid">
-            {% for product in products %}
+            {% for product in male_products %}
             <div class="product-card">
                 <a href="/product/{{ product.id }}" class="text-decoration-none">
                     <div class="product-image-container">
                         <img src="{{ product.image if product.image and product.image.startswith('/static/') else '/static/uploads/default.jpg' }}" alt="{{ product.name }}">
+                        {% if product.created_at and product.created_at.date() >= week_ago %}
+                        <span class="new-tag">NEW</span>
+                        {% endif %}
                         <form action="/add-to-cart/{{ product.id }}" method="POST">
-                            <button type="submit" class="add-btn-overlay">
-                                Quick Add
-                            </button>
+                            <button type="submit" class="add-btn-overlay">Quick Add</button>
                         </form>
                     </div>
                     <div class="product-info">
@@ -349,6 +382,105 @@
             </div>
             {% endfor %}
         </div>
+        {% else %}
+        <div class="empty-message">
+            <p>✨ Male collection coming soon. Stay tuned! ✨</p>
+        </div>
+        {% endif %}
+    </div>
+</section>
+
+<!-- Female Collection -->
+<section class="products-section">
+    <div class="container">
+        <div class="section-header">
+            <span class="section-subtitle">✦ FOR HER ✦</span>
+            <h2 class="section-title">Female Collection</h2>
+            <div class="section-divider"></div>
+        </div>
+
+        <div class="d-flex justify-content-end mb-4">
+            <a href="/collection/female" class="view-all-link">
+                View All Female Collection 
+                <span>→</span>
+            </a>
+        </div>
+
+        {% if female_products %}
+        <div class="products-grid">
+            {% for product in female_products %}
+            <div class="product-card">
+                <a href="/product/{{ product.id }}" class="text-decoration-none">
+                    <div class="product-image-container">
+                        <img src="{{ product.image if product.image and product.image.startswith('/static/') else '/static/uploads/default.jpg' }}" alt="{{ product.name }}">
+                        {% if product.created_at and product.created_at.date() >= week_ago %}
+                        <span class="new-tag">NEW</span>
+                        {% endif %}
+                        <form action="/add-to-cart/{{ product.id }}" method="POST">
+                            <button type="submit" class="add-btn-overlay">Quick Add</button>
+                        </form>
+                    </div>
+                    <div class="product-info">
+                        <div class="product-name">{{ product.name }}</div>
+                        <div class="product-category">Eau De Parfum</div>
+                        <div class="product-price">Rs. {{ product.price }}</div>
+                    </div>
+                </a>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="empty-message">
+            <p>🌸 Female collection coming soon. Stay tuned! 🌸</p>
+        </div>
+        {% endif %}
+    </div>
+</section>
+
+<!-- Unisex Collection -->
+<section class="products-section">
+    <div class="container">
+        <div class="section-header">
+            <span class="section-subtitle">✦ FOR EVERYONE ✦</span>
+            <h2 class="section-title">Unisex Collection</h2>
+            <div class="section-divider"></div>
+        </div>
+
+        <div class="d-flex justify-content-end mb-4">
+            <a href="/collection/unisex" class="view-all-link">
+                View All Unisex Collection 
+                <span>→</span>
+            </a>
+        </div>
+
+        {% if unisex %}
+        <div class="products-grid">
+            {% for product in unisex %}
+            <div class="product-card">
+                <a href="/product/{{ product.id }}" class="text-decoration-none">
+                    <div class="product-image-container">
+                        <img src="{{ product.image if product.image and product.image.startswith('/static/') else '/static/uploads/default.jpg' }}" alt="{{ product.name }}">
+                        {% if product.created_at and product.created_at.date() >= week_ago %}
+                        <span class="new-tag">NEW</span>
+                        {% endif %}
+                        <form action="/add-to-cart/{{ product.id }}" method="POST">
+                            <button type="submit" class="add-btn-overlay">Quick Add</button>
+                        </form>
+                    </div>
+                    <div class="product-info">
+                        <div class="product-name">{{ product.name }}</div>
+                        <div class="product-category">Eau De Parfum</div>
+                        <div class="product-price">Rs. {{ product.price }}</div>
+                    </div>
+                </a>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="empty-message">
+            <p>🌿 Unisex collection coming soon. Stay tuned! 🌿</p>
+        </div>
+        {% endif %}
     </div>
 </section>
 {% endblock %}

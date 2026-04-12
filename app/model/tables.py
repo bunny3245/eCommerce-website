@@ -42,6 +42,7 @@ class Product(Base):
    image = Column(String)
    description = Column(Text)
    stock = Column(Integer)
+   gender= Column(String, default='unisex')  # unisex/male/female
    created_at = Column(DateTime,default=datetime.utcnow)
 
    """ a product can be in many carts items"""

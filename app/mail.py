@@ -82,7 +82,7 @@ async def orderConfirmationEmail(to_email: str, order_id: int, name: str):
     </html>
     """
     
-    print(f'Sending professional email for Order #{order_id}...')
+    print(f'Sending email for Order #{order_id}...')
     
     message = MessageSchema(
         subject=f"Order Confirmed: Your Perfumania scent is on the way! (#{order_id})",
@@ -95,6 +95,7 @@ async def orderConfirmationEmail(to_email: str, order_id: int, name: str):
         await fm.send_message(message)
     except Exception as e:
         print(f"Error: {e}")
+        
 async def orderShippedEmail(to_email: str, order_id: int, tracking_number: str = None):
     # REPLACE THIS with your actual hosted logo URL
     logo_url = "https://placehold.co/400x100/c4a27a/ffffff?text=PERFUMANIA"

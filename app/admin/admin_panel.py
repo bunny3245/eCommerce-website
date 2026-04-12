@@ -103,7 +103,7 @@ def completeOrder(order_id: int, request: Request, db: Session = Depends(get_db)
     if not order:
         raise HTTPException(status_code=404, detail="Order not found")
 
-    # 3. Update the status (Changing to 'Shipped' since that's your button name)
+    # 3. Update the status (Changing to 'Shipped')
     order.status = 'shipped'
     db.commit()
 
@@ -117,19 +117,43 @@ def completeOrder(order_id: int, request: Request, db: Session = Depends(get_db)
 async def deliverOrder(order_id : int, request : Request , db : Session = Depends(get_db)):
 
    """
+   deduct stock... 
    genreate tracking id....
    shipped order will go to shipped cell
    then after few days we wil auto mark them as delivered....
 
    """
-   tracking_id  = GenerateTrackingID()
 
    order = db.query(Order).filter(Order.id == order_id).first()
+
    if not order:
       raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,detail = "Order not found")
    
+   # handle if already delivered
+   if order.status == 'delivered':
+       return {'order_id':order.id,
+               'customer_id':order.customer_id,
+               'message': 'order is already delivered!'}
+   
+   # first deduct_stock - quantity
+   results = db.execute(text(""" SELECT product_id , quantity FROM order_items 
+                             WHERE id =:order_id """), ({
+                                 'order_id':order_id
+                             }))
+   
+   items = results.fetchall()
+   # deduct stock
+   for item in items:
+       db.execute(text(" UPDATE products set stock = stock - :quantity WHERE id = :product_id "),
+                  ({'quantity':item.quantity,
+                    'product_id':item.product_id}))
+       
+   # update order status and stock deduction
    order.status = 'delivered'
-   # save tracking id into table
+   order.stock_deducted = True
+   # generate and save tracking id into table
+      # generate tracking id
+   tracking_id  = GenerateTrackingID()
    order.tracking_id = tracking_id
 
    db.commit()
@@ -142,11 +166,23 @@ async def deliverOrder(order_id : int, request : Request , db : Session = Depend
 
    return RedirectResponse(url='/admin_dashboard?msg=Lafra+Khatam!+Order+Delivered', status_code=303)
 
+# returned order 
+@admin_router.post('/admin/returned-order/{order_id}')
+def returnedOrder(order_id: int, request: Request, db:Session = Depends(get_db)):
+
+    return {
+        'message':'In making....'
+    }
+
+
+
+
+
+
+
+
 
 # admin product vault
-   """ let admin : 
-   add new products in the vault.
-   """
 @admin_router.get('/admin/products-vault')
 def productVault(request: Request, db: Session = Depends(get_db)):
     """
@@ -190,6 +226,7 @@ def productVault(request: Request, db: Session = Depends(get_db)):
 @admin_router.post('/admin/add-product')
 def addNewProduct(request: Request, db: Session = Depends(get_db),
                   name: str = Form(...),
+                  gender: str = Form(...),
                   price: int = Form(...),
                   perf_image: UploadFile = File(...),
                   stock: int = Form(...),
@@ -214,12 +251,17 @@ def addNewProduct(request: Request, db: Session = Depends(get_db),
     # Save relative image path to the database
     db_img_path = f'/static/uploads/{perf_image.filename}'
 
+    # handle naming 
+    gender = gender.lower()
+    name= name.capitalize()
+
     new_product = Product(
         name=name,
         price=price,
         image=db_img_path,
         stock=stock,
-        description=description
+        description=description,
+        gender=gender
     )
 
     db.add(new_product)
@@ -248,3 +290,22 @@ def delete_product(product_id: int, db: Session = Depends(get_db)):
         print(f"Error deleting product: {e}")
         db.rollback()
         return RedirectResponse(url="/admin/products-vault?msg=Error+Deleting+Product", status_code=303)
+    
+
+
+def updateStocks(request: Request, db:Session = Depends(get_db)):
+    """ get the product id and quantity from order and orderitems table 
+    and update the stock quantity """
+
+    results = db.execute(text(""" 
+                            SELECT o.status, oi.product_id, oi.quantity FROM orders o 
+                            JOIN order_items oi 
+                            ON o.id = oi.order_id
+                            WHERE o.status = 'delivered'
+                                """))
+    
+    items = results.fetchall()
+
+    # for item in items:
+    #     #get the product rows to update
+    #     db.query(Product).filter(Product.id == ) 

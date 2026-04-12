@@ -1,0 +1,339 @@
+{% extends "base.html" %}
+{% block title %}Collections - Perfumania{% endblock %}
+
+{% block content %}
+<style>
+    :root {
+        --luxury-gold: #c4a27a;
+        --luxury-gold-dark: #9b6e46;
+        --deep-dark: #0a0a0b;
+        --soft-white: #f9f5f0;
+        --cream: #faf7f2;
+        --gray-light: #f5f5f5;
+    }
+
+    * {
+        -webkit-font-smoothing: antialiased;
+    }
+
+    body {
+        background: var(--soft-white);
+    }
+
+    /* Collection Header */
+    .collection-header {
+        background: linear-gradient(135deg, #fef9f0 0%, #fff5e8 100%);
+        padding: 60px 0 40px;
+        text-align: center;
+    }
+
+    .collection-header h1 {
+        font-size: 2.5rem;
+        font-weight: 700;
+        color: #1a1a1a;
+        margin-bottom: 0.5rem;
+    }
+
+    .collection-header p {
+        color: #666;
+        font-size: 1rem;
+    }
+
+    /* Filter Section - Modern */
+    .filter-section {
+        background: white;
+        padding: 1.5rem 0;
+        border-bottom: 1px solid #eee;
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        background: rgba(255,255,255,0.98);
+        backdrop-filter: blur(10px);
+    }
+
+    .filter-wrapper {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 2rem;
+        flex-wrap: wrap;
+    }
+
+    .filter-group {
+        display: flex;
+        gap: 0.5rem;
+        background: #f5f5f5;
+        padding: 0.25rem;
+        border-radius: 50px;
+    }
+
+    .filter-chip {
+        padding: 0.6rem 1.8rem;
+        border-radius: 50px;
+        font-size: 0.85rem;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        background: transparent;
+        color: #666;
+        border: none;
+    }
+
+    .filter-chip:hover {
+        color: #1a1a1a;
+    }
+
+    .filter-chip.active {
+        background: #1a1a1a;
+        color: white;
+    }
+
+    .results-count {
+        color: #888;
+        font-size: 0.85rem;
+        font-weight: 400;
+    }
+
+    /* Products Grid */
+    .products-section {
+        padding: 50px 0 80px;
+    }
+
+    .products-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+        gap: 35px;
+        margin-top: 20px;
+    }
+
+    .product-card {
+        background: white;
+        border-radius: 16px;
+        overflow: hidden;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        display: block;
+        box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+    }
+
+    .product-card:hover {
+        transform: translateY(-6px);
+        box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+    }
+
+    .product-image-container {
+        position: relative;
+        background: #f8f8f8;
+        aspect-ratio: 1/1;
+        overflow: hidden;
+    }
+
+    .product-image-container img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.4s ease;
+    }
+
+    .product-card:hover .product-image-container img {
+        transform: scale(1.05);
+    }
+
+    .add-btn-overlay {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: rgba(0,0,0,0.85);
+        color: white;
+        padding: 12px;
+        text-align: center;
+        opacity: 0;
+        transition: opacity 0.25s ease;
+        font-size: 0.75rem;
+        font-weight: 500;
+        letter-spacing: 1px;
+        cursor: pointer;
+        border: none;
+        width: 100%;
+        text-transform: uppercase;
+    }
+
+    .product-card:hover .add-btn-overlay {
+        opacity: 1;
+    }
+
+    .add-btn-overlay:hover {
+        background: var(--luxury-gold);
+        color: #1a1a1a;
+    }
+
+    .product-info {
+        padding: 1.2rem;
+        text-align: center;
+    }
+
+    .product-name {
+        font-size: 0.95rem;
+        font-weight: 600;
+        margin-bottom: 0.3rem;
+        color: #1a1a1a;
+    }
+
+    .product-category {
+        font-size: 0.7rem;
+        color: #aaa;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-bottom: 0.6rem;
+    }
+
+    .product-price {
+        color: var(--luxury-gold);
+        font-weight: 700;
+        font-size: 1.1rem;
+        margin: 0;
+    }
+
+    .empty-message {
+        text-align: center;
+        padding: 5rem;
+        background: white;
+        border-radius: 20px;
+        color: #666;
+    }
+
+    .empty-message i {
+        font-size: 3.5rem;
+        color: var(--luxury-gold);
+        margin-bottom: 1.2rem;
+        display: block;
+    }
+
+    .empty-message h3 {
+        font-size: 1.3rem;
+        margin-bottom: 0.5rem;
+        color: #1a1a1a;
+    }
+
+    @media (max-width: 768px) {
+        .collection-header h1 {
+            font-size: 1.8rem;
+        }
+        .products-grid {
+            gap: 20px;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+        }
+        .filter-chip {
+            padding: 0.5rem 1.2rem;
+            font-size: 0.75rem;
+        }
+        .filter-wrapper {
+            gap: 1rem;
+        }
+        .product-name {
+            font-size: 0.85rem;
+        }
+    }
+</style>
+
+<!-- Collection Header -->
+<div class="collection-header">
+    <div class="container">
+        <h1>Our Collections</h1>
+        <p>Discover the perfect fragrance that defines you</p>
+    </div>
+</div>
+
+<!-- Filter Section - Modern Chips -->
+<div class="filter-section">
+    <div class="container">
+        <div class="filter-wrapper">
+            <div class="filter-group">
+                <button class="filter-chip active" data-gender="all" onclick="filterProducts('all')">
+                    All
+                </button>
+                <button class="filter-chip" data-gender="male" onclick="filterProducts('male')">
+                    Male
+                </button>
+                <button class="filter-chip" data-gender="female" onclick="filterProducts('female')">
+                    Female
+                </button>
+                <button class="filter-chip" data-gender="unisex" onclick="filterProducts('unisex')">
+                    Unisex
+                </button>
+            </div>
+            <div class="results-count" id="resultsCount">
+                {{ products|length }} products
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Products Section -->
+<section class="products-section">
+    <div class="container">
+        <div class="products-grid" id="productsGrid">
+            {% for product in products %}
+            <div class="product-card" data-gender="{{ product.gender }}">
+                <a href="/product/{{ product.id }}" class="text-decoration-none">
+                    <div class="product-image-container">
+                        <img src="{{ product.image if product.image and product.image.startswith('/static/') else '/static/uploads/default.jpg' }}" alt="{{ product.name }}">
+                        <form action="/add-to-cart/{{ product.id }}" method="POST">
+                            <button type="submit" class="add-btn-overlay">Quick Add</button>
+                        </form>
+                    </div>
+                    <div class="product-info">
+                        <div class="product-name">{{ product.name }}</div>
+                        <div class="product-category">
+                            {% if product.gender == 'male' %}For Him
+                            {% elif product.gender == 'female' %}For Her
+                            {% else %}Unisex
+                            {% endif %}
+                        </div>
+                        <div class="product-price">Rs. {{ product.price }}</div>
+                    </div>
+                </a>
+            </div>
+            {% endfor %}
+        </div>
+
+        {% if not products %}
+        <div class="empty-message">
+            <i>✨</i>
+            <h3>No products found</h3>
+            <p>Check back soon for new arrivals</p>
+        </div>
+        {% endif %}
+    </div>
+</section>
+
+<script>
+    function filterProducts(gender) {
+        // Update active chip styling
+        document.querySelectorAll('.filter-chip').forEach(chip => {
+            chip.classList.remove('active');
+            if(chip.dataset.gender === gender) {
+                chip.classList.add('active');
+            }
+        });
+        
+        // Filter products
+        const products = document.querySelectorAll('.product-card');
+        let visibleCount = 0;
+        
+        products.forEach(product => {
+            if(gender === 'all' || product.dataset.gender === gender) {
+                product.style.display = 'block';
+                visibleCount++;
+            } else {
+                product.style.display = 'none';
+            }
+        });
+        
+        // Update results count
+        const countText = visibleCount === 1 ? 'product' : 'products';
+        document.getElementById('resultsCount').innerText = `${visibleCount} ${countText}`;
+    }
+</script>
+{% endblock %}

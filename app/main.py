@@ -15,7 +15,7 @@ from app.admin.admin_auths import admin_route
 from app.admin.admin_panel import admin_router
 from app.auths.auths import router
 from dotenv import load_dotenv
-
+from datetime import datetime,timedelta
 
 
 # app instance
@@ -27,8 +27,13 @@ load_dotenv()
 # create tables when app run
 Base.metadata.create_all(bind=engine)
 
-# Session middleware (MUST be added)
-app.add_middleware(SessionMiddleware, secret_key=os.getenv('SECRET_KEY'))
+# Ensure a strong secret key for production
+SECRET_KEY = os.getenv('SECRET_KEY', 'default-secret-key')
+if SECRET_KEY == 'default-secret-key':
+    raise ValueError("SECRET_KEY must be set for production!")
+
+# Update session middleware with a strong secret key
+app.add_middleware(SessionMiddleware, secret_key=SECRET_KEY)
 
 # Include auth routes with /auth prefix
 app.include_router(auth_router, prefix='/auth')
@@ -57,16 +62,25 @@ def home(request: Request, db : Session = Depends(get_db)):
    # get current user id
    customer_id = request.session.get('customer_id')
 
-   products = db.query(Product).filter().all()
-   print(products)
+   male_products = db.query(Product).filter(Product.gender == 'male').limit(4).all()
+   female_products = db.query(Product).filter(Product.gender == 'female').limit(4).all()
+   unisex = db.query(Product).filter(Product.gender == 'unisex').limit(4).all()
 
    # Get cart count
    cart = db.query(Cart).filter(Cart.customer_id == customer_id).first()
    cart_count = sum(item.quantity for item in cart.items) if cart else 0
 
+
+   # Calculate which products are new (added in last 7 days)
+   today = datetime.now().date()
+   week_ago = today - timedelta(days=7)
+
    return templates.TemplateResponse(request=request, name="index.html", context={
-      'products': products,
-      'cart_count': cart_count
+      'male_products': male_products,
+      'female_products':female_products,
+      'unisex':unisex,
+      'cart_count': cart_count,
+      'week_ago':week_ago
    })
 
 # get for auth page
@@ -77,38 +91,39 @@ def show_auth_page(request: Request):
 
 # add to cart
 @app.post('/add-to-cart/{product_id}')
-def addToCart(request: Request,product_id : int, db : Session = Depends(get_db)):
-   """
-   here: just get product id and insert this into cart table... 
+def addToCart(request: Request, product_id: int, db: Session = Depends(get_db)):
+    """
+    here: just get product id and insert this into cart table... 
 
-   """
-   # get current user id
-   customer_id = request.session.get('customer_id')
+    """
+    # get current user id
+    customer_id = request.session.get('customer_id')
+    if not customer_id:
+        raise HTTPException(status_code=401, detail="User not logged in or session expired.")
 
-   # find or create cart
-   cart = db.query(Cart).filter(Cart.customer_id == customer_id).first()
+    # find or create cart
+    cart = db.query(Cart).filter(Cart.customer_id == customer_id).first()
 
-   if not cart:
-      cart = Cart(customer_id=customer_id)
-      db.add(cart)
-      db.commit()
-      db.refresh(cart)
+    if not cart:
+        cart = Cart(customer_id=customer_id)
+        db.add(cart)
+        db.commit()
+        db.refresh(cart)
 
-   # check if product in cart
-   existing = db.query(CartItems).filter(
-      CartItems.cart_id == cart.id,
-      CartItems.product_id == product_id
-   ).first()
+    # check if product in cart
+    existing = db.query(CartItems).filter(
+        CartItems.cart_id == cart.id,
+        CartItems.product_id == product_id
+    ).first()
 
-   # check if it is existing 
-   if existing:
-      existing.quantity += 1
-   else:
-      db.add(CartItems(cart_id=cart.id, product_id = product_id, quantity = 1))
+    # check if it is existing 
+    if existing:
+        existing.quantity += 1
+    else:
+        db.add(CartItems(cart_id=cart.id, product_id = product_id, quantity = 1))
    
-   db.commit()
-
-   return RedirectResponse(url='/',status_code=303)
+    db.commit()
+    return RedirectResponse(url='/', status_code=303)
 
 @app.get('/shop')
 def shop():
@@ -116,20 +131,25 @@ def shop():
 
 
 @app.get('/cart')
-def viewCart(request: Request, db : Session = Depends(get_db)):
+def viewCart(request: Request, db: Session = Depends(get_db)):
    """
    here fetch all those items of cart and show them....
    for a current user
    """
-   """
-   lets do it with RAW sql
-   """
-
+   # Get current user id from session
+   customer_id = request.session.get('customer_id')
+   
+   if not customer_id:
+       return RedirectResponse(url='/login', status_code=303)
+   
+   # Use the actual customer_id from session
    result = db.execute(text(""" SELECT ci.id AS cart_item_id, p.id AS product_id, p.name, p.image, p.price, ci.quantity, (p.price * ci.quantity) AS subtotal
                             FROM cart_items ci
                             JOIN products p ON p.id = ci.product_id
-                            WHERE ci.cart_id = (SELECT id FROM cart WHERE customer_id = 1)
-                            """))
+                            WHERE ci.cart_id = (SELECT id FROM cart WHERE customer_id = :customer_id)
+                            """), {
+                               'customer_id': customer_id
+                            })
 
    rows = result.fetchall()
 
@@ -150,11 +170,10 @@ def viewCart(request: Request, db : Session = Depends(get_db)):
       items.append(item)
       total += row[6]
    
-   return templates.TemplateResponse(request = request, name='cart.html',context ={
+   return templates.TemplateResponse(request=request, name='cart.html', context={
       'items': items,
-      'total':total
+      'total': total
    })
-
 
 @app.post('/remove-from-cart/{cart_item_id}')
 def removeFromCart(request: Request, cart_item_id: int, db: Session = Depends(get_db)):
@@ -188,7 +207,7 @@ async def updateCartItem(request: Request, cart_item_id: int, db: Session = Depe
 @app.get('/checkout')
 def checkout(request: Request, db: Session = Depends(get_db)):
    """ Render a template with form: """
-   if request.session.get('role') != 'customer':
+   if not request.session.get('customer_id'):
       return RedirectResponse(url='/login',status_code=403)
    
    return templates.TemplateResponse(request = request, name='checkout_form.html')
@@ -261,6 +280,7 @@ async def confirm_order(
     
     try:
         await orderConfirmationEmail(email, order.id, name)
+      #   await orderConfirmationEmail('add business email or something to send email manager as well')
     except Exception as e:
         print("Email not sent - configure email first: Error",e)
         HTTPException(status_code=302,detail='Email failed!')
@@ -321,3 +341,26 @@ def ourStory(request : Request):
    """
    
    return templates.TemplateResponse(request=request, name='our_story.html')
+
+@app.get('/collection')
+def collection(request: Request, db : Session = Depends(get_db)):
+
+   """  fetch all products from products 
+   male
+   female
+   unisex
+   """
+   try:
+      all_male_products = db.query(Product).filter(Product.gender == 'male').all()
+      all_female_products = db.query(Product).filter(Product.gender == 'female').all()
+      all_unisex_products = db.query(Product).filter(Product.gender == 'unisex').all()
+      products = db.query(Product).all()
+   except Exception as e:
+      print(f'error while fetching products: -> {e}')
+
+   return templates.TemplateResponse(request=request, name='collection.html',context={
+      'all_male_prod': all_male_products,
+      'all_female_prod' : all_female_products,
+      'all_unisex': all_unisex_products,
+      "products": products
+   })

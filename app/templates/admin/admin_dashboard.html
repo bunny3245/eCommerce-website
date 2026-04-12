@@ -174,7 +174,7 @@
 
         <div class="tab-nav">
             <div class="tab-link active" onclick="switchTab('pending', this)">Pending Shipments</div>
-            <div class="tab-link" onclick="switchTab('shipped', this)">In Transit</div>
+            <div class="tab-link" onclick="switchTab('shipped', this)">Out For Delivery</div>
         </div>
 
         <section id="pending-section" class="table-container">
@@ -226,10 +226,13 @@
                     <tr>
                         <td class="ref-tag">#{{ item[0] }}</td>
                         <td><strong>{{ item[1] }}</strong></td>
-                        <td><span style="color: #60a5fa;">● In Transit</span></td>
+                        <td><span style="color: #60a5fa;">● Out For Delivery</span></td>
                         <td style="text-align: right;">
                             <form action="/admin/deliver-order/{{ item[0] }}" method="POST" onsubmit="return confirm('Confirm delivery for order #{{ item[0] }}?');">
-                                <button type="submit" class="btn-action" style="background: #10b981;">Confirm Delivery</button>
+                                <button type="submit" class="btn-action" style="background: #10b981;">Order delivered</button>
+                            </form>
+                            <form action="/admin/returned-order/{{ item[0] }}" method="POST">
+                                <button type="submit" class="btn-action" style="background: tomato;">Order Returned</button>
                             </form>
                         </td>
                     </tr>
