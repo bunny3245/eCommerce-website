@@ -114,6 +114,7 @@
         text-decoration: none;
         display: block;
         box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+        position: relative;
     }
 
     .product-card:hover {
@@ -137,6 +138,32 @@
 
     .product-card:hover .product-image-container img {
         transform: scale(1.05);
+    }
+
+    /* Out of Stock Styles */
+    .out-of-stock-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.75);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 3;
+    }
+
+    .out-of-stock-tag {
+        background: #1a1a1a;
+        color: #ff4757;
+        padding: 8px 16px;
+        border-radius: 30px;
+        font-size: 0.7rem;
+        font-weight: 800;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        border: 1px solid #ff4757;
     }
 
     .add-btn-overlay {
@@ -168,6 +195,19 @@
         color: #1a1a1a;
     }
 
+    .add-btn-overlay.disabled {
+        background: #2c2c2c;
+        color: #666;
+        cursor: not-allowed;
+        opacity: 0.8;
+    }
+
+    .add-btn-overlay.disabled:hover {
+        background: #2c2c2c;
+        color: #666;
+        transform: none;
+    }
+
     .product-info {
         padding: 1.2rem;
         text-align: center;
@@ -193,6 +233,25 @@
         font-weight: 700;
         font-size: 1.1rem;
         margin: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 5px;
+    }
+
+    .stock-status {
+        font-size: 0.65rem;
+        font-weight: 500;
+        margin-left: 5px;
+    }
+
+    .stock-status.out {
+        color: #ff4757;
+    }
+
+    .stock-status.low {
+        color: #f59e0b;
     }
 
     .empty-message {
@@ -233,6 +292,9 @@
         }
         .product-name {
             font-size: 0.85rem;
+        }
+        .stock-status {
+            font-size: 0.6rem;
         }
     }
 </style>
@@ -279,9 +341,20 @@
                 <a href="/product/{{ product.id }}" class="text-decoration-none">
                     <div class="product-image-container">
                         <img src="{{ product.image if product.image and product.image.startswith('/static/') else '/static/uploads/default.jpg' }}" alt="{{ product.name }}">
+                        
+                        {% if product.stock == 0 %}
+                        <div class="out-of-stock-overlay">
+                            <span class="out-of-stock-tag">Out of Stock</span>
+                        </div>
+                        {% endif %}
+                        
+                        {% if product.stock > 0 %}
                         <form action="/add-to-cart/{{ product.id }}" method="POST">
                             <button type="submit" class="add-btn-overlay">Quick Add</button>
                         </form>
+                        {% else %}
+                        <button class="add-btn-overlay disabled" disabled>Out of Stock</button>
+                        {% endif %}
                     </div>
                     <div class="product-info">
                         <div class="product-name">{{ product.name }}</div>
@@ -291,7 +364,14 @@
                             {% else %}Unisex
                             {% endif %}
                         </div>
-                        <div class="product-price">Rs. {{ product.price }}</div>
+                        <div class="product-price">
+                            Rs. {{ product.price }}
+                            {% if product.stock == 0 %}
+                            <span class="stock-status out">• Out of Stock</span>
+                            {% elif product.stock < 5 %}
+                            <span class="stock-status low">• Only {{ product.stock }} left</span>
+                            {% endif %}
+                        </div>
                     </div>
                 </a>
             </div>

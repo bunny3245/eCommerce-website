@@ -364,3 +364,18 @@ def collection(request: Request, db : Session = Depends(get_db)):
       'all_unisex': all_unisex_products,
       "products": products
    })
+
+
+@app.get('/product/{product_id}')
+def product(product_id: int, request:Request, db:Session=Depends(get_db)):
+   """ product :
+   desciption
+   """
+
+   product = db.query(Product).filter(Product.id == product_id).first()
+
+   if not product:
+      return HTTPException(status_code=404,detail='something went wrong, please try again!')
+   
+   return 
+

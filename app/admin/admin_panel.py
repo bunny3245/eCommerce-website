@@ -137,22 +137,31 @@ async def deliverOrder(order_id : int, request : Request , db : Session = Depend
    
    # first deduct_stock - quantity
    results = db.execute(text(""" SELECT product_id , quantity FROM order_items 
-                             WHERE id =:order_id """), ({
+                             WHERE order_id =:order_id """), ({
                                  'order_id':order_id
                              }))
    
    items = results.fetchall()
+
+# Check stock first
+   for item in items:
+        product = db.query(Product).filter(Product.id == item.product_id).first()
+        if product:
+            if product.stock < item.quantity:
+                return {"error": f"Insufficient stock for {product.name}"}
+        else:
+            return HTTPException(status_code=404,detail='No product found')
+        
    # deduct stock
    for item in items:
        db.execute(text(" UPDATE products set stock = stock - :quantity WHERE id = :product_id "),
-                  ({'quantity':item.quantity,
-                    'product_id':item.product_id}))
+                  {'quantity':item.quantity,
+                    'product_id':item.product_id})
        
    # update order status and stock deduction
    order.status = 'delivered'
    order.stock_deducted = True
    # generate and save tracking id into table
-      # generate tracking id
    tracking_id  = GenerateTrackingID()
    order.tracking_id = tracking_id
 
@@ -170,14 +179,21 @@ async def deliverOrder(order_id : int, request : Request , db : Session = Depend
 @admin_router.post('/admin/returned-order/{order_id}')
 def returnedOrder(order_id: int, request: Request, db:Session = Depends(get_db)):
 
-    return {
-        'message':'In making....'
-    }
+    """ fetch the orders from order table, using the order_id:
+    mark the status to returned... 
+    no deduction , nothing 
+    """
+    order = db.query(Order).filter(Order.id == order_id).first()
 
+    if not order:
+        return HTTPException(status_code=404,detail='order not found!')
+    
+    # status 'returned' 
+    order.status == 'returned'
 
+    db.commit()
 
-
-
+    return RedirectResponse(url='/admin_dashboard?msg=Lafra+Hogya!+Order+Returned', status_code=303)
 
 
 
@@ -292,20 +308,31 @@ def delete_product(product_id: int, db: Session = Depends(get_db)):
         return RedirectResponse(url="/admin/products-vault?msg=Error+Deleting+Product", status_code=303)
     
 
-
-def updateStocks(request: Request, db:Session = Depends(get_db)):
-    """ get the product id and quantity from order and orderitems table 
-    and update the stock quantity """
-
-    results = db.execute(text(""" 
-                            SELECT o.status, oi.product_id, oi.quantity FROM orders o 
-                            JOIN order_items oi 
-                            ON o.id = oi.order_id
-                            WHERE o.status = 'delivered'
-                                """))
+@admin_router.post('/admin/update-stock/{product_id}')
+def updateStock(product_id: int, request: Request,new_stock :int = Form(...), db: Session = Depends(get_db)):
+    """
+    Update product stock manually
+    """
+    # Get the product
+    product = db.query(Product).filter(Product.id == product_id).first()
     
-    items = results.fetchall()
-
-    # for item in items:
-    #     #get the product rows to update
-    #     db.query(Product).filter(Product.id == ) 
+    if not product:
+        return RedirectResponse(url='/admin/products-vault?msg=Product+Not+Found', status_code=303)
+    
+    # Get new stock value from form
+    if new_stock is None:
+        return RedirectResponse(url='/admin/products-vault?msg=Invalid+Stock+Value', status_code=303)
+    
+    try:
+        new_stock = int(new_stock)
+        if new_stock < 0:
+            return RedirectResponse(url='/admin/products-vault?msg=Stock+cannot+be+negative', status_code=303)
+        
+        # Update stock
+        product.stock = new_stock
+        db.commit()
+        
+        return RedirectResponse(url='/admin/products-vault?msg=Stock+Updated+Successfully', status_code=303)
+        
+    except ValueError:
+        return RedirectResponse(url='/admin/products-vault?msg=Invalid+Number', status_code=303)
