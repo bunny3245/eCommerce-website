@@ -365,17 +365,47 @@ def collection(request: Request, db : Session = Depends(get_db)):
       "products": products
    })
 
+# api/products
+@app.get('/api/product/{product_id}')
+def get_product_api(product_id: int, db: Session = Depends(get_db)):
+    product = db.query(Product).filter(Product.id == product_id).first()
+    if not product:
+        raise HTTPException(status_code=404, detail="Product not found")
+    
+    return {
+        "id": product.id,
+        "name": product.name,
+        "price": product.price,
+        "stock": product.stock,
+        "image": product.image,
+        "description": product.description,
+        "gender": product.gender
+    }
+
 
 @app.get('/product/{product_id}')
-def product(product_id: int, request:Request, db:Session=Depends(get_db)):
-   """ product :
-   desciption
-   """
-
-   product = db.query(Product).filter(Product.id == product_id).first()
-
-   if not product:
-      return HTTPException(status_code=404,detail='something went wrong, please try again!')
-   
-   return 
+def product(product_id: int, request: Request, db: Session = Depends(get_db)):
+    """Product details page"""
+    
+    product = db.query(Product).filter(Product.id == product_id).first()
+    
+    if not product:
+        raise HTTPException(status_code=404, detail='Product not found')
+    
+    # Get cart count for logged in user
+    customer_id = request.session.get('customer_id')
+    cart_count = 0
+    if customer_id:
+        cart = db.query(Cart).filter(Cart.customer_id == customer_id).first()
+        if cart:
+            cart_count = db.query(CartItems).filter(CartItems.cart_id == cart.id).count()
+    
+    return templates.TemplateResponse(
+        request=request, 
+        name="product.html", 
+        context={
+            'product': product,
+            'cart_count': cart_count
+        }
+    )
 

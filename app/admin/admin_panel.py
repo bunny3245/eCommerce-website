@@ -41,11 +41,13 @@ def adminDashboard(request: Request, msg: str = None, db: Session = Depends(get_
         recent_orders = db.query(
             Order.id,
             Order.customer_name,
+            Order.customer_phone,
             Order.shipping_address,
             Order.status,
             func.string_agg(OrderItems.product_name, ',').label('bundle'),
             func.sum(OrderItems.quantity).label('total_items'),
             func.sum(OrderItems.product_price * OrderItems.quantity).label('total_price'),
+            Order.customer_phone,
         ).outerjoin(OrderItems, Order.id == OrderItems.order_id) \
          .group_by(Order.id, Order.customer_name, Order.shipping_address, Order.status) \
          .order_by(Order.id.desc()) \
@@ -92,14 +94,11 @@ def adminDashboard(request: Request, msg: str = None, db: Session = Depends(get_
             }
         )
 
-
-# 1. Make sure this matches your HTML exactly
 @admin_router.post('/admin/complete-order/{order_id}')
 def completeOrder(order_id: int, request: Request, db: Session = Depends(get_db)):
     # Find the order
     order = db.query(Order).filter(Order.id == order_id).first()
 
-    # 2. YOU MUST RAISE THE ERROR
     if not order:
         raise HTTPException(status_code=404, detail="Order not found")
 
@@ -107,7 +106,6 @@ def completeOrder(order_id: int, request: Request, db: Session = Depends(get_db)
     order.status = 'shipped'
     db.commit()
 
-    # 4. Redirect to the EXACT name of your dashboard route
     # Your dashboard route is @admin_router.get('/admin_dashboard')
     return RedirectResponse(url='/admin_dashboard?msg=Lafra+Khatam!+Order+Shipped', status_code=303)
 

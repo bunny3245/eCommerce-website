@@ -202,6 +202,36 @@
         transform: scale(1.03);
     }
 
+    /* Quick View Button */
+    .quick-view-btn {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: rgba(0,0,0,0.85);
+        color: white;
+        padding: 8px 20px;
+        border-radius: 30px;
+        font-size: 0.7rem;
+        font-weight: 600;
+        letter-spacing: 1px;
+        opacity: 0;
+        transition: opacity 0.2s ease;
+        cursor: pointer;
+        z-index: 5;
+        border: none;
+        text-transform: uppercase;
+    }
+
+    .product-image-container:hover .quick-view-btn {
+        opacity: 1;
+    }
+
+    .quick-view-btn:hover {
+        background: var(--luxury-gold);
+        color: #000;
+    }
+
     /* New Tag */
     .new-tag {
         position: absolute;
@@ -342,6 +372,172 @@
         font-size: 0.9rem;
     }
 
+    /* Modal Styles */
+    .product-modal {
+        display: none;
+        position: fixed;
+        z-index: 1000;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0,0,0,0.8);
+        backdrop-filter: blur(5px);
+    }
+    
+    .modal-content {
+        background: white;
+        margin: 5% auto;
+        padding: 0;
+        width: 90%;
+        max-width: 900px;
+        border-radius: 20px;
+        position: relative;
+        animation: modalSlideIn 0.3s ease;
+    }
+    
+    @keyframes modalSlideIn {
+        from {
+            transform: translateY(-50px);
+            opacity: 0;
+        }
+        to {
+            transform: translateY(0);
+            opacity: 1;
+        }
+    }
+    
+    .modal-close {
+        position: absolute;
+        right: 20px;
+        top: 15px;
+        font-size: 28px;
+        font-weight: bold;
+        cursor: pointer;
+        color: #999;
+        z-index: 10;
+        background: white;
+        width: 35px;
+        height: 35px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    .modal-close:hover {
+        color: #000;
+    }
+    
+    .modal-body {
+        padding: 30px;
+        max-height: 80vh;
+        overflow-y: auto;
+    }
+    
+    .modal-loading {
+        text-align: center;
+        padding: 50px;
+        color: #666;
+    }
+    
+    .modal-product {
+        display: flex;
+        gap: 30px;
+        flex-wrap: wrap;
+    }
+    
+    .modal-product-image {
+        flex: 1;
+        min-width: 250px;
+    }
+    
+    .modal-product-image img {
+        width: 100%;
+        border-radius: 16px;
+    }
+    
+    .modal-product-info {
+        flex: 1;
+    }
+    
+    .modal-product-name {
+        font-size: 1.8rem;
+        font-weight: 700;
+        color: #1a1a1a;
+        margin-bottom: 10px;
+    }
+    
+    .modal-product-price {
+        font-size: 1.5rem;
+        color: var(--luxury-gold);
+        font-weight: 700;
+        margin-bottom: 15px;
+    }
+    
+    .modal-product-description {
+        color: #666;
+        line-height: 1.6;
+        margin-bottom: 20px;
+    }
+    
+    .modal-stock {
+        margin-bottom: 20px;
+        padding: 10px;
+        border-radius: 8px;
+    }
+    
+    .modal-stock.in-stock {
+        background: #d4edda;
+        color: #155724;
+    }
+    
+    .modal-stock.out-stock {
+        background: #f8d7da;
+        color: #721c24;
+    }
+    
+    .modal-stock.low-stock {
+        background: #fff3cd;
+        color: #856404;
+    }
+    
+    .modal-quantity {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        margin-bottom: 25px;
+    }
+    
+    .modal-quantity input {
+        width: 70px;
+        padding: 8px;
+        text-align: center;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+    }
+    
+    .modal-add-to-cart {
+        background: #1a1a1a;
+        color: white;
+        border: none;
+        padding: 12px 30px;
+        border-radius: 40px;
+        font-weight: 600;
+        cursor: pointer;
+        width: 100%;
+    }
+    
+    .modal-add-to-cart:hover {
+        background: var(--luxury-gold);
+        color: #1a1a1a;
+    }
+    
+    .modal-add-to-cart.disabled {
+        background: #ccc;
+        cursor: not-allowed;
+    }
+
     @media (max-width: 768px) {
         .hero-section {
             padding: 60px 0;
@@ -370,6 +566,16 @@
         .new-tag {
             font-size: 0.6rem;
             padding: 3px 10px;
+        }
+        .modal-content {
+            margin: 10% auto;
+            width: 95%;
+        }
+        .modal-product {
+            flex-direction: column;
+        }
+        .modal-product-name {
+            font-size: 1.3rem;
         }
     }
 </style>
@@ -422,41 +628,41 @@
         <div class="products-grid">
             {% for product in male_products %}
             <div class="product-card">
-                <a href="/product/{{ product.id }}" class="text-decoration-none">
-                    <div class="product-image-container">
-                        <img src="{{ product.image if product.image and product.image.startswith('/static/') else '/static/uploads/default.jpg' }}" alt="{{ product.name }}">
-                        
-                        {% if product.created_at and product.created_at.date() >= week_ago and product.stock > 0 %}
-                        <span class="new-tag">NEW</span>
-                        {% endif %}
-                        
+                <div class="product-image-container">
+                    <img src="{{ product.image if product.image and product.image.startswith('/static/') else '/static/uploads/default.jpg' }}" alt="{{ product.name }}">
+                    
+                    <button class="quick-view-btn" onclick="quickView('{{ product.id }}')">Quick View</button>
+                    
+                    {% if product.created_at and product.created_at.date() >= week_ago and product.stock > 0 %}
+                    <span class="new-tag">NEW</span>
+                    {% endif %}
+                    
+                    {% if product.stock == 0 %}
+                    <div class="out-of-stock-overlay">
+                        <span class="out-of-stock-tag">Out of Stock</span>
+                    </div>
+                    {% endif %}
+                    
+                    {% if product.stock > 0 %}
+                    <form action="/add-to-cart/{{ product.id }}" method="POST">
+                        <button type="submit" class="add-btn-overlay">Quick Add</button>
+                    </form>
+                    {% else %}
+                    <button class="add-btn-overlay disabled" disabled>Out of Stock</button>
+                    {% endif %}
+                </div>
+                <div class="product-info">
+                    <div class="product-name">{{ product.name }}</div>
+                    <div class="product-category">Eau De Parfum</div>
+                    <div class="product-price">
+                        Rs. {{ product.price }}
                         {% if product.stock == 0 %}
-                        <div class="out-of-stock-overlay">
-                            <span class="out-of-stock-tag">Out of Stock</span>
-                        </div>
-                        {% endif %}
-                        
-                        {% if product.stock > 0 %}
-                        <form action="/add-to-cart/{{ product.id }}" method="POST">
-                            <button type="submit" class="add-btn-overlay">Quick Add</button>
-                        </form>
-                        {% else %}
-                        <button class="add-btn-overlay disabled" disabled>Out of Stock</button>
+                        <span class="stock-status out">• Out of Stock</span>
+                        {% elif product.stock < 5 %}
+                        <span class="stock-status low">• Only {{ product.stock }} left</span>
                         {% endif %}
                     </div>
-                    <div class="product-info">
-                        <div class="product-name">{{ product.name }}</div>
-                        <div class="product-category">Eau De Parfum</div>
-                        <div class="product-price">
-                            Rs. {{ product.price }}
-                            {% if product.stock == 0 %}
-                            <span class="stock-status out">• Out of Stock</span>
-                            {% elif product.stock < 5 %}
-                            <span class="stock-status low">• Only {{ product.stock }} left</span>
-                            {% endif %}
-                        </div>
-                    </div>
-                </a>
+                </div>
             </div>
             {% endfor %}
         </div>
@@ -488,41 +694,41 @@
         <div class="products-grid">
             {% for product in female_products %}
             <div class="product-card">
-                <a href="/product/{{ product.id }}" class="text-decoration-none">
-                    <div class="product-image-container">
-                        <img src="{{ product.image if product.image and product.image.startswith('/static/') else '/static/uploads/default.jpg' }}" alt="{{ product.name }}">
-                        
-                        {% if product.created_at and product.created_at.date() >= week_ago and product.stock > 0 %}
-                        <span class="new-tag">NEW</span>
-                        {% endif %}
-                        
+                <div class="product-image-container">
+                    <img src="{{ product.image if product.image and product.image.startswith('/static/') else '/static/uploads/default.jpg' }}" alt="{{ product.name }}">
+                    
+                    <button class="quick-view-btn" onclick="quickView('{{ product.id }}')">Quick View</button>
+                    
+                    {% if product.created_at and product.created_at.date() >= week_ago and product.stock > 0 %}
+                    <span class="new-tag">NEW</span>
+                    {% endif %}
+                    
+                    {% if product.stock == 0 %}
+                    <div class="out-of-stock-overlay">
+                        <span class="out-of-stock-tag">Out of Stock</span>
+                    </div>
+                    {% endif %}
+                    
+                    {% if product.stock > 0 %}
+                    <form action="/add-to-cart/{{ product.id }}" method="POST">
+                        <button type="submit" class="add-btn-overlay">Quick Add</button>
+                    </form>
+                    {% else %}
+                    <button class="add-btn-overlay disabled" disabled>Out of Stock</button>
+                    {% endif %}
+                </div>
+                <div class="product-info">
+                    <div class="product-name">{{ product.name }}</div>
+                    <div class="product-category">Eau De Parfum</div>
+                    <div class="product-price">
+                        Rs. {{ product.price }}
                         {% if product.stock == 0 %}
-                        <div class="out-of-stock-overlay">
-                            <span class="out-of-stock-tag">Out of Stock</span>
-                        </div>
-                        {% endif %}
-                        
-                        {% if product.stock > 0 %}
-                        <form action="/add-to-cart/{{ product.id }}" method="POST">
-                            <button type="submit" class="add-btn-overlay">Quick Add</button>
-                        </form>
-                        {% else %}
-                        <button class="add-btn-overlay disabled" disabled>Out of Stock</button>
+                        <span class="stock-status out">• Out of Stock</span>
+                        {% elif product.stock < 5 %}
+                        <span class="stock-status low">• Only {{ product.stock }} left</span>
                         {% endif %}
                     </div>
-                    <div class="product-info">
-                        <div class="product-name">{{ product.name }}</div>
-                        <div class="product-category">Eau De Parfum</div>
-                        <div class="product-price">
-                            Rs. {{ product.price }}
-                            {% if product.stock == 0 %}
-                            <span class="stock-status out">• Out of Stock</span>
-                            {% elif product.stock < 5 %}
-                            <span class="stock-status low">• Only {{ product.stock }} left</span>
-                            {% endif %}
-                        </div>
-                    </div>
-                </a>
+                </div>
             </div>
             {% endfor %}
         </div>
@@ -554,41 +760,41 @@
         <div class="products-grid">
             {% for product in unisex %}
             <div class="product-card">
-                <a href="/product/{{ product.id }}" class="text-decoration-none">
-                    <div class="product-image-container">
-                        <img src="{{ product.image if product.image and product.image.startswith('/static/') else '/static/uploads/default.jpg' }}" alt="{{ product.name }}">
-                        
-                        {% if product.created_at and product.created_at.date() >= week_ago and product.stock > 0 %}
-                        <span class="new-tag">NEW</span>
-                        {% endif %}
-                        
+                <div class="product-image-container">
+                    <img src="{{ product.image if product.image and product.image.startswith('/static/') else '/static/uploads/default.jpg' }}" alt="{{ product.name }}">
+                    
+                    <button class="quick-view-btn" onclick="quickView('{{ product.id }}')">Quick View</button>
+                    
+                    {% if product.created_at and product.created_at.date() >= week_ago and product.stock > 0 %}
+                    <span class="new-tag">NEW</span>
+                    {% endif %}
+                    
+                    {% if product.stock == 0 %}
+                    <div class="out-of-stock-overlay">
+                        <span class="out-of-stock-tag">Out of Stock</span>
+                    </div>
+                    {% endif %}
+                    
+                    {% if product.stock > 0 %}
+                    <form action="/add-to-cart/{{ product.id }}" method="POST">
+                        <button type="submit" class="add-btn-overlay">Quick Add</button>
+                    </form>
+                    {% else %}
+                    <button class="add-btn-overlay disabled" disabled>Out of Stock</button>
+                    {% endif %}
+                </div>
+                <div class="product-info">
+                    <div class="product-name">{{ product.name }}</div>
+                    <div class="product-category">Eau De Parfum</div>
+                    <div class="product-price">
+                        Rs. {{ product.price }}
                         {% if product.stock == 0 %}
-                        <div class="out-of-stock-overlay">
-                            <span class="out-of-stock-tag">Out of Stock</span>
-                        </div>
-                        {% endif %}
-                        
-                        {% if product.stock > 0 %}
-                        <form action="/add-to-cart/{{ product.id }}" method="POST">
-                            <button type="submit" class="add-btn-overlay">Quick Add</button>
-                        </form>
-                        {% else %}
-                        <button class="add-btn-overlay disabled" disabled>Out of Stock</button>
+                        <span class="stock-status out">• Out of Stock</span>
+                        {% elif product.stock < 5 %}
+                        <span class="stock-status low">• Only {{ product.stock }} left</span>
                         {% endif %}
                     </div>
-                    <div class="product-info">
-                        <div class="product-name">{{ product.name }}</div>
-                        <div class="product-category">Eau De Parfum</div>
-                        <div class="product-price">
-                            Rs. {{ product.price }}
-                            {% if product.stock == 0 %}
-                            <span class="stock-status out">• Out of Stock</span>
-                            {% elif product.stock < 5 %}
-                            <span class="stock-status low">• Only {{ product.stock }} left</span>
-                            {% endif %}
-                        </div>
-                    </div>
-                </a>
+                </div>
             </div>
             {% endfor %}
         </div>
@@ -599,4 +805,94 @@
         {% endif %}
     </div>
 </section>
+
+<!-- Product Quick View Modal -->
+<div id="productModal" class="product-modal">
+    <div class="modal-content">
+        <span class="modal-close">&times;</span>
+        <div class="modal-body" id="modalBody">
+            <div class="modal-loading">Loading fragrance details...</div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Quick View Function
+    function quickView(productId) {
+        const modal = document.getElementById('productModal');
+        const modalBody = document.getElementById('modalBody');
+        
+        modal.style.display = 'block';
+        modalBody.innerHTML = '<div class="modal-loading">Loading fragrance details...</div>';
+        
+        fetch(`/api/product/${productId}`)
+            .then(response => response.json())
+            .then(product => {
+                renderModalContent(product);
+            })
+            .catch(error => {
+                modalBody.innerHTML = '<div class="modal-loading">Error loading product. Please try again.</div>';
+            });
+    }
+    
+    function renderModalContent(product) {
+        const modalBody = document.getElementById('modalBody');
+        
+        let stockHtml = '';
+        let addToCartDisabled = '';
+        
+        if (product.stock === 0) {
+            stockHtml = '<div class="modal-stock out-stock">❌ Out of Stock</div>';
+            addToCartDisabled = 'disabled';
+        } else if (product.stock < 5) {
+            stockHtml = `<div class="modal-stock low-stock">⚠️ Only ${product.stock} left in stock!</div>`;
+        } else {
+            stockHtml = '<div class="modal-stock in-stock">✓ In Stock</div>';
+        }
+        
+        modalBody.innerHTML = `
+            <div class="modal-product">
+                <div class="modal-product-image">
+                    <img src="${product.image && product.image.startsWith('/static/') ? product.image : '/static/uploads/default.jpg'}" alt="${product.name}">
+                </div>
+                <div class="modal-product-info">
+                    <h2 class="modal-product-name">${product.name}</h2>
+                    <div class="modal-product-price">Rs. ${product.price.toLocaleString()}</div>
+                    <div class="modal-product-description">${product.description || 'A luxurious fragrance that defines elegance and sophistication.'}</div>
+                    ${stockHtml}
+                    <div class="modal-quantity">
+                        <label>Quantity:</label>
+                        <input type="number" id="modalQty" value="1" min="1" ${product.stock === 0 ? 'disabled' : ''}>
+                    </div>
+                    <form action="/add-to-cart/${product.id}" method="POST" id="modalAddToCartForm">
+                        <input type="hidden" name="quantity" id="modalQtyInput" value="1">
+                        <button type="submit" class="modal-add-to-cart ${addToCartDisabled}" ${addToCartDisabled}>
+                            ${product.stock === 0 ? 'Out of Stock' : 'Add to Cart →'}
+                        </button>
+                    </form>
+                </div>
+            </div>
+        `;
+        
+        const qtyInput = document.getElementById('modalQty');
+        const hiddenQty = document.getElementById('modalQtyInput');
+        if (qtyInput) {
+            qtyInput.addEventListener('change', function() {
+                hiddenQty.value = this.value;
+            });
+        }
+    }
+    
+    // Close modal
+    document.querySelector('.modal-close').onclick = function() {
+        document.getElementById('productModal').style.display = 'none';
+    }
+    
+    window.onclick = function(event) {
+        const modal = document.getElementById('productModal');
+        if (event.target === modal) {
+            modal.style.display = 'none';
+        }
+    }
+</script>
 {% endblock %}

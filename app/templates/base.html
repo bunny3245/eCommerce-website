@@ -38,7 +38,7 @@
                         <i class="fas fa-user-circle fs-4"></i>
                     </button>
                     <ul class="dropdown-menu dropdown-menu-end rounded-4 shadow-sm border-0 mt-2">
-                        {% if request.session.get('customer_id') %}
+                        {% if request.session.get('role') == 'customer' %}
                             <li class="px-3 py-2 border-bottom">
                                 <small class="text-muted d-block">{{ request.session.get('customer_name') }}</small>
                                 <small class="text-muted" style="font-size: 0.7rem;">{{ request.session.get('customer_email') }}</small>
@@ -53,7 +53,6 @@
                             {% endif %}
                             
                             <!-- Customer Menu (everyone sees) -->
-                            <!-- <li><a class="dropdown-item py-2" href="/profile"><i class="fas fa-user me-2"></i> My Profile</a></li> -->
                             <li><a class="dropdown-item py-2" href="/orders"><i class="fas fa-box me-2"></i> My Orders</a></li>
                             <li><hr class="dropdown-divider"></li>
                             <li><a class="dropdown-item py-2 text-danger" href="/auths/logout"><i class="fas fa-sign-out-alt me-2"></i> Logout</a></li>

@@ -1,0 +1,164 @@
+{% extends "base.html" %}
+{% block title %}{{ product.name }} - Perfumania{% endblock %}
+
+{% block content %}
+<style>
+    .product-detail {
+        padding: 80px 0;
+        background: var(--soft-white);
+    }
+    
+    .product-image {
+        width: 100%;
+        border-radius: 20px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    }
+    
+    .product-name {
+        font-size: 2rem;
+        font-weight: 700;
+        color: #1a1a1a;
+        margin-bottom: 15px;
+    }
+    
+    .product-price {
+        font-size: 1.5rem;
+        color: var(--luxury-gold);
+        font-weight: 700;
+        margin-bottom: 20px;
+    }
+    
+    .product-description {
+        color: #666;
+        line-height: 1.8;
+        margin-bottom: 30px;
+    }
+    
+    .stock-status {
+        padding: 10px 15px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+        display: inline-block;
+    }
+    
+    .stock-status.in-stock {
+        background: #d4edda;
+        color: #155724;
+    }
+    
+    .stock-status.low-stock {
+        background: #fff3cd;
+        color: #856404;
+    }
+    
+    .stock-status.out-stock {
+        background: #f8d7da;
+        color: #721c24;
+    }
+    
+    .quantity-selector {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        margin-bottom: 25px;
+    }
+    
+    .quantity-selector input {
+        width: 80px;
+        padding: 10px;
+        text-align: center;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+    }
+    
+    .add-to-cart-btn {
+        background: #1a1a1a;
+        color: white;
+        padding: 14px 30px;
+        border-radius: 40px;
+        font-weight: 600;
+        border: none;
+        cursor: pointer;
+        width: 100%;
+        max-width: 250px;
+    }
+    
+    .add-to-cart-btn:hover {
+        background: var(--luxury-gold);
+        color: #1a1a1a;
+    }
+    
+    .add-to-cart-btn.disabled {
+        background: #ccc;
+        cursor: not-allowed;
+    }
+    
+    .back-link {
+        display: inline-block;
+        margin-bottom: 30px;
+        color: var(--luxury-gold);
+        text-decoration: none;
+    }
+    
+    .back-link:hover {
+        text-decoration: underline;
+    }
+    
+    @media (max-width: 768px) {
+        .product-detail {
+            padding: 40px 0;
+        }
+        .product-name {
+            font-size: 1.5rem;
+            margin-top: 20px;
+        }
+    }
+</style>
+
+<div class="product-detail">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6">
+                <img src="{{ product.image if product.image and product.image.startswith('/static/') else '/static/uploads/default.jpg' }}" 
+                     alt="{{ product.name }}" 
+                     class="product-image">
+            </div>
+            <div class="col-md-6">
+                <a href="javascript:history.back()" class="back-link">← Back</a>
+                
+                <h1 class="product-name">{{ product.name }}</h1>
+                <div class="product-price">Rs. {{ product.price }}</div>
+                
+                <div class="product-description">
+                    {{ product.description or 'A luxurious fragrance that defines elegance and sophistication. Perfect for any occasion.' }}
+                </div>
+                
+                {% if product.stock == 0 %}
+                <div class="stock-status out-stock">❌ Out of Stock</div>
+                <button class="add-to-cart-btn disabled" disabled>Out of Stock</button>
+                
+                {% elif product.stock < 5 %}
+                <div class="stock-status low-stock">⚠️ Only {{ product.stock }} left in stock!</div>
+                <form action="/add-to-cart/{{ product.id }}" method="POST">
+                    <div class="quantity-selector">
+                        <label>Quantity:</label>
+                        <input type="number" name="quantity" value="1" min="1" max="{{ product.stock }}">
+                    </div>
+                    <button type="submit" class="add-to-cart-btn">Add to Cart →</button>
+                </form>
+                
+                {% else %}
+                <div class="stock-status in-stock">✓ In Stock</div>
+                <form action="/add-to-cart/{{ product.id }}" method="POST">
+                    <div class="quantity-selector">
+                        <label>Quantity:</label>
+                        <input type="number" name="quantity" value="1" min="1">
+                    </div>
+                    <button type="submit" class="add-to-cart-btn">Add to Cart →</button>
+                </form>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
