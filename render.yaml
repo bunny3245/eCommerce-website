@@ -1,0 +1,18 @@
+services:
+  - type: web
+    name: perfume-store
+    runtime: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn app.main:app --host 0.0.0.0 --port 8001
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: perfume-store-db
+          property: connectionString
+      - key: PYTHON_VERSION
+        value: 3.11.0
+ 
+databases:
+  - name: perfume-store-db
+    databaseName: perfume_store
+    user: perfume_user

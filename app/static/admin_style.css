@@ -1,0 +1,200 @@
+:root {
+    --bg-main: #f1f5f9;
+    --sidebar-bg: #1e293b;
+    --sidebar-active: #334155;
+    --accent: #6366f1; /* Modern Indigo */
+    --text-main: #0f172a;
+    --text-muted: #64748b;
+    --white: #ffffff;
+    --border: #e2e8f0;
+    --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+    --luxury-gold: #c4a27a;
+    --deep-dark: #0a0a0b;
+    --soft-white: #f9f5f0;
+    --highlight-pink: #ff6f91;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: var(--soft-white);
+    color: var(--deep-dark);
+    height: 100vh;
+    overflow: hidden; /* Lock the screen */
+}
+
+.container { display: flex; height: 100vh; }
+
+/* Sidebar: Fixed height, no scroll */
+.sidebar {
+    width: 260px;
+    background: var(--deep-dark);
+    display: flex;
+    flex-direction: column;
+    padding: 1rem;
+    color: var(--soft-white);
+}
+
+.logo {
+    font-size: 1.2rem;
+    font-weight: 800;
+    letter-spacing: 1px;
+    margin-bottom: 2.5rem;
+    color: var(--accent);
+}
+
+.sidebar ul { list-style: none; }
+.sidebar ul li { margin-bottom: 0.5rem; }
+.sidebar a {
+    color: var(--luxury-gold);
+    text-decoration: none;
+    font-weight: bold;
+    padding: 0.75rem 1rem;
+    display: block;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    transition: 0.2s;
+}
+.sidebar a:hover, .sidebar a.active {
+    background: var(--sidebar-active);
+    color: var(--white);
+}
+
+/* Main Content: The Scroll Magic Happens Here */
+.content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden; /* Content is a container for inner scroll */
+}
+
+header {
+    background: var(--white);
+    padding: 1.2rem 2rem;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* The Dashboard Card */
+.management-section {
+    flex: 1;
+    margin: 1.5rem;
+    background: var(--white);
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden; /* Clip the table inside the card */
+}
+
+.section-header {
+    padding: 1.25rem 1.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid var(--border);
+}
+
+/* TABLE SCROLL AREA */
+.table-scroll-area {
+    overflow-y: auto;
+    flex: 1;
+}
+
+.modern-table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+}
+
+/* Sticky Header */
+.modern-table thead th {
+    position: sticky;
+    top: 0;
+    background: #f8fafc;
+    padding: 0.75rem 1.5rem;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    font-weight: 600;
+    border-bottom: 1px solid var(--border);
+    z-index: 10;
+}
+
+.modern-table tbody td {
+    padding: 1rem 1.5rem;
+    border-bottom: 1px solid #f1f5f9;
+    font-size: 0.9rem;
+}
+
+/* UI Elements */
+.ref-pill {
+    background: #f1f5f9;
+    padding: 4px 8px;
+    border-radius: 6px;
+    font-family: monospace;
+    font-weight: 600;
+}
+
+.bundle-container {
+    max-width: 250px;
+    color: var(--text-muted);
+    font-size: 0.85rem;
+    line-height: 1.4;
+}
+
+.status-badge {
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+.pending { background: #fef3c7; color: #92400e; }
+
+.btn-ship {
+    background: var(--accent);
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
+}
+
+/* Scrollbar Styling */
+.table-scroll-area::-webkit-scrollbar { width: 6px; }
+.table-scroll-area::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+
+/* Updated admin dashboard styles */
+.dashboard-content {
+    padding: 2rem;
+    background: var(--soft-white);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+}
+
+/* Admin Dashboard Modernization */
+.dashboard-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+    padding: 2rem;
+}
+
+.dashboard-card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    box-shadow: var(--shadow);
+    padding: 1.5rem;
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.dashboard-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+}

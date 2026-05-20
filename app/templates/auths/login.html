@@ -1,0 +1,129 @@
+{% extends "base.html" %}
+
+{% block title %}Account - Perfumania{% endblock %}
+
+{% block content %}
+
+<div class="container mt-5 mb-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6 col-lg-5">
+            <div class="card border-0 shadow-sm rounded-4">
+                
+                <!-- Header -->
+                <div class="text-center pt-4 pb-2">
+                    <h2 class="fw-bold" style="color: #1a1a1a;">Welcome</h2>
+                    <p class="text-muted small">Sign in or create an account</p>
+                </div>
+                
+                <!-- Forms -->
+                <div class="card-body p-4">
+                    
+                    <!-- Login Form -->
+                    <div id="loginForm">
+                        <form action="/auth/login" method="POST">
+                            <div class="mb-3">
+                                <input type="email" name="email" class="form-control py-2" 
+                                       placeholder="Email address" required>
+                            </div>
+                            <div class="mb-4">
+                                <input type="password" name="password" class="form-control py-2" 
+                                       placeholder="Password" required>
+                            </div>
+                            <button type="submit" class="btn w-100 py-2 rounded-3 fw-semibold"
+                                    style="background: #1a1a1a; color: white;">
+                                Sign In
+                            </button>
+                        </form>
+                        
+                        <div class="text-center mt-4">
+                            <span class="text-muted small">Don't have an account? </span>
+                            <a href="#" onclick="showRegister(); return false;" 
+                               style="color: #1a1a1a; text-decoration: none; font-weight: 500;">
+                                Create Account
+                            </a>
+                        </div>
+                    </div>
+                    
+                    <!-- Register Form -->
+                    <div id="registerForm" style="display: none;">
+                        <form action="/auth/register" method="POST">
+                            <div class="mb-2">
+                                <input type="text" name="name" class="form-control py-2" 
+                                       placeholder="Full name" required>
+                            </div>
+                            <div class="mb-2">
+                                <input type="email" name="email" class="form-control py-2" 
+                                       placeholder="Email address" required>
+                            </div>
+                            <div class="mb-2">
+                                <input type="tel" name="phone" class="form-control py-2" 
+                                       placeholder="Phone number">
+                            </div>
+                            <div class="mb-2">
+                                <textarea name="address" rows="2" class="form-control" 
+                                          placeholder="Address"></textarea>
+                            </div>
+                            <div class="mb-2">
+                                <input name="city" class="form-control py-2" 
+                                       placeholder="City">
+                            </div>
+                            <div class="mb-3">
+                                <input type="password" name="password" class="form-control py-2" 
+                                       placeholder="Password" required>
+                            </div>
+                            <button type="submit" class="btn w-100 py-2 rounded-3 fw-semibold"
+                                    style="background: #1a1a1a; color: white;">
+                                Create Account
+                            </button>
+                        </form>
+                        
+                        <div class="text-center mt-4">
+                            <span class="text-muted small">Already have an account? </span>
+                            <a href="#" onclick="showLogin(); return false;" 
+                               style="color: #1a1a1a; text-decoration: none; font-weight: 500;">
+                                Sign In
+                            </a>
+                        </div>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function showLogin() {
+        document.getElementById('loginForm').style.display = 'block';
+        document.getElementById('registerForm').style.display = 'none';
+    }
+    
+    function showRegister() {
+        document.getElementById('loginForm').style.display = 'none';
+        document.getElementById('registerForm').style.display = 'block';
+    }
+</script>
+
+<style>
+    .form-control {
+        background: #f8f9fa;
+        border: 1px solid #e0e0e0;
+        border-radius: 8px;
+    }
+    
+    .form-control:focus {
+        background: white;
+        border-color: #1a1a1a;
+        box-shadow: none;
+    }
+    
+    .btn {
+        transition: none;
+    }
+    
+    .btn:hover {
+        opacity: 0.9;
+    }
+</style>
+
+{% endblock %}

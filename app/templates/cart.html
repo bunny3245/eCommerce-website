@@ -1,0 +1,449 @@
+{% extends "base.html" %}
+
+{% block title %}Your Cart - Perfumania{% endblock %}
+
+{% block content %}
+<style>
+    :root {
+        --luxury-gold: #c4a27a;
+        --luxury-gold-dark: #9b6e46;
+        --deep-dark: #0a0a0b;
+        --soft-white: #f9f5f0;
+        --cream: #faf7f2;
+        --gray-light: #f5f5f5;
+    }
+
+    .cart-section {
+        background: var(--soft-white);
+        min-height: 70vh;
+        padding: 40px 0 80px;
+    }
+
+    .cart-header {
+        text-align: center;
+        margin-bottom: 40px;
+    }
+
+    .cart-header h1 {
+        font-size: 2rem;
+        font-weight: 600;
+        color: #1a1a1a;
+        margin-bottom: 8px;
+    }
+
+    .cart-header p {
+        color: #666;
+        font-size: 0.9rem;
+    }
+
+    /* Cart Items */
+    .cart-items-container {
+        background: white;
+        border-radius: 20px;
+        overflow: hidden;
+        box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+    }
+
+    .cart-item {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+        padding: 20px;
+        border-bottom: 1px solid #f0f0f0;
+        transition: background 0.2s ease;
+    }
+
+    .cart-item:hover {
+        background: #faf9f6;
+    }
+
+    .cart-item:last-child {
+        border-bottom: none;
+    }
+
+    /* Product Image */
+    .cart-item-image {
+        width: 100px;
+        height: 100px;
+        flex-shrink: 0;
+        background: #f8f8f8;
+        border-radius: 12px;
+        overflow: hidden;
+    }
+
+    .cart-item-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    /* Product Details */
+    .cart-item-details {
+        flex: 2;
+    }
+
+    .cart-item-name {
+        font-size: 1rem;
+        font-weight: 600;
+        color: #1a1a1a;
+        margin-bottom: 4px;
+        text-decoration: none;
+    }
+
+    .cart-item-name:hover {
+        color: var(--luxury-gold);
+    }
+
+    .cart-item-category {
+        font-size: 0.7rem;
+        color: #999;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-bottom: 8px;
+    }
+
+    .cart-item-price {
+        font-size: 1rem;
+        font-weight: 600;
+        color: var(--luxury-gold);
+    }
+
+    /* Quantity Controls */
+    .cart-item-quantity {
+        flex: 1;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .quantity-btn {
+        width: 32px;
+        height: 32px;
+        border-radius: 8px;
+        background: #f5f5f5;
+        border: none;
+        font-size: 1.2rem;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .quantity-btn:hover {
+        background: var(--luxury-gold);
+        color: white;
+    }
+
+    .quantity-input {
+        width: 50px;
+        height: 32px;
+        text-align: center;
+        border: 1px solid #e0e0e0;
+        border-radius: 8px;
+        font-size: 0.9rem;
+    }
+
+    .quantity-input:focus {
+        outline: none;
+        border-color: var(--luxury-gold);
+    }
+
+    /* Item Subtotal */
+    .cart-item-subtotal {
+        flex: 1;
+        text-align: right;
+    }
+
+    .subtotal-label {
+        font-size: 0.7rem;
+        color: #999;
+        margin-bottom: 4px;
+    }
+
+    .subtotal-value {
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: #1a1a1a;
+    }
+
+    /* Remove Button */
+    .remove-item {
+        background: none;
+        border: none;
+        font-size: 1.2rem;
+        cursor: pointer;
+        color: #ccc;
+        transition: color 0.2s ease;
+        padding: 8px;
+    }
+
+    .remove-item:hover {
+        color: #dc3545;
+    }
+
+    /* Order Summary */
+    .order-summary {
+        background: white;
+        border-radius: 20px;
+        padding: 25px;
+        position: sticky;
+        top: 100px;
+        box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+    }
+
+    .summary-title {
+        font-size: 1.2rem;
+        font-weight: 600;
+        color: #1a1a1a;
+        margin-bottom: 20px;
+        padding-bottom: 12px;
+        border-bottom: 2px solid var(--luxury-gold);
+    }
+
+    .summary-row {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 12px;
+        font-size: 0.9rem;
+    }
+
+    .summary-row.total {
+        margin-top: 15px;
+        padding-top: 15px;
+        border-top: 1px solid #e0e0e0;
+        font-size: 1.1rem;
+        font-weight: 700;
+    }
+
+    .summary-label {
+        color: #666;
+    }
+
+    .summary-value {
+        color: #1a1a1a;
+        font-weight: 500;
+    }
+
+    .summary-value.total {
+        color: var(--luxury-gold);
+        font-size: 1.3rem;
+    }
+
+    .checkout-btn {
+        width: 100%;
+        background: #1a1a1a;
+        color: white;
+        border: none;
+        padding: 14px;
+        border-radius: 50px;
+        font-weight: 600;
+        font-size: 0.9rem;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin-top: 20px;
+        transition: all 0.3s ease;
+    }
+
+    .checkout-btn:hover {
+        background: var(--luxury-gold);
+        color: #1a1a1a;
+        transform: translateY(-2px);
+    }
+
+    .continue-shopping {
+        display: inline-block;
+        text-align: center;
+        margin-top: 15px;
+        color: #666;
+        text-decoration: none;
+        font-size: 0.85rem;
+        transition: color 0.2s ease;
+    }
+
+    .continue-shopping:hover {
+        color: var(--luxury-gold);
+    }
+
+    /* Empty Cart */
+    .empty-cart {
+        text-align: center;
+        padding: 60px 20px;
+        background: white;
+        border-radius: 20px;
+    }
+
+    .empty-cart-icon {
+        font-size: 4rem;
+        margin-bottom: 20px;
+        opacity: 0.5;
+    }
+
+    .empty-cart h3 {
+        font-size: 1.5rem;
+        font-weight: 500;
+        color: #1a1a1a;
+        margin-bottom: 10px;
+    }
+
+    .empty-cart p {
+        color: #666;
+        margin-bottom: 25px;
+    }
+
+    .shop-now-btn {
+        background: #1a1a1a;
+        color: white;
+        padding: 12px 30px;
+        border-radius: 50px;
+        text-decoration: none;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        display: inline-block;
+    }
+
+    .shop-now-btn:hover {
+        background: var(--luxury-gold);
+        color: #1a1a1a;
+    }
+
+    @media (max-width: 768px) {
+        .cart-item {
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        
+        .cart-item-image {
+            width: 80px;
+            height: 80px;
+        }
+        
+        .cart-item-details {
+            flex: 1;
+        }
+        
+        .cart-item-quantity {
+            flex: 0 0 100%;
+            justify-content: flex-start;
+            margin-left: 0;
+        }
+        
+        .cart-item-subtotal {
+            text-align: left;
+        }
+        
+        .order-summary {
+            margin-top: 20px;
+            position: static;
+        }
+    }
+</style>
+
+<section class="cart-section">
+    <div class="container">
+        <div class="cart-header">
+            <h1>Your Cart</h1>
+            <p>Review and adjust your fragrance selections</p>
+        </div>
+
+        {% if items and items|length > 0 %}
+        <div class="row g-4">
+            <!-- Cart Items Column -->
+            <div class="col-lg-8">
+                <div class="cart-items-container">
+                    {% for item in items %}
+                    <div class="cart-item">
+                        <!-- Product Image -->
+                        <div class="cart-item-image">
+                            <img src="{{ item.image if item.image and item.image.startswith('/static/') else '/static/uploads/default.jpg' }}" alt="{{ item.name }}">
+                        </div>
+                        
+                        <!-- Product Details -->
+                        <div class="cart-item-details">
+                            <a href="/product/{{ item.product_id }}" class="cart-item-name">{{ item.name }}</a>
+                            <div class="cart-item-category">Eau De Parfum</div>
+                            <div class="cart-item-price">Rs. {{ "{:,.0f}".format(item.price) }}</div>
+                        </div>
+                        
+                        <!-- Quantity Controls -->
+                        <div class="cart-item-quantity">
+                            <form action="/update-quantity/{{ item.cart_item_id }}" method="POST" class="d-flex align-items-center gap-2">
+                                <button type="button" class="quantity-btn" onclick="updateQuantity(this, -1)">−</button>
+                                <input type="number" name="quantity" value="{{ item.quantity }}" min="1" 
+                                       class="quantity-input" onchange="this.form.submit()">
+                                <button type="button" class="quantity-btn" onclick="updateQuantity(this, 1)">+</button>
+                            </form>
+                        </div>
+                        
+                        <!-- Subtotal -->
+                        <div class="cart-item-subtotal">
+                            <div class="subtotal-label">Subtotal</div>
+                            <div class="subtotal-value">Rs. {{ "{:,.0f}".format(item.subtotal) }}</div>
+                        </div>
+                        
+                        <!-- Remove Button -->
+                        <form action="/remove-from-cart/{{ item.cart_item_id }}" method="POST">
+                            <button type="submit" class="remove-item" title="Remove item">✕</button>
+                        </form>
+                    </div>
+                    {% endfor %}
+                </div>
+                
+                <div class="text-center mt-4">
+                    <a href="/" class="continue-shopping">← Continue Shopping</a>
+                </div>
+            </div>
+            
+            <!-- Order Summary Column -->
+            <div class="col-lg-4">
+                <div class="order-summary">
+                    <h3 class="summary-title">Order Summary</h3>
+                    
+                    <div class="summary-row">
+                        <span class="summary-label">Subtotal</span>
+                        <span class="summary-value">Rs. {{ "{:,.0f}".format(total) }}</span>
+                    </div>
+                    <div class="summary-row">
+                        <span class="summary-label">Shipping</span>
+                        <span class="summary-value">Rs. 200</span>
+                    </div>
+                    <div class="summary-row">
+                        <span class="summary-label">Tax</span>
+                        <span class="summary-value">Included</span>
+                    </div>
+                    
+                    <div class="summary-row total">
+                        <span class="summary-label">Total</span>
+                        <span class="summary-value total">Rs. {{ "{:,.0f}".format(total + 200) }}</span>
+                    </div>
+                    
+                    <form action="/checkout" method="GET">
+                        <button type="submit" class="checkout-btn">Proceed to Checkout →</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        {% else %}
+        <!-- Empty Cart -->
+        <div class="empty-cart">
+            <div class="empty-cart-icon">🛒</div>
+            <h3>Your cart is empty</h3>
+            <p>Looks like you haven't added any fragrances yet.</p>
+            <a href="/" class="shop-now-btn">Explore Perfumes →</a>
+        </div>
+        {% endif %}
+    </div>
+</section>
+
+<script>
+    function updateQuantity(btn, change) {
+        const input = btn.parentElement.querySelector('.quantity-input');
+        let newValue = parseInt(input.value) + change;
+        if (newValue >= 1) {
+            input.value = newValue;
+            input.form.submit();
+        }
+    }
+</script>
+{% endblock %}

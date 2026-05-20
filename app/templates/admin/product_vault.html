@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Luxe Scent | Inventory Vault</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <style>
+        :root { 
+            --bg: #050505; --surface: #111112; --accent: #c4a27a; 
+            --text-main: #ffffff; --text-dim: #8b8b93; 
+            --border: rgba(255, 255, 255, 0.06); --glass: rgba(255, 255, 255, 0.03);
+        }
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; }
+        body { background: var(--bg); color: var(--text-main); min-height: 100vh; display: flex; justify-content: center; }
+        
+        .main-container { width: 100%; max-width: 1200px; padding: 60px 20px; }
+
+        .vault-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 40px; border-bottom: 1px solid var(--border); padding-bottom: 20px; }
+        .vault-header h1 { font-size: 2.5rem; font-weight: 800; letter-spacing: -1.5px; }
+        .back-link { color: var(--accent); text-decoration: none; font-size: 0.8rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; }
+
+        .quick-metrics { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-bottom: 40px; }
+        .metric-tile { background: var(--glass); border: 1px solid var(--border); padding: 20px; border-radius: 16px; text-align: center; }
+        .metric-tile span { font-size: 0.7rem; color: var(--text-dim); text-transform: uppercase; }
+        .metric-tile h3 { font-size: 1.4rem; color: var(--accent); margin-top: 5px; }
+
+        .glass-card { 
+            background: var(--surface); border: 1px solid var(--border); border-radius: 28px; 
+            padding: 35px; margin-bottom: 50px; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        }
+        .form-row { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 15px; margin-bottom: 15px; }
+        .input-box { display: flex; flex-direction: column; gap: 8px; }
+        .input-box label { font-size: 0.65rem; font-weight: 800; color: var(--text-dim); text-transform: uppercase; }
+        
+        input, textarea { 
+            background: #000; border: 1px solid var(--border); color: white; 
+            padding: 12px 15px; border-radius: 10px; font-size: 0.9rem; 
+        }
+        input:focus { border-color: var(--accent); outline: none; }
+
+        .search-bar { width: 100%; padding: 15px; background: var(--glass); border: 1px solid var(--border); border-radius: 12px; color: white; margin-bottom: 20px; }
+        
+        .table-wrap { background: var(--surface); border-radius: 20px; border: 1px solid var(--border); overflow-x: auto; }
+        table { width: 100%; border-collapse: collapse; }
+        th { padding: 18px; text-align: left; color: var(--text-dim); font-size: 0.65rem; text-transform: uppercase; background: rgba(255,255,255,0.01); }
+        td { padding: 18px; border-top: 1px solid var(--border); font-size: 0.9rem; vertical-align: middle; }
+
+        .btn-deploy { 
+            background: var(--accent); color: #000; border: none; padding: 15px; 
+            border-radius: 12px; cursor: pointer; font-weight: 800; width: 100%; transition: 0.3s;
+        }
+        .btn-deploy:hover { transform: scale(1.01); filter: brightness(1.1); }
+        
+        .btn-del { 
+            background: #ff4757; color: white; border: none; padding: 8px 16px; 
+            border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 0.75rem;
+        }
+        .btn-del:hover { background: #ff3333; transform: translateY(-1px); }
+        
+        .btn-update-stock {
+            background: #2c3e50; color: white; border: none; padding: 8px 16px;
+            border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 0.75rem;
+            margin-right: 8px;
+        }
+        .btn-update-stock:hover { background: #34495e; }
+        
+        .stock-form {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+        
+        .stock-input {
+            width: 80px;
+            padding: 6px 10px;
+            background: #000;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            color: white;
+            font-size: 0.8rem;
+        }
+        
+        .stock-input:focus {
+            border-color: var(--accent);
+            outline: none;
+        }
+        
+        .btn-save-stock {
+            background: #10b981;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.7rem;
+            font-weight: 600;
+        }
+        
+        .btn-save-stock:hover { background: #059669; }
+        
+        .btn-cancel {
+            background: #6b7280;
+            padding: 6px 12px;
+        }
+        
+        .btn-cancel:hover { background: #4b5563; }
+        
+        .product-image {
+            width: 60px;
+            height: 60px;
+            object-fit: cover;
+            border-radius: 8px;
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 60px;
+            color: var(--text-dim);
+        }
+        
+        .message {
+            background: rgba(196, 162, 122, 0.1);
+            border: 1px solid var(--accent);
+            color: var(--accent);
+            padding: 12px 20px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+    </style>
+</head>
+<body>
+    <div class="main-container">
+        <header class="vault-header">
+            <div>
+                <a href="/admin-dashboard" class="back-link">← Return to Dashboard</a>
+                <h1>Scent Vault</h1>
+            </div>
+            <div style="text-align: right;">
+                <p style="color: var(--text-dim); font-size: 0.8rem;">Authorized Access Only</p>
+                <p style="font-weight: 800; color: var(--accent);">V.2.0.6</p>
+            </div>
+        </header>
+
+        {% if message %}
+        <div class="message">{{ message }}</div>
+        {% endif %}
+
+        <section class="glass-card">
+            <form action="/admin/add-product" method="POST" enctype="multipart/form-data">
+                <div class="form-row">
+                    <div class="input-box">
+                        <label>Scent Name</label>
+                        <input type="text" name="name" placeholder="E.g. Golden Amber" required>
+                    </div>
+                    <div class="input-box">
+                        <label>Gender</label>
+                        <input type="text" name="gender" placeholder="male/female/unisex" required>
+                    </div>
+                    <div class="input-box">
+                        <label>Price (Rs.)</label>
+                        <input type="number" name="price" placeholder="900" required>
+                    </div>
+                    <div class="input-box">
+                        <label>Stock</label>
+                        <input type="number" name="stock" placeholder="5 or 10" required>
+                    </div>
+                </div>
+                <div class="input-box" style="margin-bottom: 20px;">
+                    <label>Profile Description</label>
+                    <input type="text" name="description" placeholder="Describe the notes and feel..." required>
+                </div>
+                <div class="input-box" style="margin-bottom: 25px;">
+                    <label>Upload Imagery</label>
+                    <input type="file" name="perf_image" accept="image/*" required style="border: 1px dashed var(--accent);">
+                </div>
+                <button type="submit" class="btn-deploy">Deploy to Marketplace</button>
+            </form>
+        </section>
+
+        <input type="text" id="vaultSearch" class="search-bar" placeholder="Filter scents by name..." onkeyup="filterTable()">
+        
+        <div class="table-wrap">
+            <table id="vaultTable" class="modern-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Price</th>
+                        <th>Stock</th>
+                        <th>Image</th>
+                        <th style="text-align: center;">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% if products %}
+                        {% for product in products %}
+                        <tr id="row-{{ product.id }}">
+                            <td>{{ product.id }}</td>
+                            <td><strong>{{ product.name }}</strong></td>
+                            <td>Rs. {{ product.price }}</td>
+                            <td id="stock-cell-{{ product.id }}">
+                                {% if product.stock > 10 %}
+                                    <span style="color: #10b981;">{{ product.stock }} units</span>
+                                {% elif product.stock > 0 %}
+                                    <span style="color: #f59e0b;">{{ product.stock }} units</span>
+                                {% else %}
+                                    <span style="color: #ff4757;">Out of Stock</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if product.image %}
+                                    <img src="{{ product.image }}" alt="{{ product.name }}" class="product-image">
+                                {% else %}
+                                    <span style="color: var(--text-dim);">No image</span>
+                                {% endif %}
+                            </td>
+                            <td style="text-align: center;">
+                                <div class="action-buttons">
+                                    <button class="btn-update-stock" onclick="showStockForm('{{ product.id }}')">Update Stock</button>
+                                    <form action="/admin/delete-product/{{ product.id }}" method="POST" style="display: inline;">
+                                        <button type="submit" class="btn-del">Delete</button>
+                                    </form>
+                                </div>
+                                <div id="stock-form-{{ product.id }}" style="display: none; margin-top: 10px;">
+                                    <form action="/admin/update-stock/{{ product.id }}" method="POST" class="stock-form">
+                                        <input type="number" name="new_stock" class="stock-input" value="{{ product.stock }}" min="0" required>
+                                        <button type="submit" class="btn-save-stock">Save</button>
+                                        <button type="button" class="btn-save-stock btn-cancel" onclick="hideStockForm('{{ product.id }}')">Cancel</button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    {% else %}
+                        <tr>
+                            <td colspan="6" class="empty-state">No products found. Add your first product above!</td>
+                        </tr>
+                    {% endif %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        function filterTable() {
+            let input = document.getElementById("vaultSearch");
+            let filter = input.value.toUpperCase();
+            let table = document.getElementById("vaultTable");
+            let tr = table.getElementsByTagName("tr");
+
+            for (let i = 1; i < tr.length; i++) {
+                let td = tr[i].getElementsByTagName("td")[0];
+                if (td) {
+                    let txtValue = td.textContent || td.innerText;
+                    tr[i].style.display = txtValue.toUpperCase().indexOf(filter) > -1 ? "" : "none";
+                }
+            }
+        }
+        
+        function showStockForm(productId) {
+            document.getElementById('stock-form-' + productId).style.display = 'block';
+        }
+        
+        function hideStockForm(productId) {
+            document.getElementById('stock-form-' + productId).style.display = 'none';
+        }
+        
+        // Auto-hide message after 5 seconds
+        setTimeout(function() {
+            const msgBox = document.querySelector('.message');
+            if (msgBox) {
+                msgBox.style.transition = 'opacity 0.5s';
+                msgBox.style.opacity = '0';
+                setTimeout(() => msgBox.remove(), 500);
+            }
+        }, 5000);
+    </script>
+</body>
+</html>

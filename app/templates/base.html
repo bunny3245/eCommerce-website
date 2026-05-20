@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Perfumania | Luxury Perfume Store{% endblock %}</title>
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <link href="/static/style.css" rel="stylesheet">
+</head>
+<body>
+
+    <nav class="navbar navbar-expand-lg fixed-top">
+        <div class="container d-flex align-items-center">
+            
+            <button class="navbar-toggler border-0 px-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <i class="fas fa-bars text-dark fs-4"></i>
+            </button>
+
+            <a class="navbar-brand brand-luxury mx-auto mx-lg-0" href="/">
+                Perfumania<span class="brand-dot">.</span>
+            </a>
+
+            <div class="collapse navbar-collapse justify-content-center" id="navbarNav">
+                <ul class="navbar-nav gap-4">
+                    <li class="nav-item"><a class="nav-link" href="/shop">Shop</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/collection">Collections</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/about">Our Story</a></li>
+                </ul>
+            </div>
+
+            <div class="d-flex align-items-center gap-3">
+                <!-- User Account Dropdown -->
+                <div class="dropdown">
+                    <button class="btn btn-link text-dark text-decoration-none p-0 dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="fas fa-user-circle fs-4"></i>
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end rounded-4 shadow-sm border-0 mt-2">
+                        {% if request.session.get('role') == 'customer' %}
+                            <li class="px-3 py-2 border-bottom">
+                                <small class="text-muted d-block">{{ request.session.get('customer_name') }}</small>
+                                <small class="text-muted" style="font-size: 0.7rem;">{{ request.session.get('customer_email') }}</small>
+                            </li>
+                            
+                            <!-- Admin Menu (only visible to admin users) -->
+                            {% if request.session.get('role') == 'admin' %}
+                            <li><a class="dropdown-item py-2" href="/admin/dashboard"><i class="fas fa-chart-line me-2"></i> Dashboard</a></li>
+                            <li><a class="dropdown-item py-2" href="/admin/orders"><i class="fas fa-truck me-2"></i> Manage Orders</a></li>
+                            <li><a class="dropdown-item py-2" href="/admin/products"><i class="fas fa-box me-2"></i> Manage Products</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            {% endif %}
+                            
+                            <!-- Customer Menu (everyone sees) -->
+                            <li><a class="dropdown-item py-2" href="/orders"><i class="fas fa-box me-2"></i> My Orders</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item py-2 text-danger" href="/auths/logout"><i class="fas fa-sign-out-alt me-2"></i> Logout</a></li>
+                        {% else %}
+                            <li><a class="dropdown-item py-2" href="/auths/login"><i class="fas fa-sign-in-alt me-2"></i> Sign In</a></li>
+                            <li><a class="dropdown-item py-2" href="/auths/login"><i class="fas fa-user-plus me-2"></i> Create Account</a></li>
+                        {% endif %}
+                    </ul>
+                </div>
+
+                <!-- Cart Icon -->
+                <a href="/cart" class="position-relative text-dark text-decoration-none fs-5">
+                    <i class="fas fa-shopping-bag"></i>
+                    {% if cart_count and cart_count > 0 %}
+                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-dark" style="font-size: 0.6rem; padding: 0.35em 0.5em;">
+                        {{ cart_count }}
+                    </span>
+                    {% endif %}
+                </a>
+            </div>
+            
+        </div>
+    </nav>
+
+    <main>
+        {% block content %}
+        {% endblock %}
+    </main>
+
+    <footer class="text-center py-5" style="background-color: var(--forest-dark); color: var(--bg-main);">
+        <h3 class="brand-luxury text-white mb-3 justify-content-center" style="font-size: 2.2rem;">
+            Perfumania<span class="brand-dot">.</span>
+        </h3>
+        <p class="mb-0" style="opacity: 0.6; font-size: 0.8rem; letter-spacing: 1px;">
+            &copy; 2026 PERFUMANIA BOTANICALS. ALL RIGHTS RESERVED.
+        </p>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
