@@ -1,43 +1,66 @@
-from fastapi import APIRouter, Request, Depends, Form
+from fastapi import APIRouter, Request, Depends, Form, HTTPException
 from fastapi.responses import RedirectResponse
 from sqlalchemy.orm import Session
 from app.database.db import get_db
 from app.utility import hashPassword, verifyPassword
-from app.model.tables import Admin # Ensure this is the correct import
+from app.model.tables import Admin
 from fastapi.templating import Jinja2Templates
 import os
-from fastapi.staticfiles import StaticFiles
-
 
 admin_route = APIRouter()
 
-# path to templates directory - point to app root, not app/admin
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-# templates at app/templates
-templates = Jinja2Templates(directory=os.path.join(BASE_DIR,'templates'))
+templates = Jinja2Templates(directory=os.path.join(BASE_DIR, 'templates'))
 
+
+# ========== FIX 1: Add a proper login page route ==========
+@admin_route.get('/admin/login')
+def get_login_page(request: Request, error: str = None):
+    """Show the admin login page"""
+    # If already logged in, redirect to dashboard
+    if request.session.get('admin_id'):
+        return RedirectResponse(url='/admin_dashboard', status_code=303)
+    
+    return templates.TemplateResponse(
+        request=request, 
+        name="admin/admin_login.html",  # Create this template
+        context={"error": error}
+    )
+
+
+# ========== FIX 2: Add a proper register page route ==========
 @admin_route.get('/admin/register')
-def get_register_page(request: Request):
-    # This renders the HTML file so the user can actually see it
-    return templates.TemplateResponse(request=request,name="admin/admin_auth.html")
+def get_register_page(request: Request, error: str = None):
+    """Show the admin registration page"""
+    # If already logged in, redirect to dashboard
+    if request.session.get('admin_id'):
+        return RedirectResponse(url='/admin_dashboard', status_code=303)
+    
+    return templates.TemplateResponse(
+        request=request, 
+        name="admin/admin_register.html",  # Create this template
+        context={"error": error}
+    )
 
 
 @admin_route.post('/admin/register')
 async def register(request: Request, db: Session = Depends(get_db)):
     form_data = await request.form()
     
-    # Matching the HTML 'name' attributes exactly
     username = form_data.get('full_name')
     email = form_data.get('email')
     password = form_data.get('password')
 
+    # Validate input
+    if not username or not email or not password:
+        return RedirectResponse(url='/admin/register?error=All%20fields%20required', status_code=303)
+
     existing = db.query(Admin).filter(Admin.email == email).first()
     if existing:
-        return RedirectResponse(url='/auth?error=Email%20already%20registered', status_code=303)
+        return RedirectResponse(url='/admin/register?error=Email%20already%20registered', status_code=303)
 
     hashed_password = hashPassword(password)
 
-    # FIX: Use Admin model here, not Customer
     new_admin = Admin(
         name=username,
         email=email,
@@ -49,7 +72,7 @@ async def register(request: Request, db: Session = Depends(get_db)):
     db.commit()
     db.refresh(new_admin)
 
-    # Session Management
+    # Set session
     request.session['admin_id'] = new_admin.id
     request.session['admin_name'] = new_admin.name
     request.session['role'] = new_admin.role
@@ -61,15 +84,18 @@ async def register(request: Request, db: Session = Depends(get_db)):
 async def login(request: Request, db: Session = Depends(get_db)):
     form_data = await request.form()
     
-    # FIX: Your HTML sent 'username' for the email field. We match that here.
     email = form_data.get('username') 
     password = form_data.get('password')
+
+    if not email or not password:
+        return RedirectResponse(url='/admin/login?error=Email%20and%20password%20required', status_code=303)
 
     user = db.query(Admin).filter(Admin.email == email).first()
 
     if not user or not verifyPassword(password, user.password):
-        return RedirectResponse(url='/auth?error=Invalid%20credentials', status_code=303)
+        return RedirectResponse(url='/admin/login?error=Invalid%20credentials', status_code=303)
 
+    # Set session
     request.session['admin_id'] = user.id
     request.session['admin_name'] = user.name
     request.session['role'] = user.role
@@ -77,8 +103,7 @@ async def login(request: Request, db: Session = Depends(get_db)):
     return RedirectResponse(url='/admin_dashboard', status_code=303)
 
 
-@admin_route.get('/logout')
+@admin_route.get('/admin/logout')
 async def logout(request: Request):
-    # FIX: .pop() requires a key or use .clear()
     request.session.clear() 
-    return RedirectResponse(url='/', status_code=303)
+    return RedirectResponse(url='/admin/login', status_code=303)  # Redirect to login, not home
