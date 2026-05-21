@@ -223,14 +223,15 @@ async def confirm_order(
     db: Session = Depends(get_db)
 ):
     if not request.session.get('customer_id'):
-       return RedirectResponse(url='/login',status_code=403)
+       return RedirectResponse(url='/login', status_code=403)
     
-    # get current user id
+    # ✅ FIX 1: session se sahi customer_id lo, hardcoded 1 nahi
     customer_id = request.session.get('customer_id')
+
     # 1. Get cart
     cart = db.query(Cart).filter(Cart.customer_id == customer_id).first()
     if not cart:
-        return {"error": "No cart found"}  # need to use flashes messages
+        return RedirectResponse(url='/cart', status_code=303)
     
     # 2. Get cart items
     result = db.execute(text("""
@@ -243,14 +244,14 @@ async def confirm_order(
     cart_items = result.fetchall()
     
     if not cart_items:
-        return {"error": "Cart is empty"}
+        return RedirectResponse(url='/cart', status_code=303)
     
     # 3. Calculate total
     total = sum(item[4] for item in cart_items)
     
-    # 4. Create order with customer details
+    # 4. ✅ FIX 2: customer_id=1 tha, ab session wala use ho raha hai
     order = Order(
-        customer_id=1,
+        customer_id=customer_id,
         customer_name=name,
         customer_email=email,
         customer_phone=phone,
@@ -277,17 +278,13 @@ async def confirm_order(
     db.execute(text("DELETE FROM cart_items WHERE cart_id = :cart_id"), {"cart_id": cart.id})
     db.commit()
     
-    
     try:
         await orderConfirmationEmail(email, order.id, name)
-      #   await orderConfirmationEmail('add business email or something to send email manager as well')
     except Exception as e:
-        print("Email not sent - configure email first: Error",e)
-        HTTPException(status_code=302,detail='Email failed!')
+        print("Email not sent - configure email first: Error", e)
     
-    # 8. Return confirmation page
-    return templates.TemplateResponse(request = request, name= "order_confirmation.html",context = {
-        "request": request,
+    # 7. Return confirmation page
+    return templates.TemplateResponse(request=request, name="order_confirmation.html", context={
         "order_id": order.id,
         "customer_name": name,
         "email": email,
@@ -309,11 +306,11 @@ def myOrders(request: Request, db: Session = Depends(get_db)):
    my_orders = []
    
    try:
+      # ✅ FIX 3: products JOIN hataya kyunki order_items mein product_id nahi hota
       result = db.execute(text("""
-         SELECT o.id, oi.product_name, oi.product_price, o.created_at, (oi.product_price * oi.quantity) as subtotal, p.image
+         SELECT o.id, oi.product_name, oi.product_price, o.created_at, (oi.product_price * oi.quantity) as subtotal
          FROM order_items oi 
          JOIN orders o ON o.id = oi.order_id
-         JOIN products p ON p.id = oi.product_id
          WHERE o.customer_id = :customer_id 
          ORDER BY o.created_at DESC
       """), {
@@ -327,7 +324,6 @@ def myOrders(request: Request, db: Session = Depends(get_db)):
 
    except Exception as e:
       print('Error fetching orders:', e)
-      # Optionally add flash message here
 
    return templates.TemplateResponse(request=request, name='myorders.html', context={
       'my_orders': my_orders
@@ -408,4 +404,3 @@ def product(product_id: int, request: Request, db: Session = Depends(get_db)):
             'cart_count': cart_count
         }
     )
-
