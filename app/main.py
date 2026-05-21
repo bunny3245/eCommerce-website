@@ -279,7 +279,10 @@ async def confirm_order(
     db.execute(text("DELETE FROM cart_items WHERE cart_id = :cart_id"), {"cart_id": cart.id})
     db.commit()
     
-   background_tasks.add_task(orderConfirmationEmail, email, order.id, name)
+try:
+    await orderConfirmationEmail(email, order.id, name)
+except Exception as e:
+    print("Email not sent - configure email first: Error", e)
 
     # 7. Return confirmation page
     return templates.TemplateResponse(request=request, name="order_confirmation.html", context={
