@@ -4,10 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Perfumania | Luxury Perfume Store{% endblock %}</title>
-
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
     <link href="/static/style.css" rel="stylesheet">
     <link rel="icon" type="image/x-icon" href="/static/favicon/favicon.ico">
     <link rel="icon" type="image/png" sizes="16x16" href="/static/favicon/favicon-16x16.png">
@@ -17,32 +16,35 @@
     <link rel="icon" type="image/png" sizes="512x512" href="/static/favicon/android-chrome-512x512.png">
     <style>
         :root {
-            --blush-bg: #f5e6e0;
-            --blush-mid: #eecfc4;
-            --rose:     #c8836e;
-            --rose-dark:#a0614e;
-            --ink:      #2b1f1a;
-            --ink-soft: #7a5c52;
-            --white:    #fffaf8;
-            --border:   rgba(43,31,26,0.12);
-            --font-display: 'Cormorant Garamond', serif;
-            --font-body:    'Jost', sans-serif;
-            --nav-h: 68px;
+            --sand:      #e8ddd0;
+            --sand-dark: #d4c4b0;
+            --warm-bg:   #f0ebe3;
+            --card-bg:   #faf7f3;
+            --gold:      #b8956a;
+            --gold-dark: #9a7550;
+            --ink:       #1c1610;
+            --ink-mid:   #4a3f32;
+            --ink-soft:  #8a7a6a;
+            --white:     #fdfaf6;
+            --border:    rgba(28,22,16,0.10);
+            --font-display: 'Playfair Display', serif;
+            --font-body:    'Outfit', sans-serif;
+            --nav-h: 72px;
         }
-
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
+        html { scroll-behavior: smooth; }
         body {
-            background: var(--blush-bg);
+            background: var(--warm-bg);
             color: var(--ink);
             font-family: var(--font-body);
             font-size: 15px;
             font-weight: 300;
             padding-top: var(--nav-h);
             min-height: 100vh;
+            -webkit-font-smoothing: antialiased;
         }
 
-        /* NAVBAR */
+        /* ── NAVBAR ── */
         .site-nav {
             position: fixed;
             top: 0; left: 0;
@@ -51,13 +53,17 @@
             height: var(--nav-h);
             background: var(--white);
             border-bottom: 1px solid var(--border);
-            transition: box-shadow 0.3s;
+            transition: box-shadow 0.3s, background 0.3s;
         }
-        .site-nav.scrolled { box-shadow: 0 4px 24px rgba(43,31,26,0.08); }
+        .site-nav.scrolled {
+            box-shadow: 0 2px 32px rgba(28,22,16,0.10);
+            background: rgba(253,250,246,0.97);
+            backdrop-filter: blur(16px);
+        }
         .nav-inner {
-            max-width: 1280px;
+            max-width: 1320px;
             margin: 0 auto;
-            padding: 0 32px;
+            padding: 0 40px;
             height: 100%;
             display: grid;
             grid-template-columns: 1fr auto 1fr;
@@ -65,52 +71,51 @@
         }
         .nav-brand {
             font-family: var(--font-display);
-            font-size: 1.55rem;
-            font-weight: 400;
-            letter-spacing: 3px;
+            font-size: 1.5rem;
+            font-weight: 700;
+            letter-spacing: 2px;
             color: var(--ink);
             text-decoration: none;
             text-transform: uppercase;
             justify-self: start;
-            line-height: 1;
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 10px;
         }
-        .nav-brand img { height: 32px; width: 32px; object-fit: contain; }
-        .nav-brand .dot { color: var(--rose); }
+        .nav-brand img { height: 30px; width: 30px; object-fit: contain; }
+        .nav-brand .dot { color: var(--gold); }
         .nav-links {
             display: flex;
-            gap: 2.4rem;
+            gap: 2.8rem;
             list-style: none;
             align-items: center;
         }
         .nav-links a {
             font-family: var(--font-body);
             font-size: 13px;
-            font-weight: 400;
-            letter-spacing: 1.5px;
+            font-weight: 500;
+            letter-spacing: 1px;
             text-transform: uppercase;
-            color: var(--ink-soft);
+            color: var(--ink-mid);
             text-decoration: none;
             position: relative;
-            padding-bottom: 3px;
+            padding-bottom: 4px;
             transition: color 0.2s;
         }
         .nav-links a::after {
             content: '';
             position: absolute;
             bottom: 0; left: 0;
-            width: 0; height: 1px;
-            background: var(--rose);
-            transition: width 0.28s ease;
+            width: 0; height: 1.5px;
+            background: var(--gold);
+            transition: width 0.3s ease;
         }
         .nav-links a:hover { color: var(--ink); }
         .nav-links a:hover::after { width: 100%; }
         .nav-actions {
             display: flex;
             align-items: center;
-            gap: 18px;
+            gap: 20px;
             justify-self: end;
         }
         .nav-action-btn {
@@ -118,74 +123,85 @@
             border: none;
             padding: 0;
             cursor: pointer;
-            color: var(--ink-soft);
-            font-size: 1.05rem;
+            color: var(--ink-mid);
+            font-size: 1rem;
             transition: color 0.2s;
             position: relative;
-            line-height: 1;
             text-decoration: none;
             display: flex;
             align-items: center;
         }
-        .nav-action-btn:hover { color: var(--rose); }
+        .nav-action-btn:hover { color: var(--gold); }
         .cart-badge {
             position: absolute;
-            top: -6px; right: -8px;
-            background: var(--rose);
+            top: -7px; right: -9px;
+            background: var(--gold);
             color: #fff;
             font-size: 9px;
-            font-weight: 500;
-            width: 16px; height: 16px;
+            font-weight: 600;
+            width: 17px; height: 17px;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
         }
+
+        /* Dropdown */
         .nav-dropdown { position: relative; }
         .nav-dropdown-menu {
             position: absolute;
-            top: calc(100% + 16px);
+            top: calc(100% + 18px);
             right: 0;
             background: var(--white);
             border: 1px solid var(--border);
-            border-radius: 6px;
-            box-shadow: 0 16px 48px rgba(43,31,26,0.12);
-            min-width: 210px;
+            border-radius: 8px;
+            box-shadow: 0 20px 60px rgba(28,22,16,0.14);
+            min-width: 220px;
             display: none;
             z-index: 2000;
             padding: 8px 0;
+            overflow: hidden;
         }
-        .nav-dropdown-menu.open { display: block; animation: fadeDown 0.18s ease; }
-        @keyframes fadeDown {
-            from { opacity: 0; transform: translateY(-6px); }
+        .nav-dropdown-menu.open { display: block; animation: ddIn 0.18s ease; }
+        @keyframes ddIn {
+            from { opacity: 0; transform: translateY(-8px); }
             to   { opacity: 1; transform: translateY(0); }
         }
         .dd-user-info {
-            padding: 12px 18px 10px;
+            padding: 14px 20px 12px;
             border-bottom: 1px solid var(--border);
             margin-bottom: 6px;
+            background: var(--warm-bg);
         }
-        .dd-user-name { font-family: var(--font-display); font-size: 16px; font-weight: 400; color: var(--ink); display: block; }
-        .dd-user-email { font-size: 11px; color: var(--ink-soft); display: block; margin-top: 1px; }
+        .dd-user-name {
+            font-family: var(--font-display);
+            font-size: 15px;
+            font-weight: 400;
+            color: var(--ink);
+            display: block;
+        }
+        .dd-user-email { font-size: 11px; color: var(--ink-soft); display: block; margin-top: 2px; }
         .dd-item {
             display: flex;
             align-items: center;
             gap: 10px;
-            padding: 9px 18px;
+            padding: 10px 20px;
             font-size: 12px;
-            letter-spacing: 1px;
+            letter-spacing: 0.8px;
             text-transform: uppercase;
-            color: var(--ink-soft);
+            color: var(--ink-mid);
             text-decoration: none;
             font-family: var(--font-body);
             font-weight: 400;
             transition: background 0.15s, color 0.15s;
         }
-        .dd-item i { font-size: 13px; color: var(--rose); width: 14px; }
-        .dd-item:hover { background: var(--blush-bg); color: var(--ink); }
-        .dd-item.danger { color: #b94040; }
-        .dd-item.danger i { color: #b94040; }
+        .dd-item i { font-size: 12px; color: var(--gold); width: 14px; }
+        .dd-item:hover { background: var(--warm-bg); color: var(--ink); }
+        .dd-item.danger { color: #c0392b; }
+        .dd-item.danger i { color: #c0392b; }
         .dd-divider { border: none; border-top: 1px solid var(--border); margin: 6px 0; }
+
+        /* Hamburger */
         .nav-hamburger {
             display: none;
             background: none;
@@ -199,326 +215,276 @@
             display: none;
             position: fixed;
             top: var(--nav-h);
-            left: 0;
-            width: 100%;
+            left: 0; width: 100%;
             background: var(--white);
             border-bottom: 1px solid var(--border);
             z-index: 999;
-            padding: 20px 28px 28px;
+            padding: 24px 32px 32px;
         }
         .mobile-drawer.open { display: block; }
         .mobile-drawer ul { list-style: none; padding: 0; margin: 0; }
         .mobile-drawer ul a {
             display: block;
-            padding: 13px 0;
+            padding: 14px 0;
             font-size: 13px;
             letter-spacing: 1.5px;
             text-transform: uppercase;
-            color: var(--ink-soft);
+            color: var(--ink-mid);
             text-decoration: none;
             border-bottom: 1px solid var(--border);
             font-family: var(--font-body);
+            font-weight: 500;
             transition: color 0.2s;
         }
-        .mobile-drawer ul a:hover { color: var(--rose); }
+        .mobile-drawer ul a:hover { color: var(--gold); }
 
         main { min-height: 65vh; }
 
-        /* FOOTER */
+        /* ── FOOTER ── */
         .site-footer {
             background: var(--ink);
-            color: rgba(255,250,248,0.5);
-            padding: 56px 32px 0;
-            margin-top: 80px;
+            color: rgba(253,250,246,0.45);
+            padding: 64px 40px 0;
+            margin-top: 100px;
         }
         .footer-grid {
-            max-width: 1280px;
+            max-width: 1320px;
             margin: 0 auto;
             display: grid;
-            grid-template-columns: 1.8fr 1fr 1fr 1fr;
-            gap: 40px;
-            padding-bottom: 40px;
-            border-bottom: 1px solid rgba(255,250,248,0.08);
+            grid-template-columns: 2fr 1fr 1fr 1fr;
+            gap: 48px;
+            padding-bottom: 48px;
+            border-bottom: 1px solid rgba(253,250,246,0.08);
         }
+        .footer-brand-wrap { }
         .footer-brand {
             font-family: var(--font-display);
             font-size: 1.8rem;
-            font-weight: 300;
-            letter-spacing: 5px;
+            font-weight: 700;
+            letter-spacing: 3px;
             color: var(--white);
             text-transform: uppercase;
             display: flex;
             align-items: center;
             gap: 10px;
-            margin-bottom: 12px;
+            margin-bottom: 14px;
         }
-        .footer-brand img {
-            height: 28px; width: 28px;
-            object-fit: contain;
-            filter: brightness(10);
-        }
-        .footer-brand .dot { color: var(--rose); }
+        .footer-brand img { height: 28px; width: 28px; object-fit: contain; filter: brightness(10); }
+        .footer-brand .dot { color: var(--gold); }
         .footer-tagline {
             font-size: 13px;
             line-height: 1.9;
-            max-width: 220px;
+            max-width: 240px;
             font-weight: 300;
-            margin-bottom: 24px;
+            margin-bottom: 28px;
         }
-
-        /* Social icons */
-        .footer-socials {
-            display: flex;
-            gap: 12px;
-            align-items: center;
-        }
+        .footer-socials { display: flex; gap: 10px; }
         .social-btn {
-            width: 36px; height: 36px;
+            width: 38px; height: 38px;
             border-radius: 50%;
-            border: 1px solid rgba(255,250,248,0.15);
+            border: 1px solid rgba(253,250,246,0.15);
             display: flex;
             align-items: center;
             justify-content: center;
-            color: rgba(255,250,248,0.5);
+            color: rgba(253,250,246,0.45);
             text-decoration: none;
             font-size: 14px;
             transition: all 0.22s ease;
         }
         .social-btn:hover {
-            border-color: var(--rose);
-            color: var(--rose);
-            background: rgba(200,131,110,0.1);
+            border-color: var(--gold);
+            color: var(--gold);
+            background: rgba(184,149,106,0.1);
             transform: translateY(-2px);
         }
         .social-btn.whatsapp:hover {
             border-color: #25D366;
             color: #25D366;
-            background: rgba(37,211,102,0.1);
+            background: rgba(37,211,102,0.08);
         }
-
         .footer-col-title {
             font-size: 10px;
             letter-spacing: 2.5px;
             text-transform: uppercase;
             color: var(--white);
-            font-weight: 500;
-            margin-bottom: 18px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            font-family: var(--font-body);
         }
-        .footer-links { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 11px; }
+        .footer-links { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 12px; }
         .footer-links a {
-            color: rgba(255,250,248,0.45);
+            color: rgba(253,250,246,0.4);
             text-decoration: none;
             font-size: 13px;
-            letter-spacing: 0.5px;
+            letter-spacing: 0.3px;
             transition: color 0.2s;
             font-weight: 300;
         }
-        .footer-links a:hover { color: var(--rose); }
-
+        .footer-links a:hover { color: var(--gold); }
+        .footer-links i { margin-right: 7px; font-size: 12px; }
         .footer-bottom {
-            max-width: 1280px;
+            max-width: 1320px;
             margin: 0 auto;
-            padding: 20px 0 28px;
+            padding: 22px 0 30px;
             display: flex;
             justify-content: space-between;
             align-items: center;
             font-size: 10px;
             letter-spacing: 1.5px;
             text-transform: uppercase;
-            color: rgba(255,250,248,0.3);
+            color: rgba(253,250,246,0.25);
         }
 
         /* RESPONSIVE */
+        @media (max-width: 1024px) {
+            .footer-grid { grid-template-columns: 1fr 1fr; gap: 36px; }
+        }
         @media (max-width: 991px) {
             .nav-links { display: none; }
             .nav-hamburger { display: block; }
-            .nav-inner { grid-template-columns: auto 1fr auto; gap: 12px; }
-            .nav-brand { justify-self: start; }
-            .nav-actions { justify-self: end; }
-            .footer-grid { grid-template-columns: 1fr 1fr; gap: 32px; }
+            .nav-inner { grid-template-columns: auto 1fr auto; padding: 0 24px; }
         }
         @media (max-width: 576px) {
             .nav-inner { padding: 0 20px; }
-            .site-footer { padding: 40px 20px 0; }
+            .site-footer { padding: 48px 20px 0; }
             .footer-grid { grid-template-columns: 1fr; gap: 28px; }
             .footer-bottom { flex-direction: column; gap: 8px; text-align: center; padding: 16px 0 24px; }
         }
     </style>
-
     {% block extra_head %}{% endblock %}
 </head>
 <body>
 
-    <nav class="site-nav" id="siteNav">
-        <div class="nav-inner">
-
-            <a class="nav-brand" href="/">
-                <img src="/static/favicon/favicon-32x32.png" alt="Perfumania">
-                Perfumania<span class="dot">.</span>
-            </a>
-
-            <ul class="nav-links">
-                <li><a href="/shop">Shop</a></li>
-                <li><a href="/collection">Collections</a></li>
-                <li><a href="/about">Our Story</a></li>
-            </ul>
-
-            <div class="nav-actions">
-                <div class="nav-dropdown">
-                    <button class="nav-action-btn" onclick="toggleDd(event)" aria-label="Account">
-                        <i class="fas fa-user"></i>
-                    </button>
-                    <div class="nav-dropdown-menu" id="accountDd">
-                        {% if request.session.get('role') == 'customer' %}
-                            <div class="dd-user-info">
-                                <span class="dd-user-name">{{ request.session.get('customer_name') }}</span>
-                                <span class="dd-user-email">{{ request.session.get('customer_email') }}</span>
-                            </div>
-                            {% if request.session.get('role') == 'admin' %}
-                                <a class="dd-item" href="/admin_dashboard"><i class="fas fa-chart-line"></i> Dashboard</a>
-                                <a class="dd-item" href="/admin/products-vault"><i class="fas fa-box"></i> Products</a>
-                                <hr class="dd-divider">
-                            {% endif %}
-                            <a class="dd-item" href="/orders"><i class="fas fa-box-open"></i> My Orders</a>
-                            <hr class="dd-divider">
-                            <a class="dd-item danger" href="/auths/logout"><i class="fas fa-sign-out-alt"></i> Logout</a>
-                        {% else %}
-                            <a class="dd-item" href="/auths/login"><i class="fas fa-sign-in-alt"></i> Sign In</a>
-                            <a class="dd-item" href="/auths/login"><i class="fas fa-user-plus"></i> Create Account</a>
-                        {% endif %}
-                    </div>
-                </div>
-
-                <a href="/cart" class="nav-action-btn" aria-label="Cart">
-                    <i class="fas fa-shopping-bag"></i>
-                    {% if cart_count and cart_count > 0 %}
-                        <span class="cart-badge">{{ cart_count }}</span>
-                    {% endif %}
-                </a>
-
-                <button class="nav-hamburger" onclick="toggleDrawer()" aria-label="Menu">
-                    <i class="fas fa-bars" id="hamburgerIcon"></i>
-                </button>
-            </div>
-        </div>
-    </nav>
-
-    <div class="mobile-drawer" id="mobileDrawer">
-        <ul>
+<nav class="site-nav" id="siteNav">
+    <div class="nav-inner">
+        <a class="nav-brand" href="/">
+            <img src="/static/favicon/favicon-32x32.png" alt="Perfumania">
+            Perfumania<span class="dot">.</span>
+        </a>
+        <ul class="nav-links">
             <li><a href="/shop">Shop</a></li>
             <li><a href="/collection">Collections</a></li>
             <li><a href="/about">Our Story</a></li>
-            <li><a href="/orders">My Orders</a></li>
-            {% if request.session.get('customer_name') %}
-                <li><a href="/auths/logout">Logout</a></li>
-            {% else %}
-                <li><a href="/auths/login">Sign In / Register</a></li>
-            {% endif %}
         </ul>
+        <div class="nav-actions">
+            <div class="nav-dropdown">
+                <button class="nav-action-btn" onclick="toggleDd(event)" aria-label="Account">
+                    <i class="fas fa-user"></i>
+                </button>
+                <div class="nav-dropdown-menu" id="accountDd">
+                    {% if request.session.get('role') == 'customer' %}
+                        <div class="dd-user-info">
+                            <span class="dd-user-name">{{ request.session.get('customer_name') }}</span>
+                            <span class="dd-user-email">{{ request.session.get('customer_email') }}</span>
+                        </div>
+                        {% if request.session.get('role') == 'admin' %}
+                            <a class="dd-item" href="/admin_dashboard"><i class="fas fa-chart-line"></i> Dashboard</a>
+                            <a class="dd-item" href="/admin/products-vault"><i class="fas fa-box"></i> Products</a>
+                            <hr class="dd-divider">
+                        {% endif %}
+                        <a class="dd-item" href="/orders"><i class="fas fa-box-open"></i> My Orders</a>
+                        <hr class="dd-divider">
+                        <a class="dd-item danger" href="/auths/logout"><i class="fas fa-sign-out-alt"></i> Logout</a>
+                    {% else %}
+                        <a class="dd-item" href="/auths/login"><i class="fas fa-sign-in-alt"></i> Sign In</a>
+                        <a class="dd-item" href="/auths/login"><i class="fas fa-user-plus"></i> Create Account</a>
+                    {% endif %}
+                </div>
+            </div>
+            <a href="/cart" class="nav-action-btn" aria-label="Cart">
+                <i class="fas fa-shopping-bag"></i>
+                {% if cart_count and cart_count > 0 %}
+                    <span class="cart-badge">{{ cart_count }}</span>
+                {% endif %}
+            </a>
+            <button class="nav-hamburger" onclick="toggleDrawer()" aria-label="Menu">
+                <i class="fas fa-bars" id="hamburgerIcon"></i>
+            </button>
+        </div>
     </div>
+</nav>
 
-    <main>
-        {% block content %}{% endblock %}
-    </main>
+<div class="mobile-drawer" id="mobileDrawer">
+    <ul>
+        <li><a href="/shop">Shop</a></li>
+        <li><a href="/collection">Collections</a></li>
+        <li><a href="/about">Our Story</a></li>
+        <li><a href="/orders">My Orders</a></li>
+        {% if request.session.get('customer_name') %}
+            <li><a href="/auths/logout">Logout</a></li>
+        {% else %}
+            <li><a href="/auths/login">Sign In / Register</a></li>
+        {% endif %}
+    </ul>
+</div>
 
-    <footer class="site-footer">
-        <div class="footer-grid">
+<main>{% block content %}{% endblock %}</main>
 
-            <!-- Brand + socials -->
-            <div>
-                <div class="footer-brand">
-                    <img src="/static/favicon/favicon-32x32.png" alt="Perfumania">
-                    Perfumania<span class="dot">.</span>
-                </div>
-                <p class="footer-tagline">Curated fragrances for those who wear their mood. Every bottle, a memory waiting to happen.</p>
-                <div class="footer-socials">
-                    <a class="social-btn" href="https://www.instagram.com/perfumania52?igsh=cGYwZnE4dzM2cTB4" target="_blank" rel="noopener" aria-label="Instagram">
-                        <i class="fab fa-instagram"></i>
-                    </a>
-                    <a class="social-btn" href="https://www.tiktok.com/@perfumania52?_r=1&_t=ZS-96dXejrrpBN" target="_blank" rel="noopener" aria-label="TikTok">
-                        <i class="fab fa-tiktok"></i>
-                    </a>
-                    <a class="social-btn" href="https://www.facebook.com/share/1S2gLmikDc/" target="_blank" rel="noopener" aria-label="Facebook">
-                        <i class="fab fa-facebook-f"></i>
-                    </a>
-                    <a class="social-btn whatsapp" href="https://wa.me/923135380892" target="_blank" rel="noopener" aria-label="WhatsApp">
-                        <i class="fab fa-whatsapp"></i>
-                    </a>
-                </div>
+<footer class="site-footer">
+    <div class="footer-grid">
+        <div class="footer-brand-wrap">
+            <div class="footer-brand">
+                <img src="/static/favicon/favicon-32x32.png" alt="Perfumania">
+                Perfumania<span class="dot">.</span>
             </div>
-
-            <!-- Explore -->
-            <div>
-                <p class="footer-col-title">Explore</p>
-                <ul class="footer-links">
-                    <li><a href="/collection">Collections</a></li>
-                    <li><a href="/shop">Shop All</a></li>
-                    <li><a href="/about">Our Story</a></li>
-                </ul>
+            <p class="footer-tagline">Curated fragrances for those who wear their mood. Every bottle, a memory waiting to happen.</p>
+            <div class="footer-socials">
+                <a class="social-btn" href="https://www.instagram.com/perfumania52?igsh=cGYwZnE4dzM2cTB4" target="_blank" rel="noopener" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                <a class="social-btn" href="https://www.tiktok.com/@perfumania52?_r=1&_t=ZS-96dXejrrpBN" target="_blank" rel="noopener" aria-label="TikTok"><i class="fab fa-tiktok"></i></a>
+                <a class="social-btn" href="https://www.facebook.com/share/1S2gLmikDc/" target="_blank" rel="noopener" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+                <a class="social-btn whatsapp" href="https://wa.me/923135380892" target="_blank" rel="noopener" aria-label="WhatsApp"><i class="fab fa-whatsapp"></i></a>
             </div>
-
-            <!-- Account -->
-            <div>
-                <p class="footer-col-title">Account</p>
-                <ul class="footer-links">
-                    <li><a href="/orders">My Orders</a></li>
-                    <li><a href="/auths/login">Sign In</a></li>
-                    <li><a href="/cart">Cart</a></li>
-                </ul>
-            </div>
-
-            <!-- Contact -->
-            <div>
-                <p class="footer-col-title">Contact</p>
-                <ul class="footer-links">
-                    <li>
-                        <a href="https://wa.me/923135380892" target="_blank" rel="noopener">
-                            <i class="fab fa-whatsapp" style="color:#25D366; margin-right:6px;"></i>+92 313 538 0892
-                        </a>
-                    </li>
-                    <li>
-                        <a href="https://www.instagram.com/perfumania52?igsh=cGYwZnE4dzM2cTB4" target="_blank" rel="noopener">
-                            <i class="fab fa-instagram" style="margin-right:6px;"></i>@perfumania52
-                        </a>
-                    </li>
-                    <li>
-                        <a href="https://www.tiktok.com/@perfumania52?_r=1&_t=ZS-96dXejrrpBN" target="_blank" rel="noopener">
-                            <i class="fab fa-tiktok" style="margin-right:6px;"></i>@perfumania52
-                        </a>
-                    </li>
-                </ul>
-            </div>
-
         </div>
-
-        <div class="footer-bottom">
-            <span>&copy; 2026 Perfumania Botanicals. All rights reserved.</span>
-            <span>Made with intention.</span>
+        <div>
+            <p class="footer-col-title">Explore</p>
+            <ul class="footer-links">
+                <li><a href="/collection">Collections</a></li>
+                <li><a href="/shop">Shop All</a></li>
+                <li><a href="/about">Our Story</a></li>
+            </ul>
         </div>
-    </footer>
+        <div>
+            <p class="footer-col-title">Account</p>
+            <ul class="footer-links">
+                <li><a href="/orders">My Orders</a></li>
+                <li><a href="/auths/login">Sign In</a></li>
+                <li><a href="/cart">Cart</a></li>
+            </ul>
+        </div>
+        <div>
+            <p class="footer-col-title">Contact</p>
+            <ul class="footer-links">
+                <li><a href="https://wa.me/923135380892" target="_blank" rel="noopener"><i class="fab fa-whatsapp" style="color:#25D366"></i>+92 313 538 0892</a></li>
+                <li><a href="https://www.instagram.com/perfumania52?igsh=cGYwZnE4dzM2cTB4" target="_blank" rel="noopener"><i class="fab fa-instagram"></i>@perfumania52</a></li>
+                <li><a href="https://www.tiktok.com/@perfumania52?_r=1&_t=ZS-96dXejrrpBN" target="_blank" rel="noopener"><i class="fab fa-tiktok"></i>@perfumania52</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="footer-bottom">
+        <span>&copy; 2026 Perfumania Botanicals. All rights reserved.</span>
+        <span>Made with intention.</span>
+    </div>
+</footer>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
-    <script>
-        function toggleDd(e) {
-            e.stopPropagation();
-            document.getElementById('accountDd').classList.toggle('open');
-        }
-        document.addEventListener('click', function() {
-            document.getElementById('accountDd').classList.remove('open');
-        });
-
-        let drawerOpen = false;
-        function toggleDrawer() {
-            drawerOpen = !drawerOpen;
-            document.getElementById('mobileDrawer').classList.toggle('open', drawerOpen);
-            document.getElementById('hamburgerIcon').className = drawerOpen ? 'fas fa-times' : 'fas fa-bars';
-        }
-
-        window.addEventListener('scroll', function() {
-            document.getElementById('siteNav').classList.toggle('scrolled', window.scrollY > 10);
-        });
-    </script>
-
-    {% block extra_scripts %}{% endblock %}
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    function toggleDd(e) {
+        e.stopPropagation();
+        document.getElementById('accountDd').classList.toggle('open');
+    }
+    document.addEventListener('click', function() {
+        document.getElementById('accountDd').classList.remove('open');
+    });
+    let drawerOpen = false;
+    function toggleDrawer() {
+        drawerOpen = !drawerOpen;
+        document.getElementById('mobileDrawer').classList.toggle('open', drawerOpen);
+        document.getElementById('hamburgerIcon').className = drawerOpen ? 'fas fa-times' : 'fas fa-bars';
+    }
+    window.addEventListener('scroll', function() {
+        document.getElementById('siteNav').classList.toggle('scrolled', window.scrollY > 10);
+    });
+</script>
+{% block extra_scripts %}{% endblock %}
 </body>
 </html>

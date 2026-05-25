@@ -5,170 +5,228 @@
 <style>
     /* ── HERO ── */
     .hero {
-        background: var(--blush-bg, #f5e6e0);
-        min-height: 88vh;
-        display: flex;
-        align-items: center;
-        padding: 80px 0 60px;
+        min-height: 92vh;
+        background: var(--warm-bg, #f0ebe3);
         position: relative;
         overflow: hidden;
+        display: flex;
+        align-items: center;
     }
-    .hero::before {
-        content: '';
+    /* big background text */
+    .hero-bg-text {
         position: absolute;
-        top: -120px; right: -120px;
-        width: 500px; height: 500px;
-        border-radius: 50%;
-        background: rgba(200,131,110,0.10);
+        bottom: -40px; left: -20px;
+        font-family: var(--font-display, 'Playfair Display', serif);
+        font-size: clamp(120px, 18vw, 220px);
+        font-weight: 900;
+        color: rgba(28,22,16,0.04);
+        line-height: 1;
+        user-select: none;
         pointer-events: none;
-    }
-    .hero::after {
-        content: '';
-        position: absolute;
-        bottom: -80px; left: -80px;
-        width: 320px; height: 320px;
-        border-radius: 50%;
-        background: rgba(200,131,110,0.07);
-        pointer-events: none;
+        white-space: nowrap;
+        letter-spacing: -4px;
     }
     .hero-inner {
-        max-width: 1280px;
+        max-width: 1320px;
         margin: 0 auto;
-        padding: 0 40px;
+        padding: 80px 40px 60px;
         display: grid;
         grid-template-columns: 1fr 1fr;
         gap: 60px;
         align-items: center;
         position: relative;
         z-index: 1;
+        width: 100%;
     }
-    .hero-eyebrow {
-        display: flex;
+    .hero-left { }
+    .hero-label {
+        display: inline-flex;
         align-items: center;
         gap: 10px;
-        margin-bottom: 20px;
+        margin-bottom: 24px;
     }
-    .hero-eyebrow-line {
-        width: 32px; height: 1px;
-        background: var(--rose, #c8836e);
-    }
-    .hero-eyebrow span {
+    .hero-label-line { width: 36px; height: 1px; background: var(--gold, #b8956a); }
+    .hero-label span {
         font-size: 11px;
         letter-spacing: 3px;
         text-transform: uppercase;
-        color: var(--rose, #c8836e);
-        font-family: var(--font-body, 'Jost', sans-serif);
-        font-weight: 400;
+        color: var(--gold, #b8956a);
+        font-family: var(--font-body, 'Outfit', sans-serif);
+        font-weight: 500;
     }
     .hero-title {
-        font-family: var(--font-display, 'Cormorant Garamond', serif);
-        font-size: clamp(2.8rem, 5vw, 4.2rem);
-        font-weight: 300;
-        line-height: 1.1;
-        color: var(--ink, #2b1f1a);
-        margin-bottom: 20px;
-        letter-spacing: 1px;
+        font-family: var(--font-display, 'Playfair Display', serif);
+        font-size: clamp(3rem, 6vw, 5.5rem);
+        font-weight: 900;
+        line-height: 1.0;
+        color: var(--ink, #1c1610);
+        margin-bottom: 6px;
+        letter-spacing: -1px;
     }
-    .hero-title em {
+    .hero-title-italic {
+        font-family: var(--font-display, 'Playfair Display', serif);
+        font-size: clamp(2.4rem, 5vw, 4.5rem);
+        font-weight: 400;
         font-style: italic;
-        color: var(--rose, #c8836e);
+        color: var(--gold, #b8956a);
+        line-height: 1.1;
+        margin-bottom: 6px;
+        display: block;
+    }
+    .hero-slash {
+        font-family: var(--font-body, 'Outfit', sans-serif);
+        font-size: 14px;
+        color: var(--ink-soft, #8a7a6a);
+        letter-spacing: 1px;
+        margin-bottom: 32px;
+        display: block;
+        font-weight: 300;
     }
     .hero-desc {
         font-size: 15px;
         line-height: 1.85;
-        color: var(--ink-soft, #7a5c52);
-        max-width: 400px;
-        margin-bottom: 36px;
+        color: var(--ink-mid, #4a3f32);
+        max-width: 380px;
+        margin-bottom: 40px;
         font-weight: 300;
     }
     .hero-cta {
         display: inline-flex;
         align-items: center;
-        gap: 10px;
-        background: var(--ink, #2b1f1a);
-        color: var(--white, #fffaf8);
-        padding: 14px 36px;
-        border-radius: 40px;
-        font-size: 11px;
-        letter-spacing: 2.5px;
+        gap: 12px;
+        background: var(--ink, #1c1610);
+        color: var(--white, #fdfaf6);
+        padding: 16px 40px;
+        border-radius: 50px;
+        font-size: 12px;
+        letter-spacing: 2px;
         text-transform: uppercase;
         text-decoration: none;
-        font-family: var(--font-body, 'Jost', sans-serif);
-        font-weight: 400;
-        transition: all 0.28s ease;
+        font-family: var(--font-body, 'Outfit', sans-serif);
+        font-weight: 500;
+        transition: all 0.3s ease;
     }
     .hero-cta:hover {
-        background: var(--rose, #c8836e);
+        background: var(--gold, #b8956a);
         color: #fff;
-        gap: 16px;
+        gap: 18px;
+        transform: translateY(-2px);
+        box-shadow: 0 12px 32px rgba(184,149,106,0.35);
     }
-    .hero-img-wrap {
+    .hero-stats {
+        display: flex;
+        gap: 32px;
+        margin-top: 48px;
+        padding-top: 32px;
+        border-top: 1px solid var(--border, rgba(28,22,16,0.10));
+    }
+    .hero-stat-num {
+        font-family: var(--font-display, 'Playfair Display', serif);
+        font-size: 1.8rem;
+        font-weight: 700;
+        color: var(--ink, #1c1610);
+        display: block;
+        line-height: 1;
+        margin-bottom: 4px;
+    }
+    .hero-stat-label {
+        font-size: 10px;
+        letter-spacing: 1.5px;
+        text-transform: uppercase;
+        color: var(--ink-soft, #8a7a6a);
+        font-weight: 400;
+    }
+
+    /* right side */
+    .hero-right {
         position: relative;
         display: flex;
         justify-content: center;
+        align-items: center;
     }
-    .hero-img-wrap img {
+    .hero-img-main {
         width: 100%;
-        max-width: 480px;
-        height: 540px;
+        max-width: 460px;
+        height: 580px;
         object-fit: cover;
-        border-radius: 220px 220px 160px 160px;
-    }
-    .hero-pill {
-        position: absolute;
-        bottom: 28px;
-        left: -10px;
-        background: #fff;
-        border: 1px solid rgba(43,31,26,0.10);
-        border-radius: 40px;
-        padding: 10px 20px;
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        box-shadow: 0 8px 32px rgba(43,31,26,0.08);
-    }
-    .hero-pill-icon {
-        width: 36px; height: 36px;
-        background: var(--blush-bg, #f5e6e0);
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: var(--rose, #c8836e);
-        font-size: 14px;
-    }
-    .hero-pill-text { line-height: 1.3; }
-    .hero-pill-text strong {
+        border-radius: 240px 240px 160px 160px;
         display: block;
-        font-size: 13px;
+        filter: brightness(0.98);
+    }
+    /* floating card 1 */
+    .hero-card {
+        position: absolute;
+        background: rgba(253,250,246,0.95);
+        backdrop-filter: blur(12px);
+        border: 1px solid rgba(28,22,16,0.08);
+        border-radius: 16px;
+        padding: 16px 20px;
+        box-shadow: 0 8px 40px rgba(28,22,16,0.12);
+    }
+    .hero-card-1 {
+        bottom: 60px;
+        left: -20px;
+        min-width: 180px;
+    }
+    .hero-card-2 {
+        top: 80px;
+        right: -20px;
+        min-width: 160px;
+    }
+    .hc-label {
+        font-size: 9px;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        color: var(--ink-soft, #8a7a6a);
+        margin-bottom: 6px;
         font-weight: 500;
-        color: var(--ink, #2b1f1a);
     }
-    .hero-pill-text span {
-        font-size: 10px;
-        color: var(--ink-soft, #7a5c52);
-        letter-spacing: 0.5px;
+    .hc-title {
+        font-family: var(--font-display, 'Playfair Display', serif);
+        font-size: 1rem;
+        font-weight: 700;
+        color: var(--ink, #1c1610);
+        margin-bottom: 2px;
     }
+    .hc-sub {
+        font-size: 11px;
+        color: var(--gold, #b8956a);
+        font-weight: 400;
+    }
+    .hc-dots {
+        display: flex;
+        gap: 4px;
+        margin-top: 8px;
+    }
+    .hc-dot {
+        width: 6px; height: 6px;
+        border-radius: 50%;
+        background: var(--sand-dark, #d4c4b0);
+    }
+    .hc-dot.active { background: var(--gold, #b8956a); }
 
     @media (max-width: 900px) {
-        .hero-inner { grid-template-columns: 1fr; gap: 40px; padding: 0 24px; text-align: center; }
-        .hero-eyebrow { justify-content: center; }
-        .hero-desc { margin-left: auto; margin-right: auto; }
-        .hero-img-wrap img { height: 360px; max-width: 320px; }
-        .hero-pill { left: 0; }
+        .hero-inner { grid-template-columns: 1fr; gap: 40px; padding: 60px 24px 40px; text-align: center; }
+        .hero-label { justify-content: center; }
+        .hero-desc { margin: 0 auto 32px; }
+        .hero-stats { justify-content: center; }
+        .hero-img-main { height: 380px; max-width: 300px; }
+        .hero-card-1 { left: 0; bottom: 20px; }
+        .hero-card-2 { right: 0; top: 20px; }
+        .hero-bg-text { font-size: 80px; }
     }
 
-    /* ── STRIP ── */
+    /* ── MARQUEE ── */
     .strip {
-        background: var(--ink, #2b1f1a);
-        padding: 14px 0;
+        background: var(--ink, #1c1610);
+        padding: 13px 0;
         overflow: hidden;
     }
-    .strip-inner {
+    .strip-track {
         display: flex;
-        gap: 60px;
+        gap: 56px;
         width: max-content;
-        animation: marquee 22s linear infinite;
+        animation: marquee 24s linear infinite;
     }
     .strip-item {
         display: flex;
@@ -178,59 +236,57 @@
         font-size: 11px;
         letter-spacing: 2px;
         text-transform: uppercase;
-        color: rgba(255,250,248,0.6);
-        font-family: var(--font-body, 'Jost', sans-serif);
+        color: rgba(253,250,246,0.5);
+        font-family: var(--font-body, 'Outfit', sans-serif);
+        font-weight: 400;
     }
-    .strip-item i { color: var(--rose, #c8836e); font-size: 12px; }
+    .strip-item i { color: var(--gold, #b8956a); font-size: 6px; }
     @keyframes marquee {
         from { transform: translateX(0); }
         to   { transform: translateX(-50%); }
     }
 
-    /* ── SECTION ── */
-    .pf-section {
-        padding: 72px 0 56px;
-    }
-    .pf-section:nth-child(even) { background: rgba(255,250,248,0.6); }
-    .section-wrap {
-        max-width: 1280px;
-        margin: 0 auto;
-        padding: 0 40px;
-    }
+    /* ── SECTIONS ── */
+    .pf-section { padding: 80px 0 64px; }
+    .pf-section.alt { background: rgba(253,250,246,0.5); }
+    .section-wrap { max-width: 1320px; margin: 0 auto; padding: 0 40px; }
     .section-top {
         display: flex;
         align-items: flex-end;
         justify-content: space-between;
-        margin-bottom: 36px;
+        margin-bottom: 40px;
     }
-    .section-label {
+    .section-eyebrow {
         font-size: 10px;
         letter-spacing: 3px;
         text-transform: uppercase;
-        color: var(--rose, #c8836e);
-        margin-bottom: 6px;
-        font-weight: 400;
+        color: var(--gold, #b8956a);
+        margin-bottom: 8px;
+        font-weight: 500;
+        display: block;
     }
     .section-title {
-        font-family: var(--font-display, 'Cormorant Garamond', serif);
-        font-size: 2.2rem;
-        font-weight: 300;
-        color: var(--ink, #2b1f1a);
-        letter-spacing: 1px;
+        font-family: var(--font-display, 'Playfair Display', serif);
+        font-size: clamp(1.8rem, 3vw, 2.6rem);
+        font-weight: 700;
+        color: var(--ink, #1c1610);
+        letter-spacing: -0.5px;
         line-height: 1;
     }
     .view-all {
         font-size: 11px;
         letter-spacing: 2px;
         text-transform: uppercase;
-        color: var(--ink-soft, #7a5c52);
+        color: var(--ink-soft, #8a7a6a);
         text-decoration: none;
-        border-bottom: 1px solid var(--border, rgba(43,31,26,0.12));
-        padding-bottom: 2px;
-        transition: color 0.2s, border-color 0.2s;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        font-weight: 500;
+        transition: color 0.2s, gap 0.2s;
         white-space: nowrap;
     }
-    .view-all:hover { color: var(--rose, #c8836e); border-color: var(--rose, #c8836e); }
+    .view-all:hover { color: var(--gold, #b8956a); gap: 10px; }
 
     /* ── PRODUCT GRID ── */
     .prod-grid {
@@ -243,124 +299,117 @@
 
     /* ── PRODUCT CARD ── */
     .prod-card {
-        background: #fff;
-        border: 1px solid rgba(43,31,26,0.08);
-        border-radius: 12px;
+        background: var(--card-bg, #faf7f3);
+        border: 1px solid rgba(28,22,16,0.07);
+        border-radius: 16px;
         overflow: hidden;
-        transition: transform 0.26s ease, box-shadow 0.26s ease;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
         position: relative;
     }
     .prod-card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 16px 40px rgba(200,131,110,0.14);
+        transform: translateY(-6px);
+        box-shadow: 0 20px 48px rgba(28,22,16,0.12);
     }
     .prod-img-wrap {
         position: relative;
         aspect-ratio: 1/1;
         overflow: hidden;
-        background: var(--blush-bg, #f5e6e0);
+        background: var(--sand, #e8ddd0);
     }
     .prod-img-wrap img {
         width: 100%; height: 100%;
         object-fit: cover;
-        transition: transform 0.4s ease;
+        transition: transform 0.5s ease;
         display: block;
     }
-    .prod-card:hover .prod-img-wrap img { transform: scale(1.04); }
+    .prod-card:hover .prod-img-wrap img { transform: scale(1.06); }
 
-    /* badges */
     .badge-new {
         position: absolute;
-        top: 10px; left: 10px;
-        background: var(--rose, #c8836e);
+        top: 12px; left: 12px;
+        background: var(--gold, #b8956a);
         color: #fff;
         font-size: 9px;
         letter-spacing: 1.5px;
         text-transform: uppercase;
-        padding: 4px 10px;
+        padding: 4px 12px;
         border-radius: 20px;
-        font-weight: 500;
+        font-weight: 600;
         z-index: 2;
     }
     .oos-overlay {
         position: absolute;
         inset: 0;
-        background: rgba(43,31,26,0.55);
+        background: rgba(28,22,16,0.6);
         display: flex;
         align-items: center;
         justify-content: center;
         z-index: 3;
     }
     .oos-tag {
-        background: #fff;
-        color: var(--ink, #2b1f1a);
+        background: var(--white, #fdfaf6);
+        color: var(--ink, #1c1610);
         font-size: 9px;
         letter-spacing: 2px;
         text-transform: uppercase;
-        padding: 6px 14px;
+        padding: 7px 16px;
         border-radius: 20px;
-        font-weight: 500;
+        font-weight: 600;
     }
-
-    /* quick add — slides up on hover */
-    .quick-add {
-        position: absolute;
-        bottom: 0; left: 0; right: 0;
-        transform: translateY(100%);
-        transition: transform 0.26s ease;
-        z-index: 4;
-    }
-    .prod-card:hover .quick-add { transform: translateY(0); }
-    .quick-add button {
-        width: 100%;
-        border: none;
-        background: var(--ink, #2b1f1a);
-        color: #fff;
-        padding: 11px 0;
-        font-size: 10px;
-        letter-spacing: 2px;
-        text-transform: uppercase;
-        cursor: pointer;
-        font-family: var(--font-body, 'Jost', sans-serif);
-        transition: background 0.2s;
-    }
-    .quick-add button:hover { background: var(--rose, #c8836e); }
-    .quick-add button.oos {
-        background: rgba(43,31,26,0.5);
-        cursor: not-allowed;
-    }
-    .quick-add button.oos:hover { background: rgba(43,31,26,0.5); }
-
-    /* quick view button */
     .quick-view-btn {
         position: absolute;
         top: 50%; left: 50%;
         transform: translate(-50%, -50%);
-        background: rgba(255,250,248,0.92);
-        color: var(--ink, #2b1f1a);
+        background: rgba(253,250,246,0.95);
+        color: var(--ink, #1c1610);
         border: none;
-        padding: 8px 18px;
+        padding: 9px 20px;
         border-radius: 30px;
         font-size: 10px;
         letter-spacing: 1.5px;
         text-transform: uppercase;
         cursor: pointer;
         opacity: 0;
-        transition: opacity 0.2s;
+        transition: opacity 0.22s;
         z-index: 5;
-        font-family: var(--font-body, 'Jost', sans-serif);
+        font-family: var(--font-body, 'Outfit', sans-serif);
+        font-weight: 500;
         white-space: nowrap;
+        box-shadow: 0 4px 16px rgba(28,22,16,0.15);
     }
     .prod-img-wrap:hover .quick-view-btn { opacity: 1; }
 
-    /* card info */
-    .prod-info {
-        padding: 14px 16px 16px;
+    .quick-add {
+        position: absolute;
+        bottom: 0; left: 0; right: 0;
+        transform: translateY(100%);
+        transition: transform 0.28s ease;
+        z-index: 4;
     }
+    .prod-card:hover .quick-add { transform: translateY(0); }
+    .quick-add button {
+        width: 100%;
+        border: none;
+        background: var(--ink, #1c1610);
+        color: #fff;
+        padding: 12px 0;
+        font-size: 10px;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        cursor: pointer;
+        font-family: var(--font-body, 'Outfit', sans-serif);
+        font-weight: 500;
+        transition: background 0.22s;
+    }
+    .quick-add button:hover { background: var(--gold, #b8956a); }
+    .quick-add button.oos { background: rgba(28,22,16,0.4); cursor: not-allowed; }
+    .quick-add button.oos:hover { background: rgba(28,22,16,0.4); }
+
+    .prod-info { padding: 16px 18px 18px; }
     .prod-name {
-        font-size: 13px;
-        font-weight: 400;
-        color: var(--ink, #2b1f1a);
+        font-size: 14px;
+        font-weight: 500;
+        color: var(--ink, #1c1610);
         margin-bottom: 3px;
         letter-spacing: 0.2px;
     }
@@ -368,46 +417,28 @@
         font-size: 10px;
         letter-spacing: 1px;
         text-transform: uppercase;
-        color: var(--ink-soft, #7a5c52);
-        margin-bottom: 8px;
-    }
-    .prod-bottom {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-    }
-    .prod-price {
-        font-family: var(--font-display, 'Cormorant Garamond', serif);
-        font-size: 1.15rem;
+        color: var(--ink-soft, #8a7a6a);
+        margin-bottom: 10px;
         font-weight: 400;
-        color: var(--rose-dark, #a0614e);
+    }
+    .prod-bottom { display: flex; justify-content: space-between; align-items: center; }
+    .prod-price {
+        font-family: var(--font-display, 'Playfair Display', serif);
+        font-size: 1.2rem;
+        font-weight: 700;
+        color: var(--gold-dark, #9a7550);
     }
     .stock-low {
-        font-size: 9px;
-        letter-spacing: 1px;
-        text-transform: uppercase;
-        color: #b97a30;
-        background: #fff3e0;
-        padding: 3px 8px;
-        border-radius: 10px;
+        font-size: 9px; letter-spacing: 1px; text-transform: uppercase;
+        color: #9a6b20; background: #fef3e2; padding: 3px 9px; border-radius: 10px; font-weight: 500;
     }
     .stock-out {
-        font-size: 9px;
-        letter-spacing: 1px;
-        text-transform: uppercase;
-        color: #a33;
-        background: #fdecea;
-        padding: 3px 8px;
-        border-radius: 10px;
+        font-size: 9px; letter-spacing: 1px; text-transform: uppercase;
+        color: #a33; background: #fdecea; padding: 3px 9px; border-radius: 10px; font-weight: 500;
     }
-
-    /* empty */
     .empty-state {
-        text-align: center;
-        padding: 48px 0;
-        color: var(--ink-soft, #7a5c52);
-        font-size: 14px;
-        letter-spacing: 0.5px;
+        text-align: center; padding: 60px 0;
+        color: var(--ink-soft, #8a7a6a); font-size: 14px; letter-spacing: 0.5px;
     }
 
     /* ── QUICK VIEW MODAL ── */
@@ -415,7 +446,7 @@
         display: none;
         position: fixed;
         inset: 0;
-        background: rgba(43,31,26,0.6);
+        background: rgba(28,22,16,0.65);
         z-index: 9000;
         align-items: center;
         justify-content: center;
@@ -423,133 +454,122 @@
     }
     .qv-modal.open { display: flex; }
     .qv-box {
-        background: #fff;
-        border-radius: 16px;
-        width: 100%;
-        max-width: 860px;
-        max-height: 90vh;
-        overflow-y: auto;
+        background: var(--white, #fdfaf6);
+        border-radius: 20px;
+        width: 100%; max-width: 880px;
+        max-height: 90vh; overflow-y: auto;
         position: relative;
-        animation: qvIn 0.24s ease;
+        animation: qvIn 0.26s ease;
     }
     @keyframes qvIn {
-        from { opacity: 0; transform: scale(0.96) translateY(16px); }
+        from { opacity: 0; transform: scale(0.95) translateY(20px); }
         to   { opacity: 1; transform: scale(1) translateY(0); }
     }
     .qv-close {
         position: absolute;
         top: 16px; right: 16px;
-        background: var(--blush-bg, #f5e6e0);
+        background: var(--warm-bg, #f0ebe3);
         border: none;
-        width: 36px; height: 36px;
+        width: 38px; height: 38px;
         border-radius: 50%;
         cursor: pointer;
         font-size: 18px;
-        color: var(--ink, #2b1f1a);
-        display: flex;
-        align-items: center;
-        justify-content: center;
+        color: var(--ink, #1c1610);
+        display: flex; align-items: center; justify-content: center;
         z-index: 10;
         transition: background 0.2s;
     }
-    .qv-close:hover { background: var(--blush-mid, #eecfc4); }
+    .qv-close:hover { background: var(--sand, #e8ddd0); }
     .qv-body { display: grid; grid-template-columns: 1fr 1fr; }
-    .qv-img img {
-        width: 100%; height: 400px;
-        object-fit: cover;
-        border-radius: 16px 0 0 16px;
-    }
-    .qv-info { padding: 36px 32px; }
-    .qv-name {
-        font-family: var(--font-display, 'Cormorant Garamond', serif);
-        font-size: 2rem;
-        font-weight: 300;
-        color: var(--ink, #2b1f1a);
-        margin-bottom: 8px;
-    }
-    .qv-price {
-        font-family: var(--font-display, 'Cormorant Garamond', serif);
-        font-size: 1.5rem;
-        color: var(--rose-dark, #a0614e);
-        margin-bottom: 16px;
-    }
-    .qv-desc {
-        font-size: 13px;
-        line-height: 1.8;
-        color: var(--ink-soft, #7a5c52);
-        margin-bottom: 20px;
-        font-weight: 300;
-    }
-    .qv-stock-ok  { font-size: 12px; color: #2e7d32; background: #e8f5e9; padding: 8px 14px; border-radius: 6px; margin-bottom: 20px; }
-    .qv-stock-low { font-size: 12px; color: #b97a30; background: #fff3e0; padding: 8px 14px; border-radius: 6px; margin-bottom: 20px; }
-    .qv-stock-out { font-size: 12px; color: #c62828; background: #fdecea; padding: 8px 14px; border-radius: 6px; margin-bottom: 20px; }
+    .qv-img img { width: 100%; height: 420px; object-fit: cover; border-radius: 20px 0 0 20px; }
+    .qv-info { padding: 40px 36px; }
+    .qv-name { font-family: var(--font-display, 'Playfair Display', serif); font-size: 2rem; font-weight: 700; color: var(--ink, #1c1610); margin-bottom: 8px; }
+    .qv-price { font-family: var(--font-display, 'Playfair Display', serif); font-size: 1.6rem; color: var(--gold-dark, #9a7550); font-weight: 700; margin-bottom: 16px; }
+    .qv-desc { font-size: 13px; line-height: 1.8; color: var(--ink-mid, #4a3f32); margin-bottom: 20px; font-weight: 300; }
+    .qv-stock-ok  { font-size: 12px; color: #2e7d32; background: #e8f5e9; padding: 9px 16px; border-radius: 8px; margin-bottom: 20px; font-weight: 500; }
+    .qv-stock-low { font-size: 12px; color: #9a6b20; background: #fef3e2; padding: 9px 16px; border-radius: 8px; margin-bottom: 20px; font-weight: 500; }
+    .qv-stock-out { font-size: 12px; color: #c62828; background: #fdecea; padding: 9px 16px; border-radius: 8px; margin-bottom: 20px; font-weight: 500; }
     .qv-atc {
-        display: block;
-        width: 100%;
-        background: var(--ink, #2b1f1a);
-        color: #fff;
-        border: none;
-        padding: 14px;
-        border-radius: 8px;
-        font-size: 11px;
-        letter-spacing: 2px;
-        text-transform: uppercase;
-        cursor: pointer;
-        font-family: var(--font-body, 'Jost', sans-serif);
-        transition: background 0.22s;
+        display: block; width: 100%;
+        background: var(--ink, #1c1610); color: #fff;
+        border: none; padding: 15px;
+        border-radius: 10px;
+        font-size: 11px; letter-spacing: 2px; text-transform: uppercase;
+        cursor: pointer; font-family: var(--font-body, 'Outfit', sans-serif); font-weight: 500;
+        transition: background 0.22s, transform 0.22s;
     }
-    .qv-atc:hover { background: var(--rose, #c8836e); }
-    .qv-atc:disabled { background: #ccc; cursor: not-allowed; }
-    .qv-loading { padding: 60px; text-align: center; color: var(--ink-soft, #7a5c52); font-size: 13px; }
+    .qv-atc:hover { background: var(--gold, #b8956a); transform: translateY(-1px); }
+    .qv-atc:disabled { background: #ccc; cursor: not-allowed; transform: none; }
+    .qv-loading { padding: 60px; text-align: center; color: var(--ink-soft, #8a7a6a); font-size: 13px; }
     @media (max-width: 700px) {
         .qv-body { grid-template-columns: 1fr; }
-        .qv-img img { border-radius: 16px 16px 0 0; height: 260px; }
-        .qv-info { padding: 24px 20px; }
+        .qv-img img { border-radius: 20px 20px 0 0; height: 280px; }
+        .qv-info { padding: 28px 24px; }
     }
-
     @media (max-width: 600px) {
         .section-wrap { padding: 0 20px; }
-        .hero-inner { padding: 0 20px; }
-        .hero-title { font-size: 2.4rem; }
-        .section-top { flex-direction: column; align-items: flex-start; gap: 10px; }
+        .section-top { flex-direction: column; align-items: flex-start; gap: 12px; }
+        .hero-inner { padding: 60px 20px 40px; }
     }
 </style>
 
 <!-- HERO -->
 <section class="hero">
+    <div class="hero-bg-text">SCENT</div>
     <div class="hero-inner">
-        <div>
-            <div class="hero-eyebrow">
-                <span class="hero-eyebrow-line"></span>
-                <span>Signature Scent</span>
+        <div class="hero-left">
+            <div class="hero-label">
+                <span class="hero-label-line"></span>
+                <span>Signature Collection</span>
             </div>
-            <h1 class="hero-title">
-                Find Your<br>
-                Signature Scent<br>
-                <em>with Perfumania</em>
-            </h1>
+            <h1 class="hero-title">THE<br>PERFECT</h1>
+            <span class="hero-title-italic">Fragrance®</span>
+            <span class="hero-slash">/ We craft luxury scents /</span>
             <p class="hero-desc">
-                Experience a world of luxurious fragrances crafted to elevate your presence and define who you are.
+                Experience a world of luxurious fragrances crafted to elevate your presence and define your signature scent.
             </p>
             <a href="/collection" class="hero-cta">Explore the Scent →</a>
-        </div>
-        <div class="hero-img-wrap">
-            <img src="https://images.pexels.com/photos/965989/pexels-photo-965989.jpeg?auto=compress&cs=tinysrgb&w=800"
-                 alt="Luxury Perfume">
-            <div class="hero-pill">
-                <div class="hero-pill-icon"><i class="fas fa-star"></i></div>
-                <div class="hero-pill-text">
-                    <strong>Bestseller 2026</strong>
-                    <span>Luxury in every note.</span>
+            <div class="hero-stats">
+                <div>
+                    <span class="hero-stat-num">200+</span>
+                    <span class="hero-stat-label">Fragrances</span>
                 </div>
+                <div>
+                    <span class="hero-stat-num">5k+</span>
+                    <span class="hero-stat-label">Customers</span>
+                </div>
+                <div>
+                    <span class="hero-stat-num">4.9★</span>
+                    <span class="hero-stat-label">Rating</span>
+                </div>
+            </div>
+        </div>
+        <div class="hero-right">
+            <img class="hero-img-main"
+                 src="https://images.pexels.com/photos/965989/pexels-photo-965989.jpeg?auto=compress&cs=tinysrgb&w=800"
+                 alt="Luxury Perfume">
+            <div class="hero-card hero-card-1">
+                <div class="hc-label">Bestseller</div>
+                <div class="hc-title">Signature Scent</div>
+                <div class="hc-sub">Luxury in every note.</div>
+                <div class="hc-dots">
+                    <span class="hc-dot active"></span>
+                    <span class="hc-dot"></span>
+                    <span class="hc-dot"></span>
+                </div>
+            </div>
+            <div class="hero-card hero-card-2">
+                <div class="hc-label">New Arrival</div>
+                <div class="hc-title">Every Friday</div>
+                <div class="hc-sub">Fresh drops weekly</div>
             </div>
         </div>
     </div>
 </section>
 
-<!-- MARQUEE STRIP -->
+<!-- STRIP -->
 <div class="strip">
-    <div class="strip-inner">
+    <div class="strip-track">
         <span class="strip-item"><i class="fas fa-circle"></i> Free Shipping Over Rs. 3,000</span>
         <span class="strip-item"><i class="fas fa-circle"></i> Authentic Luxury Fragrances</span>
         <span class="strip-item"><i class="fas fa-circle"></i> New Arrivals Every Friday</span>
@@ -561,42 +581,29 @@
     </div>
 </div>
 
-<!-- MALE COLLECTION -->
+<!-- MALE -->
 <section class="pf-section">
     <div class="section-wrap">
         <div class="section-top">
             <div>
-                <p class="section-label">For Him</p>
+                <span class="section-eyebrow">For Him</span>
                 <h2 class="section-title">Male Collection</h2>
             </div>
-            <a href="/collection" class="view-all">View All →</a>
+            <a href="/collection" class="view-all">View All <i class="fas fa-arrow-right" style="font-size:10px;"></i></a>
         </div>
         {% if male_products %}
         <div class="prod-grid">
             {% for product in male_products %}
             <div class="prod-card">
                 <div class="prod-img-wrap">
-                    <img src="{{ product.image if product.image and product.image.startswith('/static/') else '/static/uploads/default.jpg' }}"
-                         alt="{{ product.name }}">
-
-                    {% if product.created_at and product.created_at.date() >= week_ago and product.stock > 0 %}
-                    <span class="badge-new">New</span>
-                    {% endif %}
-
-                    {% if product.stock == 0 %}
-                    <div class="oos-overlay"><span class="oos-tag">Out of Stock</span></div>
-                    {% endif %}
-
+                    <img src="{{ product.image if product.image and product.image.startswith('/static/') else '/static/uploads/default.jpg' }}" alt="{{ product.name }}">
+                    {% if product.created_at and product.created_at.date() >= week_ago and product.stock > 0 %}<span class="badge-new">New</span>{% endif %}
+                    {% if product.stock == 0 %}<div class="oos-overlay"><span class="oos-tag">Out of Stock</span></div>{% endif %}
                     <button class="quick-view-btn" onclick="openQV('{{ product.id }}')">Quick View</button>
-
                     <div class="quick-add">
                         {% if product.stock > 0 %}
-                        <form action="/add-to-cart/{{ product.id }}" method="POST">
-                            <button type="submit">Add to Cart</button>
-                        </form>
-                        {% else %}
-                        <button class="oos" disabled>Out of Stock</button>
-                        {% endif %}
+                        <form action="/add-to-cart/{{ product.id }}" method="POST"><button type="submit">Add to Cart</button></form>
+                        {% else %}<button class="oos" disabled>Out of Stock</button>{% endif %}
                     </div>
                 </div>
                 <div class="prod-info">
@@ -604,58 +611,40 @@
                     <div class="prod-sub">Eau De Parfum</div>
                     <div class="prod-bottom">
                         <span class="prod-price">Rs. {{ product.price }}</span>
-                        {% if product.stock == 0 %}
-                        <span class="stock-out">Out of Stock</span>
-                        {% elif product.stock < 5 %}
-                        <span class="stock-low">Only {{ product.stock }} left</span>
-                        {% endif %}
+                        {% if product.stock == 0 %}<span class="stock-out">Out of Stock</span>
+                        {% elif product.stock < 5 %}<span class="stock-low">Only {{ product.stock }} left</span>{% endif %}
                     </div>
                 </div>
             </div>
             {% endfor %}
         </div>
-        {% else %}
-        <div class="empty-state">Male collection coming soon.</div>
-        {% endif %}
+        {% else %}<div class="empty-state">Male collection coming soon.</div>{% endif %}
     </div>
 </section>
 
-<!-- FEMALE COLLECTION -->
-<section class="pf-section">
+<!-- FEMALE -->
+<section class="pf-section alt">
     <div class="section-wrap">
         <div class="section-top">
             <div>
-                <p class="section-label">For Her</p>
+                <span class="section-eyebrow">For Her</span>
                 <h2 class="section-title">Female Collection</h2>
             </div>
-            <a href="/collection" class="view-all">View All →</a>
+            <a href="/collection" class="view-all">View All <i class="fas fa-arrow-right" style="font-size:10px;"></i></a>
         </div>
         {% if female_products %}
         <div class="prod-grid">
             {% for product in female_products %}
             <div class="prod-card">
                 <div class="prod-img-wrap">
-                    <img src="{{ product.image if product.image and product.image.startswith('/static/') else '/static/uploads/default.jpg' }}"
-                         alt="{{ product.name }}">
-
-                    {% if product.created_at and product.created_at.date() >= week_ago and product.stock > 0 %}
-                    <span class="badge-new">New</span>
-                    {% endif %}
-
-                    {% if product.stock == 0 %}
-                    <div class="oos-overlay"><span class="oos-tag">Out of Stock</span></div>
-                    {% endif %}
-
+                    <img src="{{ product.image if product.image and product.image.startswith('/static/') else '/static/uploads/default.jpg' }}" alt="{{ product.name }}">
+                    {% if product.created_at and product.created_at.date() >= week_ago and product.stock > 0 %}<span class="badge-new">New</span>{% endif %}
+                    {% if product.stock == 0 %}<div class="oos-overlay"><span class="oos-tag">Out of Stock</span></div>{% endif %}
                     <button class="quick-view-btn" onclick="openQV('{{ product.id }}')">Quick View</button>
-
                     <div class="quick-add">
                         {% if product.stock > 0 %}
-                        <form action="/add-to-cart/{{ product.id }}" method="POST">
-                            <button type="submit">Add to Cart</button>
-                        </form>
-                        {% else %}
-                        <button class="oos" disabled>Out of Stock</button>
-                        {% endif %}
+                        <form action="/add-to-cart/{{ product.id }}" method="POST"><button type="submit">Add to Cart</button></form>
+                        {% else %}<button class="oos" disabled>Out of Stock</button>{% endif %}
                     </div>
                 </div>
                 <div class="prod-info">
@@ -663,58 +652,40 @@
                     <div class="prod-sub">Eau De Parfum</div>
                     <div class="prod-bottom">
                         <span class="prod-price">Rs. {{ product.price }}</span>
-                        {% if product.stock == 0 %}
-                        <span class="stock-out">Out of Stock</span>
-                        {% elif product.stock < 5 %}
-                        <span class="stock-low">Only {{ product.stock }} left</span>
-                        {% endif %}
+                        {% if product.stock == 0 %}<span class="stock-out">Out of Stock</span>
+                        {% elif product.stock < 5 %}<span class="stock-low">Only {{ product.stock }} left</span>{% endif %}
                     </div>
                 </div>
             </div>
             {% endfor %}
         </div>
-        {% else %}
-        <div class="empty-state">Female collection coming soon.</div>
-        {% endif %}
+        {% else %}<div class="empty-state">Female collection coming soon.</div>{% endif %}
     </div>
 </section>
 
-<!-- UNISEX COLLECTION -->
+<!-- UNISEX -->
 <section class="pf-section">
     <div class="section-wrap">
         <div class="section-top">
             <div>
-                <p class="section-label">For Everyone</p>
+                <span class="section-eyebrow">For Everyone</span>
                 <h2 class="section-title">Unisex Collection</h2>
             </div>
-            <a href="/collection" class="view-all">View All →</a>
+            <a href="/collection" class="view-all">View All <i class="fas fa-arrow-right" style="font-size:10px;"></i></a>
         </div>
         {% if unisex %}
         <div class="prod-grid">
             {% for product in unisex %}
             <div class="prod-card">
                 <div class="prod-img-wrap">
-                    <img src="{{ product.image if product.image and product.image.startswith('/static/') else '/static/uploads/default.jpg' }}"
-                         alt="{{ product.name }}">
-
-                    {% if product.created_at and product.created_at.date() >= week_ago and product.stock > 0 %}
-                    <span class="badge-new">New</span>
-                    {% endif %}
-
-                    {% if product.stock == 0 %}
-                    <div class="oos-overlay"><span class="oos-tag">Out of Stock</span></div>
-                    {% endif %}
-
+                    <img src="{{ product.image if product.image and product.image.startswith('/static/') else '/static/uploads/default.jpg' }}" alt="{{ product.name }}">
+                    {% if product.created_at and product.created_at.date() >= week_ago and product.stock > 0 %}<span class="badge-new">New</span>{% endif %}
+                    {% if product.stock == 0 %}<div class="oos-overlay"><span class="oos-tag">Out of Stock</span></div>{% endif %}
                     <button class="quick-view-btn" onclick="openQV('{{ product.id }}')">Quick View</button>
-
                     <div class="quick-add">
                         {% if product.stock > 0 %}
-                        <form action="/add-to-cart/{{ product.id }}" method="POST">
-                            <button type="submit">Add to Cart</button>
-                        </form>
-                        {% else %}
-                        <button class="oos" disabled>Out of Stock</button>
-                        {% endif %}
+                        <form action="/add-to-cart/{{ product.id }}" method="POST"><button type="submit">Add to Cart</button></form>
+                        {% else %}<button class="oos" disabled>Out of Stock</button>{% endif %}
                     </div>
                 </div>
                 <div class="prod-info">
@@ -722,19 +693,14 @@
                     <div class="prod-sub">Eau De Parfum</div>
                     <div class="prod-bottom">
                         <span class="prod-price">Rs. {{ product.price }}</span>
-                        {% if product.stock == 0 %}
-                        <span class="stock-out">Out of Stock</span>
-                        {% elif product.stock < 5 %}
-                        <span class="stock-low">Only {{ product.stock }} left</span>
-                        {% endif %}
+                        {% if product.stock == 0 %}<span class="stock-out">Out of Stock</span>
+                        {% elif product.stock < 5 %}<span class="stock-low">Only {{ product.stock }} left</span>{% endif %}
                     </div>
                 </div>
             </div>
             {% endfor %}
         </div>
-        {% else %}
-        <div class="empty-state">Unisex collection coming soon.</div>
-        {% endif %}
+        {% else %}<div class="empty-state">Unisex collection coming soon.</div>{% endif %}
     </div>
 </section>
 
@@ -752,20 +718,13 @@
         const content = document.getElementById('qvContent');
         modal.classList.add('open');
         content.innerHTML = '<div class="qv-loading">Loading fragrance details...</div>';
-
         fetch(`/api/product/${id}`)
             .then(r => r.json())
             .then(p => {
-                let stockHtml = '';
-                let disabled = '';
-                if (p.stock === 0) {
-                    stockHtml = `<div class="qv-stock-out">Out of stock</div>`;
-                    disabled = 'disabled';
-                } else if (p.stock < 5) {
-                    stockHtml = `<div class="qv-stock-low">Only ${p.stock} left in stock</div>`;
-                } else {
-                    stockHtml = `<div class="qv-stock-ok">In stock &amp; ready to ship</div>`;
-                }
+                let stockHtml = '', disabled = '';
+                if (p.stock === 0) { stockHtml = `<div class="qv-stock-out">Out of stock</div>`; disabled = 'disabled'; }
+                else if (p.stock < 5) { stockHtml = `<div class="qv-stock-low">Only ${p.stock} left in stock</div>`; }
+                else { stockHtml = `<div class="qv-stock-ok">In stock &amp; ready to ship</div>`; }
                 const img = p.image && p.image.startsWith('/static/') ? p.image : '/static/uploads/default.jpg';
                 content.innerHTML = `
                     <div class="qv-body">
@@ -783,15 +742,11 @@
                         </div>
                     </div>`;
             })
-            .catch(() => {
-                content.innerHTML = '<div class="qv-loading">Could not load product. Please try again.</div>';
-            });
+            .catch(() => { content.innerHTML = '<div class="qv-loading">Could not load product.</div>'; });
     }
-
     function closeQV(e) {
-        if (e.target === document.getElementById('qvModal')) {
+        if (e.target === document.getElementById('qvModal'))
             document.getElementById('qvModal').classList.remove('open');
-        }
     }
 </script>
 {% endblock %}
