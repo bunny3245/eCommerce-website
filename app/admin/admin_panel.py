@@ -14,6 +14,7 @@ from datetime import datetime
 from sqlalchemy import func
 from app.utility import GenerateTrackingID
 from pathlib import Path
+import asyncio
 
 
 
@@ -111,51 +112,39 @@ def completeOrder(order_id: int, request: Request, db: Session = Depends(get_db)
 
 @admin_router.post('/admin/deliver-order/{order_id}')
 async def deliverOrder(order_id: int, request: Request, db: Session = Depends(get_db)):
-    # FIX: added auth check
     if not request.session.get('admin_id'):
         return RedirectResponse(url='/admin/login', status_code=303)
 
     order = db.query(Order).filter(Order.id == order_id).first()
-
     if not order:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Order not found")
-    
+
     if order.status == 'delivered':
-        return {'order_id': order.id,
-                'customer_id': order.customer_id,
-                'message': 'order is already delivered!'}
-    
-    results = db.execute(text(""" SELECT product_id , quantity FROM order_items 
-                             WHERE order_id =:order_id """), ({
-                                 'order_id': order_id
-                             }))
-    
+        return RedirectResponse(url='/admin_dashboard?msg=Already+Delivered', status_code=303)
+
+    results = db.execute(text("""SELECT product_id, quantity FROM order_items 
+                                 WHERE order_id = :order_id"""), {'order_id': order_id})
     items = results.fetchall()
 
     for item in items:
         product = db.query(Product).filter(Product.id == item.product_id).first()
-        if product:
-            if product.stock < item.quantity:
-                return {"error": f"Insufficient stock for {product.name}"}
-        else:
-            return HTTPException(status_code=404, detail='No product found')
-        
+        if not product:
+            raise HTTPException(status_code=404, detail='Product not found')
+        if product.stock < item.quantity:
+            return RedirectResponse(url=f'/admin_dashboard?msg=Insufficient+stock+for+{product.name}', status_code=303)
+
     for item in items:
-        db.execute(text(" UPDATE products set stock = stock - :quantity WHERE id = :product_id "),
-                   {'quantity': item.quantity,
-                    'product_id': item.product_id})
-       
+        db.execute(text("UPDATE products SET stock = stock - :quantity WHERE id = :product_id"),
+                   {'quantity': item.quantity, 'product_id': item.product_id})
+
     order.status = 'delivered'
     order.stock_deducted = True
     tracking_id = GenerateTrackingID()
     order.tracking_id = tracking_id
-
     db.commit()
-    
-    try:
-        await orderShippedEmail(order.customer_email, order_id, tracking_id)
-    except Exception as e:
-        print('email failed!', e)
+
+    # FIX: fire and forget — doesn't block the redirect
+    asyncio.create_task(orderShippedEmail(order.customer_email, order_id, tracking_id))
 
     return RedirectResponse(url='/admin_dashboard?msg=Lafra+Khatam!+Order+Delivered', status_code=303)
 
