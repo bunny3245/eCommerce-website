@@ -9,7 +9,12 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
     <link href="/static/style.css" rel="stylesheet">
-
+    <link rel="icon" type="image/x-icon" href="/static/favicon/favicon.ico">
+    <link rel="icon" type="image/png" sizes="16x16" href="/static/favicon/favicon-16x16.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/static/favicon/favicon-32x32.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/static/favicon/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="/static/favicon/android-chrome-192x192.png">
+    <link rel="icon" type="image/png" sizes="512x512" href="/static/favicon/android-chrome-512x512.png">
     <style>
         :root {
             --blush-bg: #f5e6e0;
@@ -48,9 +53,7 @@
             border-bottom: 1px solid var(--border);
             transition: box-shadow 0.3s;
         }
-        .site-nav.scrolled {
-            box-shadow: 0 4px 24px rgba(43,31,26,0.08);
-        }
+        .site-nav.scrolled { box-shadow: 0 4px 24px rgba(43,31,26,0.08); }
         .nav-inner {
             max-width: 1280px;
             margin: 0 auto;
@@ -60,8 +63,6 @@
             grid-template-columns: 1fr auto 1fr;
             align-items: center;
         }
-
-        /* Brand - left */
         .nav-brand {
             font-family: var(--font-display);
             font-size: 1.55rem;
@@ -72,10 +73,12 @@
             text-transform: uppercase;
             justify-self: start;
             line-height: 1;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
+        .nav-brand img { height: 32px; width: 32px; object-fit: contain; }
         .nav-brand .dot { color: var(--rose); }
-
-        /* Links - center */
         .nav-links {
             display: flex;
             gap: 2.4rem;
@@ -104,8 +107,6 @@
         }
         .nav-links a:hover { color: var(--ink); }
         .nav-links a:hover::after { width: 100%; }
-
-        /* Icons - right */
         .nav-actions {
             display: flex;
             align-items: center;
@@ -127,7 +128,6 @@
             align-items: center;
         }
         .nav-action-btn:hover { color: var(--rose); }
-
         .cart-badge {
             position: absolute;
             top: -6px; right: -8px;
@@ -141,8 +141,6 @@
             align-items: center;
             justify-content: center;
         }
-
-        /* Dropdown */
         .nav-dropdown { position: relative; }
         .nav-dropdown-menu {
             position: absolute;
@@ -167,19 +165,8 @@
             border-bottom: 1px solid var(--border);
             margin-bottom: 6px;
         }
-        .dd-user-name {
-            font-family: var(--font-display);
-            font-size: 16px;
-            font-weight: 400;
-            color: var(--ink);
-            display: block;
-        }
-        .dd-user-email {
-            font-size: 11px;
-            color: var(--ink-soft);
-            display: block;
-            margin-top: 1px;
-        }
+        .dd-user-name { font-family: var(--font-display); font-size: 16px; font-weight: 400; color: var(--ink); display: block; }
+        .dd-user-email { font-size: 11px; color: var(--ink-soft); display: block; margin-top: 1px; }
         .dd-item {
             display: flex;
             align-items: center;
@@ -199,8 +186,6 @@
         .dd-item.danger { color: #b94040; }
         .dd-item.danger i { color: #b94040; }
         .dd-divider { border: none; border-top: 1px solid var(--border); margin: 6px 0; }
-
-        /* Mobile hamburger */
         .nav-hamburger {
             display: none;
             background: none;
@@ -210,8 +195,6 @@
             cursor: pointer;
             padding: 4px;
         }
-
-        /* Mobile drawer */
         .mobile-drawer {
             display: none;
             position: fixed;
@@ -239,42 +222,80 @@
         }
         .mobile-drawer ul a:hover { color: var(--rose); }
 
-        /* MAIN */
         main { min-height: 65vh; }
 
         /* FOOTER */
         .site-footer {
             background: var(--ink);
             color: rgba(255,250,248,0.5);
-            padding: 56px 32px 32px;
+            padding: 56px 32px 0;
             margin-top: 80px;
         }
         .footer-grid {
             max-width: 1280px;
             margin: 0 auto;
             display: grid;
-            grid-template-columns: 1.5fr 1fr 1fr;
+            grid-template-columns: 1.8fr 1fr 1fr 1fr;
             gap: 40px;
             padding-bottom: 40px;
-            border-bottom: 1px solid rgba(255,250,248,0.1);
+            border-bottom: 1px solid rgba(255,250,248,0.08);
         }
         .footer-brand {
             font-family: var(--font-display);
-            font-size: 2rem;
+            font-size: 1.8rem;
             font-weight: 300;
             letter-spacing: 5px;
             color: var(--white);
             text-transform: uppercase;
-            display: block;
+            display: flex;
+            align-items: center;
+            gap: 10px;
             margin-bottom: 12px;
+        }
+        .footer-brand img {
+            height: 28px; width: 28px;
+            object-fit: contain;
+            filter: brightness(10);
         }
         .footer-brand .dot { color: var(--rose); }
         .footer-tagline {
             font-size: 13px;
             line-height: 1.9;
-            max-width: 230px;
+            max-width: 220px;
             font-weight: 300;
+            margin-bottom: 24px;
         }
+
+        /* Social icons */
+        .footer-socials {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+        .social-btn {
+            width: 36px; height: 36px;
+            border-radius: 50%;
+            border: 1px solid rgba(255,250,248,0.15);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: rgba(255,250,248,0.5);
+            text-decoration: none;
+            font-size: 14px;
+            transition: all 0.22s ease;
+        }
+        .social-btn:hover {
+            border-color: var(--rose);
+            color: var(--rose);
+            background: rgba(200,131,110,0.1);
+            transform: translateY(-2px);
+        }
+        .social-btn.whatsapp:hover {
+            border-color: #25D366;
+            color: #25D366;
+            background: rgba(37,211,102,0.1);
+        }
+
         .footer-col-title {
             font-size: 10px;
             letter-spacing: 2.5px;
@@ -293,15 +314,18 @@
             font-weight: 300;
         }
         .footer-links a:hover { color: var(--rose); }
+
         .footer-bottom {
             max-width: 1280px;
-            margin: 24px auto 0;
+            margin: 0 auto;
+            padding: 20px 0 28px;
             display: flex;
             justify-content: space-between;
             align-items: center;
             font-size: 10px;
             letter-spacing: 1.5px;
             text-transform: uppercase;
+            color: rgba(255,250,248,0.3);
         }
 
         /* RESPONSIVE */
@@ -311,13 +335,13 @@
             .nav-inner { grid-template-columns: auto 1fr auto; gap: 12px; }
             .nav-brand { justify-self: start; }
             .nav-actions { justify-self: end; }
-            .footer-grid { grid-template-columns: 1fr 1fr; }
+            .footer-grid { grid-template-columns: 1fr 1fr; gap: 32px; }
         }
         @media (max-width: 576px) {
             .nav-inner { padding: 0 20px; }
-            .site-footer { padding: 40px 20px 24px; }
+            .site-footer { padding: 40px 20px 0; }
             .footer-grid { grid-template-columns: 1fr; gap: 28px; }
-            .footer-bottom { flex-direction: column; gap: 8px; text-align: center; }
+            .footer-bottom { flex-direction: column; gap: 8px; text-align: center; padding: 16px 0 24px; }
         }
     </style>
 
@@ -328,7 +352,10 @@
     <nav class="site-nav" id="siteNav">
         <div class="nav-inner">
 
-            <a class="nav-brand" href="/">Perfumania<span class="dot">.</span></a>
+            <a class="nav-brand" href="/">
+                <img src="/static/favicon/favicon-32x32.png" alt="Perfumania">
+                Perfumania<span class="dot">.</span>
+            </a>
 
             <ul class="nav-links">
                 <li><a href="/shop">Shop</a></li>
@@ -337,7 +364,6 @@
             </ul>
 
             <div class="nav-actions">
-
                 <div class="nav-dropdown">
                     <button class="nav-action-btn" onclick="toggleDd(event)" aria-label="Account">
                         <i class="fas fa-user"></i>
@@ -373,7 +399,6 @@
                 <button class="nav-hamburger" onclick="toggleDrawer()" aria-label="Menu">
                     <i class="fas fa-bars" id="hamburgerIcon"></i>
                 </button>
-
             </div>
         </div>
     </nav>
@@ -398,10 +423,31 @@
 
     <footer class="site-footer">
         <div class="footer-grid">
+
+            <!-- Brand + socials -->
             <div>
-                <span class="footer-brand">Perfumania<span class="dot">.</span></span>
+                <div class="footer-brand">
+                    <img src="/static/favicon/favicon-32x32.png" alt="Perfumania">
+                    Perfumania<span class="dot">.</span>
+                </div>
                 <p class="footer-tagline">Curated fragrances for those who wear their mood. Every bottle, a memory waiting to happen.</p>
+                <div class="footer-socials">
+                    <a class="social-btn" href="https://www.instagram.com/perfumania52?igsh=cGYwZnE4dzM2cTB4" target="_blank" rel="noopener" aria-label="Instagram">
+                        <i class="fab fa-instagram"></i>
+                    </a>
+                    <a class="social-btn" href="https://www.tiktok.com/@perfumania52?_r=1&_t=ZS-96dXejrrpBN" target="_blank" rel="noopener" aria-label="TikTok">
+                        <i class="fab fa-tiktok"></i>
+                    </a>
+                    <a class="social-btn" href="https://www.facebook.com/share/1S2gLmikDc/" target="_blank" rel="noopener" aria-label="Facebook">
+                        <i class="fab fa-facebook-f"></i>
+                    </a>
+                    <a class="social-btn whatsapp" href="https://wa.me/923135380892" target="_blank" rel="noopener" aria-label="WhatsApp">
+                        <i class="fab fa-whatsapp"></i>
+                    </a>
+                </div>
             </div>
+
+            <!-- Explore -->
             <div>
                 <p class="footer-col-title">Explore</p>
                 <ul class="footer-links">
@@ -410,6 +456,8 @@
                     <li><a href="/about">Our Story</a></li>
                 </ul>
             </div>
+
+            <!-- Account -->
             <div>
                 <p class="footer-col-title">Account</p>
                 <ul class="footer-links">
@@ -418,7 +466,31 @@
                     <li><a href="/cart">Cart</a></li>
                 </ul>
             </div>
+
+            <!-- Contact -->
+            <div>
+                <p class="footer-col-title">Contact</p>
+                <ul class="footer-links">
+                    <li>
+                        <a href="https://wa.me/923135380892" target="_blank" rel="noopener">
+                            <i class="fab fa-whatsapp" style="color:#25D366; margin-right:6px;"></i>+92 313 538 0892
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://www.instagram.com/perfumania52?igsh=cGYwZnE4dzM2cTB4" target="_blank" rel="noopener">
+                            <i class="fab fa-instagram" style="margin-right:6px;"></i>@perfumania52
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://www.tiktok.com/@perfumania52?_r=1&_t=ZS-96dXejrrpBN" target="_blank" rel="noopener">
+                            <i class="fab fa-tiktok" style="margin-right:6px;"></i>@perfumania52
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
         </div>
+
         <div class="footer-bottom">
             <span>&copy; 2026 Perfumania Botanicals. All rights reserved.</span>
             <span>Made with intention.</span>
