@@ -79,4 +79,4 @@ async def login(request: Request, db: Session = Depends(get_db)):
 @admin_route.get('/logout')
 async def logout(request: Request):
     request.session.clear() 
-    return RedirectResponse(url='/', status_code=303)
+    return RedirectResponse(url='/admin/login', status_code=303)
