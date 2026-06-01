@@ -36,7 +36,7 @@ def adminHome(request: Request, db: Session = Depends(get_db)):
 def adminDashboard(request: Request, msg: str = None, db: Session = Depends(get_db)):
     # FIX: corrected broken redirect url (was 'url=admin/login')
     if not request.session.get('admin_id'):
-        return RedirectResponse(url='/admin/login', status_code=303)
+        return RedirectResponse(url='/admin/register', status_code=303)
     
     try:
         recent_orders = db.query(
