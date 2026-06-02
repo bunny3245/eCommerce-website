@@ -310,6 +310,11 @@ def collection(request: Request, db: Session = Depends(get_db)):
     })
 
 
+
+# @app.get('/top-collections')
+# def topCollections(request:Request, db : Session = Depends(get_db)):
+    # try:
+
 @app.get('/api/product/{product_id}')
 def get_product_api(product_id: int, db: Session = Depends(get_db)):
     product = db.query(Product).filter(Product.id == product_id).first()

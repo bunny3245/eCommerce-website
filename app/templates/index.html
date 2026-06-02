@@ -88,6 +88,7 @@
         margin-bottom: 40px;
         font-weight: 300;
     }
+    .hero-actions { display: flex; align-items: center; gap: 20px; flex-wrap: wrap; }
     .hero-cta {
         display: inline-flex;
         align-items: center;
@@ -111,6 +112,19 @@
         transform: translateY(-2px);
         box-shadow: 0 12px 32px rgba(184,149,106,0.35);
     }
+    .hero-cta-ghost {
+        font-size: 12px;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        color: var(--ink-soft, #8a7a6a);
+        text-decoration: none;
+        font-family: var(--font-body, 'Outfit', sans-serif);
+        font-weight: 500;
+        border-bottom: 1px solid currentColor;
+        padding-bottom: 2px;
+        transition: color 0.2s;
+    }
+    .hero-cta-ghost:hover { color: var(--gold, #b8956a); }
     .hero-stats {
         display: flex;
         gap: 32px;
@@ -160,14 +174,8 @@
     }
     .hero-card-1 { bottom: 60px; left: -20px; min-width: 180px; }
     .hero-card-2 { top: 80px; right: -20px; min-width: 160px; }
-    .hc-label {
-        font-size: 9px; letter-spacing: 2px; text-transform: uppercase;
-        color: var(--ink-soft, #8a7a6a); margin-bottom: 6px; font-weight: 500;
-    }
-    .hc-title {
-        font-family: var(--font-display, 'Playfair Display', serif);
-        font-size: 1rem; font-weight: 700; color: var(--ink, #1c1610); margin-bottom: 2px;
-    }
+    .hc-label { font-size: 9px; letter-spacing: 2px; text-transform: uppercase; color: var(--ink-soft, #8a7a6a); margin-bottom: 6px; font-weight: 500; }
+    .hc-title { font-family: var(--font-display, 'Playfair Display', serif); font-size: 1rem; font-weight: 700; color: var(--ink, #1c1610); margin-bottom: 2px; }
     .hc-sub { font-size: 11px; color: var(--gold, #b8956a); font-weight: 400; }
     .hc-dots { display: flex; gap: 4px; margin-top: 8px; }
     .hc-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--sand-dark, #d4c4b0); }
@@ -177,6 +185,7 @@
         .hero-inner { grid-template-columns: 1fr; gap: 40px; padding: 60px 24px 40px; text-align: center; }
         .hero-label { justify-content: center; }
         .hero-desc { margin: 0 auto 32px; }
+        .hero-actions { justify-content: center; }
         .hero-stats { justify-content: center; }
         .hero-img-main { height: 380px; max-width: 300px; }
         .hero-card-1 { left: 0; bottom: 20px; }
@@ -186,10 +195,7 @@
 
     /* ── MARQUEE ── */
     .strip { background: var(--ink, #1c1610); padding: 13px 0; overflow: hidden; }
-    .strip-track {
-        display: flex; gap: 56px; width: max-content;
-        animation: marquee 24s linear infinite;
-    }
+    .strip-track { display: flex; gap: 56px; width: max-content; animation: marquee 24s linear infinite; }
     .strip-item {
         display: flex; align-items: center; gap: 10px; white-space: nowrap;
         font-size: 11px; letter-spacing: 2px; text-transform: uppercase;
@@ -197,177 +203,302 @@
         font-family: var(--font-body, 'Outfit', sans-serif); font-weight: 400;
     }
     .strip-item i { color: var(--gold, #b8956a); font-size: 6px; }
-    @keyframes marquee {
-        from { transform: translateX(0); }
-        to   { transform: translateX(-50%); }
-    }
+    @keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
 
-    /* ── SECTIONS ── */
-    .pf-section { padding: 80px 0 64px; }
-    .pf-section.alt { background: rgba(253,250,246,0.5); }
+    /* ── GENDER SHOWCASE (replaces old sections) ── */
+    .showcase { padding: 100px 0; }
+    .showcase.alt { background: #faf7f2; }
     .section-wrap { max-width: 1320px; margin: 0 auto; padding: 0 40px; }
-    .section-top {
-        display: flex; align-items: flex-end;
-        justify-content: space-between; margin-bottom: 40px;
+
+    /* Section intro — eyebrow + title + link in one row */
+    .section-head {
+        display: flex;
+        align-items: flex-end;
+        justify-content: space-between;
+        margin-bottom: 48px;
+        gap: 20px;
     }
+    .section-head-left {}
     .section-eyebrow {
         font-size: 10px; letter-spacing: 3px; text-transform: uppercase;
-        color: var(--gold, #b8956a); margin-bottom: 8px; font-weight: 500; display: block;
+        color: var(--gold, #b8956a); margin-bottom: 8px; font-weight: 600; display: block;
     }
     .section-title {
         font-family: var(--font-display, 'Playfair Display', serif);
-        font-size: clamp(1.8rem, 3vw, 2.6rem); font-weight: 700;
-        color: var(--ink, #1c1610); letter-spacing: -0.5px; line-height: 1;
+        font-size: clamp(2rem, 3.5vw, 3rem);
+        font-weight: 700;
+        color: var(--ink, #1c1610);
+        letter-spacing: -1px;
+        line-height: 1;
+    }
+    .section-desc {
+        font-size: 13px;
+        color: var(--ink-soft, #8a7a6a);
+        margin-top: 8px;
+        font-weight: 300;
+        max-width: 340px;
+        line-height: 1.6;
     }
     .view-all {
-        font-size: 11px; letter-spacing: 2px; text-transform: uppercase;
-        color: var(--ink-soft, #8a7a6a); text-decoration: none;
-        display: flex; align-items: center; gap: 6px;
-        font-weight: 500; transition: color 0.2s, gap 0.2s; white-space: nowrap;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 11px;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        color: var(--ink, #1c1610);
+        text-decoration: none;
+        font-weight: 500;
+        border: 1px solid rgba(28,22,16,0.2);
+        padding: 10px 24px;
+        border-radius: 50px;
+        transition: all 0.25s;
+        white-space: nowrap;
+        flex-shrink: 0;
     }
-    .view-all:hover { color: var(--gold, #b8956a); gap: 10px; }
+    .view-all:hover {
+        background: var(--ink, #1c1610);
+        color: #fff;
+        border-color: var(--ink, #1c1610);
+        gap: 12px;
+    }
 
     /* ── PRODUCT GRID ── */
-    .prod-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
+    .prod-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 24px;
+    }
     @media (max-width: 1100px) { .prod-grid { grid-template-columns: repeat(3, 1fr); } }
     @media (max-width: 768px)  { .prod-grid { grid-template-columns: repeat(2, 1fr); gap: 14px; } }
 
     /* ── PRODUCT CARD ── */
     .prod-card {
-        background: var(--card-bg, #faf7f3);
-        border: 1px solid rgba(28,22,16,0.07);
-        border-radius: 16px; overflow: hidden;
-        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        background: #fff;
+        border-radius: 20px;
+        overflow: hidden;
+        transition: transform 0.35s ease, box-shadow 0.35s ease;
         position: relative;
+        border: 1px solid rgba(28,22,16,0.06);
     }
-    .prod-card:hover { transform: translateY(-6px); box-shadow: 0 20px 48px rgba(28,22,16,0.12); }
+    .prod-card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 24px 56px rgba(28,22,16,0.13);
+    }
     .prod-img-wrap {
-        position: relative; aspect-ratio: 1/1;
-        overflow: hidden; background: var(--sand, #e8ddd0);
+        position: relative;
+        aspect-ratio: 1/1;
+        overflow: hidden;
+        background: #f5f0ea;
     }
     .prod-img-wrap img {
-        width: 100%; height: 100%; object-fit: cover;
-        transition: transform 0.5s ease; display: block;
+        width: 100%; height: 100%;
+        object-fit: cover;
+        transition: transform 0.55s ease;
+        display: block;
     }
-    .prod-card:hover .prod-img-wrap img { transform: scale(1.06); }
+    .prod-card:hover .prod-img-wrap img { transform: scale(1.07); }
+
+    /* badges */
     .badge-new {
-        position: absolute; top: 12px; left: 12px;
+        position: absolute; top: 14px; left: 14px;
         background: var(--gold, #b8956a); color: #fff;
         font-size: 9px; letter-spacing: 1.5px; text-transform: uppercase;
         padding: 4px 12px; border-radius: 20px; font-weight: 600; z-index: 2;
     }
     .oos-overlay {
-        position: absolute; inset: 0; background: rgba(28,22,16,0.6);
+        position: absolute; inset: 0; background: rgba(28,22,16,0.55);
         display: flex; align-items: center; justify-content: center; z-index: 3;
     }
     .oos-tag {
-        background: var(--white, #fdfaf6); color: var(--ink, #1c1610);
+        background: #fff; color: var(--ink, #1c1610);
         font-size: 9px; letter-spacing: 2px; text-transform: uppercase;
         padding: 7px 16px; border-radius: 20px; font-weight: 600;
     }
+
+    /* hover overlays */
     .quick-view-btn {
         position: absolute; top: 50%; left: 50%;
         transform: translate(-50%, -50%);
-        background: rgba(253,250,246,0.95); color: var(--ink, #1c1610);
-        border: none; padding: 9px 20px; border-radius: 30px;
+        background: rgba(253,250,246,0.96); color: var(--ink, #1c1610);
+        border: none; padding: 10px 22px; border-radius: 30px;
         font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase;
         cursor: pointer; opacity: 0; transition: opacity 0.22s; z-index: 5;
         font-family: var(--font-body, 'Outfit', sans-serif); font-weight: 500;
-        white-space: nowrap; box-shadow: 0 4px 16px rgba(28,22,16,0.15);
+        white-space: nowrap; box-shadow: 0 4px 20px rgba(28,22,16,0.18);
     }
     .prod-img-wrap:hover .quick-view-btn { opacity: 1; }
     .quick-add {
         position: absolute; bottom: 0; left: 0; right: 0;
-        transform: translateY(100%); transition: transform 0.28s ease; z-index: 4;
+        transform: translateY(100%); transition: transform 0.3s ease; z-index: 4;
     }
     .prod-card:hover .quick-add { transform: translateY(0); }
     .quick-add button {
         width: 100%; border: none; background: var(--ink, #1c1610); color: #fff;
-        padding: 12px 0; font-size: 10px; letter-spacing: 2px; text-transform: uppercase;
+        padding: 13px 0; font-size: 10px; letter-spacing: 2px; text-transform: uppercase;
         cursor: pointer; font-family: var(--font-body, 'Outfit', sans-serif); font-weight: 500;
         transition: background 0.22s;
     }
     .quick-add button:hover { background: var(--gold, #b8956a); }
-    .quick-add button.oos { background: rgba(28,22,16,0.4); cursor: not-allowed; }
-    .quick-add button.oos:hover { background: rgba(28,22,16,0.4); }
-    .prod-info { padding: 16px 18px 18px; }
-    .prod-name { font-size: 14px; font-weight: 500; color: var(--ink, #1c1610); margin-bottom: 3px; letter-spacing: 0.2px; }
-    .prod-sub { font-size: 10px; letter-spacing: 1px; text-transform: uppercase; color: var(--ink-soft, #8a7a6a); margin-bottom: 10px; font-weight: 400; }
+    .quick-add button.oos { background: rgba(28,22,16,0.35); cursor: not-allowed; }
+
+    /* card info */
+    .prod-info { padding: 18px 20px 20px; }
+    .prod-name {
+        font-size: 14px; font-weight: 600; color: var(--ink, #1c1610);
+        margin-bottom: 3px; letter-spacing: 0.2px;
+        white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .prod-sub {
+        font-size: 10px; letter-spacing: 1px; text-transform: uppercase;
+        color: var(--ink-soft, #8a7a6a); margin-bottom: 12px; font-weight: 400;
+    }
     .prod-bottom { display: flex; justify-content: space-between; align-items: center; }
-    .prod-price { font-family: var(--font-display, 'Playfair Display', serif); font-size: 1.2rem; font-weight: 700; color: var(--gold-dark, #9a7550); }
-    .stock-low { font-size: 9px; letter-spacing: 1px; text-transform: uppercase; color: #9a6b20; background: #fef3e2; padding: 3px 9px; border-radius: 10px; font-weight: 500; }
-    .stock-out { font-size: 9px; letter-spacing: 1px; text-transform: uppercase; color: #a33; background: #fdecea; padding: 3px 9px; border-radius: 10px; font-weight: 500; }
-    .empty-state { text-align: center; padding: 60px 0; color: var(--ink-soft, #8a7a6a); font-size: 14px; letter-spacing: 0.5px; }
+    .prod-price {
+        font-family: var(--font-display, 'Playfair Display', serif);
+        font-size: 1.15rem; font-weight: 700; color: var(--gold-dark, #9a7550);
+    }
+    .prod-badge-low {
+        font-size: 9px; letter-spacing: 0.8px; text-transform: uppercase;
+        color: #9a6b20; background: #fef3e2; padding: 3px 9px;
+        border-radius: 10px; font-weight: 500;
+    }
+    .prod-badge-out {
+        font-size: 9px; letter-spacing: 0.8px; text-transform: uppercase;
+        color: #a33; background: #fdecea; padding: 3px 9px;
+        border-radius: 10px; font-weight: 500;
+    }
+    .empty-state {
+        text-align: center; padding: 60px 0;
+        color: var(--ink-soft, #8a7a6a); font-size: 14px;
+    }
+
+    /* ── DIVIDER BAND ── */
+    .divider-band {
+        padding: 48px 0;
+        background: var(--ink, #1c1610);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 60px;
+        flex-wrap: wrap;
+    }
+    .db-item {
+        text-align: center;
+        color: rgba(253,250,246,0.5);
+    }
+    .db-num {
+        font-family: var(--font-display, 'Playfair Display', serif);
+        font-size: 2.4rem;
+        font-weight: 700;
+        color: var(--gold, #b8956a);
+        display: block;
+        line-height: 1;
+        margin-bottom: 6px;
+    }
+    .db-label {
+        font-size: 10px;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        font-weight: 400;
+    }
+    .db-sep {
+        width: 1px;
+        height: 40px;
+        background: rgba(255,255,255,0.1);
+    }
+    @media (max-width: 600px) { .db-sep { display: none; } }
 
     /* ── QUICK VIEW MODAL ── */
     .qv-modal {
         display: none; position: fixed; inset: 0;
-        background: rgba(28,22,16,0.65); z-index: 9000;
+        background: rgba(28,22,16,0.7); z-index: 9000;
         align-items: center; justify-content: center; padding: 20px;
+        backdrop-filter: blur(4px);
     }
     .qv-modal.open { display: flex; }
     .qv-box {
-        background: var(--white, #fdfaf6); border-radius: 20px;
-        width: 100%; max-width: 880px; max-height: 90vh; overflow-y: auto;
-        position: relative; animation: qvIn 0.26s ease;
+        background: #fdfaf6; border-radius: 24px;
+        width: 100%; max-width: 900px; max-height: 90vh; overflow-y: auto;
+        position: relative; animation: qvIn 0.28s ease;
+        box-shadow: 0 40px 100px rgba(28,22,16,0.25);
     }
     @keyframes qvIn {
-        from { opacity: 0; transform: scale(0.95) translateY(20px); }
+        from { opacity: 0; transform: scale(0.94) translateY(24px); }
         to   { opacity: 1; transform: scale(1) translateY(0); }
     }
     .qv-close {
-        position: absolute; top: 16px; right: 16px;
-        background: var(--warm-bg, #f0ebe3); border: none;
-        width: 38px; height: 38px; border-radius: 50%;
-        cursor: pointer; font-size: 18px; color: var(--ink, #1c1610);
+        position: absolute; top: 18px; right: 18px;
+        background: rgba(28,22,16,0.06); border: none;
+        width: 40px; height: 40px; border-radius: 50%;
+        cursor: pointer; font-size: 20px; color: var(--ink, #1c1610);
         display: flex; align-items: center; justify-content: center;
         z-index: 10; transition: background 0.2s;
     }
-    .qv-close:hover { background: var(--sand, #e8ddd0); }
+    .qv-close:hover { background: rgba(28,22,16,0.12); }
     .qv-body { display: grid; grid-template-columns: 1fr 1fr; }
-    .qv-img img { width: 100%; height: 420px; object-fit: cover; border-radius: 20px 0 0 20px; }
-    .qv-info { padding: 40px 36px; }
-    .qv-name { font-family: var(--font-display, 'Playfair Display', serif); font-size: 2rem; font-weight: 700; color: var(--ink, #1c1610); margin-bottom: 8px; }
-    .qv-price { font-family: var(--font-display, 'Playfair Display', serif); font-size: 1.6rem; color: var(--gold-dark, #9a7550); font-weight: 700; margin-bottom: 20px; }
-    .qv-stock-ok  { font-size: 12px; color: #2e7d32; background: #e8f5e9; padding: 9px 16px; border-radius: 8px; margin-bottom: 20px; font-weight: 500; }
-    .qv-stock-low { font-size: 12px; color: #9a6b20; background: #fef3e2; padding: 9px 16px; border-radius: 8px; margin-bottom: 20px; font-weight: 500; }
-    .qv-stock-out { font-size: 12px; color: #c62828; background: #fdecea; padding: 9px 16px; border-radius: 8px; margin-bottom: 20px; font-weight: 500; }
-    .qv-atc {
-        display: block; width: 100%;
-        background: var(--ink, #1c1610); color: #fff;
-        border: none; padding: 15px; border-radius: 10px;
-        font-size: 11px; letter-spacing: 2px; text-transform: uppercase;
-        cursor: pointer; font-family: var(--font-body, 'Outfit', sans-serif); font-weight: 500;
-        transition: background 0.22s, transform 0.22s;
+    .qv-img { position: relative; background: #f5f0ea; border-radius: 24px 0 0 24px; overflow: hidden; }
+    .qv-img img { width: 100%; height: 100%; min-height: 420px; object-fit: cover; display: block; }
+    .qv-info { padding: 44px 40px; display: flex; flex-direction: column; }
+    .qv-gender-tag {
+        display: inline-block;
+        font-size: 9px; letter-spacing: 2px; text-transform: uppercase;
+        color: var(--gold, #b8956a); font-weight: 600;
+        background: rgba(184,149,106,0.1);
+        padding: 4px 12px; border-radius: 20px;
+        margin-bottom: 14px; width: fit-content;
     }
-    .qv-atc:hover { background: var(--gold, #b8956a); transform: translateY(-1px); }
-    .qv-atc:disabled { background: #ccc; cursor: not-allowed; transform: none; }
-    .qv-loading { padding: 60px; text-align: center; color: var(--ink-soft, #8a7a6a); font-size: 13px; }
-
-    /* ── NOTES ── */
-    .qv-notes { display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px; }
+    .qv-name {
+        font-family: var(--font-display, 'Playfair Display', serif);
+        font-size: 1.9rem; font-weight: 700; color: var(--ink, #1c1610);
+        margin-bottom: 6px; line-height: 1.1;
+    }
+    .qv-price {
+        font-family: var(--font-display, 'Playfair Display', serif);
+        font-size: 1.5rem; color: var(--gold-dark, #9a7550);
+        font-weight: 700; margin-bottom: 22px;
+    }
+    /* notes */
+    .qv-notes { display: flex; flex-direction: column; gap: 10px; margin-bottom: 22px; }
     .qv-note-row {
         display: flex; align-items: flex-start; gap: 12px;
-        padding: 10px 14px;
-        background: var(--warm-bg, #f0ebe3);
-        border-radius: 10px;
+        padding: 11px 14px;
+        background: #f5f0ea;
+        border-radius: 12px;
     }
-    .qv-note-icon { color: var(--gold, #b8956a); font-size: 12px; margin-top: 2px; flex-shrink: 0; }
+    .qv-note-icon { color: var(--gold, #b8956a); font-size: 13px; margin-top: 1px; flex-shrink: 0; }
     .qv-note-label {
         font-size: 9px; letter-spacing: 2px; text-transform: uppercase;
         color: var(--gold-dark, #9a7550); font-weight: 600; margin-bottom: 3px;
     }
     .qv-note-val { font-size: 12px; color: var(--ink-mid, #4a3f32); line-height: 1.6; font-weight: 300; }
-    .qv-desc-plain { font-size: 13px; line-height: 1.8; color: var(--ink-mid, #4a3f32); margin-bottom: 20px; font-weight: 300; }
+    .qv-desc-plain { font-size: 13px; line-height: 1.8; color: var(--ink-mid, #4a3f32); margin-bottom: 22px; font-weight: 300; }
+    .qv-stock-ok  { font-size: 12px; color: #2e7d32; background: #e8f5e9; padding: 9px 16px; border-radius: 8px; margin-bottom: 20px; font-weight: 500; }
+    .qv-stock-low { font-size: 12px; color: #9a6b20; background: #fef3e2; padding: 9px 16px; border-radius: 8px; margin-bottom: 20px; font-weight: 500; }
+    .qv-stock-out { font-size: 12px; color: #c62828; background: #fdecea; padding: 9px 16px; border-radius: 8px; margin-bottom: 20px; font-weight: 500; }
+    .qv-atc {
+        display: block; width: 100%; margin-top: auto;
+        background: var(--ink, #1c1610); color: #fff;
+        border: none; padding: 16px;
+        border-radius: 12px;
+        font-size: 11px; letter-spacing: 2px; text-transform: uppercase;
+        cursor: pointer; font-family: var(--font-body, 'Outfit', sans-serif); font-weight: 500;
+        transition: background 0.22s, transform 0.22s;
+    }
+    .qv-atc:hover { background: var(--gold, #b8956a); transform: translateY(-2px); }
+    .qv-atc:disabled { background: #ccc; cursor: not-allowed; transform: none; }
+    .qv-loading { padding: 80px; text-align: center; color: var(--ink-soft, #8a7a6a); font-size: 13px; }
 
     @media (max-width: 700px) {
         .qv-body { grid-template-columns: 1fr; }
-        .qv-img img { border-radius: 20px 20px 0 0; height: 280px; }
+        .qv-img { border-radius: 24px 24px 0 0; }
+        .qv-img img { min-height: 280px; }
         .qv-info { padding: 28px 24px; }
+        .showcase { padding: 64px 0; }
+        .section-head { flex-direction: column; align-items: flex-start; }
     }
     @media (max-width: 600px) {
         .section-wrap { padding: 0 20px; }
-        .section-top { flex-direction: column; align-items: flex-start; gap: 12px; }
         .hero-inner { padding: 60px 20px 40px; }
     }
 </style>
@@ -382,12 +513,15 @@
                 <span>Signature Collection</span>
             </div>
             <h1 class="hero-title">THE<br>PERFECT</h1>
-            <span class="hero-title-italic">Fragrance</span>
+            <span class="hero-title-italic">Fragrance®</span>
             <span class="hero-slash">/ We craft luxury scents /</span>
             <p class="hero-desc">
                 Experience a world of luxurious fragrances crafted to elevate your presence and define your signature scent.
             </p>
-            <a href="/collection" class="hero-cta">Explore the Collection →</a>
+            <div class="hero-actions">
+                <a href="/collection" class="hero-cta">Explore the Collection →</a>
+                <a href="#him" class="hero-cta-ghost">Top Picks</a>
+            </div>
             <div class="hero-stats">
                 <div>
                     <span class="hero-stat-num">200+</span>
@@ -426,7 +560,7 @@
     </div>
 </section>
 
-<!-- STRIP -->
+<!-- MARQUEE STRIP -->
 <div class="strip">
     <div class="strip-track">
         <span class="strip-item"><i class="fas fa-circle"></i> Free Shipping Over Rs. 3,000</span>
@@ -440,126 +574,191 @@
     </div>
 </div>
 
-<!-- MALE -->
-<section class="pf-section">
+<!-- FOR HIM -->
+<section class="showcase" id="him">
     <div class="section-wrap">
-        <div class="section-top">
-            <div>
-                <span class="section-eyebrow">For Him</span>
-                <h2 class="section-title">Male Collection</h2>
+        <div class="section-head">
+            <div class="section-head-left">
+                <span class="section-eyebrow">Top Picks · For Him</span>
+                <h2 class="section-title">His Signature<br>Scents</h2>
+                <p class="section-desc">Bold, deep, and enduring — fragrances built for the modern man.</p>
             </div>
-            <a href="/collection" class="view-all">View All <i class="fas fa-arrow-right" style="font-size:10px;"></i></a>
+            <a href="/collection?gender=male" class="view-all">Full Collection →</a>
         </div>
         {% if male_products %}
         <div class="prod-grid">
             {% for product in male_products %}
             <div class="prod-card">
                 <div class="prod-img-wrap">
-                    <img src="{{ product.image if product.image and product.image.startswith('/static/') else '/static/uploads/default.jpg' }}" alt="{{ product.name }}">
-                    {% if product.created_at and product.created_at.date() >= week_ago and product.stock > 0 %}<span class="badge-new">New</span>{% endif %}
-                    {% if product.stock == 0 %}<div class="oos-overlay"><span class="oos-tag">Out of Stock</span></div>{% endif %}
+                    <img src="{{ product.image if product.image else '/static/uploads/default.jpg' }}"
+                         alt="{{ product.name }}"
+                         onerror="this.src='/static/uploads/default.jpg'">
+                    {% if product.created_at and product.created_at.date() >= week_ago and product.stock > 0 %}
+                        <span class="badge-new">New</span>
+                    {% endif %}
+                    {% if product.stock == 0 %}
+                        <div class="oos-overlay"><span class="oos-tag">Out of Stock</span></div>
+                    {% endif %}
                     <button class="quick-view-btn" onclick="openQV('{{ product.id }}')">Quick View</button>
                     <div class="quick-add">
                         {% if product.stock > 0 %}
-                        <form action="/add-to-cart/{{ product.id }}" method="POST"><button type="submit">Add to Cart</button></form>
-                        {% else %}<button class="oos" disabled>Out of Stock</button>{% endif %}
+                        <form action="/add-to-cart/{{ product.id }}" method="POST">
+                            <button type="submit">Add to Cart</button>
+                        </form>
+                        {% else %}
+                        <button class="oos" disabled>Out of Stock</button>
+                        {% endif %}
                     </div>
                 </div>
                 <div class="prod-info">
                     <div class="prod-name">{{ product.name }}</div>
-                    <div class="prod-sub">Eau De Parfum</div>
+                    <div class="prod-sub">Eau De Parfum · For Him</div>
                     <div class="prod-bottom">
                         <span class="prod-price">Rs. {{ product.price }}</span>
-                        {% if product.stock == 0 %}<span class="stock-out">Out of Stock</span>
-                        {% elif product.stock < 5 %}<span class="stock-low">Only {{ product.stock }} left</span>{% endif %}
+                        {% if product.stock == 0 %}<span class="prod-badge-out">Sold Out</span>
+                        {% elif product.stock < 5 %}<span class="prod-badge-low">Only {{ product.stock }} left</span>
+                        {% endif %}
                     </div>
                 </div>
             </div>
             {% endfor %}
         </div>
-        {% else %}<div class="empty-state">Male collection coming soon.</div>{% endif %}
+        {% else %}
+        <div class="empty-state">Male collection coming soon.</div>
+        {% endif %}
     </div>
 </section>
 
-<!-- FEMALE -->
-<section class="pf-section alt">
+<!-- STATS BAND -->
+<div class="divider-band">
+    <div class="db-item">
+        <span class="db-num">200+</span>
+        <span class="db-label">Fragrances</span>
+    </div>
+    <div class="db-sep"></div>
+    <div class="db-item">
+        <span class="db-num">800+</span>
+        <span class="db-label">Happy Customers</span>
+    </div>
+    <div class="db-sep"></div>
+    <div class="db-item">
+        <span class="db-num">4.8★</span>
+        <span class="db-label">Average Rating</span>
+    </div>
+    <div class="db-sep"></div>
+    <div class="db-item">
+        <span class="db-num">48h</span>
+        <span class="db-label">Dispatch Time</span>
+    </div>
+</div>
+
+<!-- FOR HER -->
+<section class="showcase alt" id="her">
     <div class="section-wrap">
-        <div class="section-top">
-            <div>
-                <span class="section-eyebrow">For Her</span>
-                <h2 class="section-title">Female Collection</h2>
+        <div class="section-head">
+            <div class="section-head-left">
+                <span class="section-eyebrow">Top Picks · For Her</span>
+                <h2 class="section-title">Her Signature<br>Scents</h2>
+                <p class="section-desc">Soft, radiant, and unforgettable — scents that speak for themselves.</p>
             </div>
-            <a href="/collection" class="view-all">View All <i class="fas fa-arrow-right" style="font-size:10px;"></i></a>
+            <a href="/collection?gender=female" class="view-all">Full Collection →</a>
         </div>
         {% if female_products %}
         <div class="prod-grid">
             {% for product in female_products %}
             <div class="prod-card">
                 <div class="prod-img-wrap">
-                    <img src="{{ product.image if product.image and product.image.startswith('/static/') else '/static/uploads/default.jpg' }}" alt="{{ product.name }}">
-                    {% if product.created_at and product.created_at.date() >= week_ago and product.stock > 0 %}<span class="badge-new">New</span>{% endif %}
-                    {% if product.stock == 0 %}<div class="oos-overlay"><span class="oos-tag">Out of Stock</span></div>{% endif %}
+                    <img src="{{ product.image if product.image else '/static/uploads/default.jpg' }}"
+                         alt="{{ product.name }}"
+                         onerror="this.src='/static/uploads/default.jpg'">
+                    {% if product.created_at and product.created_at.date() >= week_ago and product.stock > 0 %}
+                        <span class="badge-new">New</span>
+                    {% endif %}
+                    {% if product.stock == 0 %}
+                        <div class="oos-overlay"><span class="oos-tag">Out of Stock</span></div>
+                    {% endif %}
                     <button class="quick-view-btn" onclick="openQV('{{ product.id }}')">Quick View</button>
                     <div class="quick-add">
                         {% if product.stock > 0 %}
-                        <form action="/add-to-cart/{{ product.id }}" method="POST"><button type="submit">Add to Cart</button></form>
-                        {% else %}<button class="oos" disabled>Out of Stock</button>{% endif %}
+                        <form action="/add-to-cart/{{ product.id }}" method="POST">
+                            <button type="submit">Add to Cart</button>
+                        </form>
+                        {% else %}
+                        <button class="oos" disabled>Out of Stock</button>
+                        {% endif %}
                     </div>
                 </div>
                 <div class="prod-info">
                     <div class="prod-name">{{ product.name }}</div>
-                    <div class="prod-sub">Eau De Parfum</div>
+                    <div class="prod-sub">Eau De Parfum · For Her</div>
                     <div class="prod-bottom">
                         <span class="prod-price">Rs. {{ product.price }}</span>
-                        {% if product.stock == 0 %}<span class="stock-out">Out of Stock</span>
-                        {% elif product.stock < 5 %}<span class="stock-low">Only {{ product.stock }} left</span>{% endif %}
+                        {% if product.stock == 0 %}<span class="prod-badge-out">Sold Out</span>
+                        {% elif product.stock < 5 %}<span class="prod-badge-low">Only {{ product.stock }} left</span>
+                        {% endif %}
                     </div>
                 </div>
             </div>
             {% endfor %}
         </div>
-        {% else %}<div class="empty-state">Female collection coming soon.</div>{% endif %}
+        {% else %}
+        <div class="empty-state">Female collection coming soon.</div>
+        {% endif %}
     </div>
 </section>
 
-<!-- UNISEX -->
-<section class="pf-section">
+<!-- FOR BOTH -->
+<section class="showcase" id="both">
     <div class="section-wrap">
-        <div class="section-top">
-            <div>
-                <span class="section-eyebrow">For Everyone</span>
-                <h2 class="section-title">Unisex Collection</h2>
+        <div class="section-head">
+            <div class="section-head-left">
+                <span class="section-eyebrow">Top Picks · For Both</span>
+                <h2 class="section-title">Scents With<br>No Boundaries</h2>
+                <p class="section-desc">Made for everyone — wear it your way.</p>
             </div>
-            <a href="/collection" class="view-all">View All <i class="fas fa-arrow-right" style="font-size:10px;"></i></a>
+            <a href="/collection?gender=unisex" class="view-all">Full Collection →</a>
         </div>
         {% if unisex %}
         <div class="prod-grid">
             {% for product in unisex %}
             <div class="prod-card">
                 <div class="prod-img-wrap">
-                    <img src="{{ product.image if product.image and product.image.startswith('/static/') else '/static/uploads/default.jpg' }}" alt="{{ product.name }}">
-                    {% if product.created_at and product.created_at.date() >= week_ago and product.stock > 0 %}<span class="badge-new">New</span>{% endif %}
-                    {% if product.stock == 0 %}<div class="oos-overlay"><span class="oos-tag">Out of Stock</span></div>{% endif %}
+                    <img src="{{ product.image if product.image else '/static/uploads/default.jpg' }}"
+                         alt="{{ product.name }}"
+                         onerror="this.src='/static/uploads/default.jpg'">
+                    {% if product.created_at and product.created_at.date() >= week_ago and product.stock > 0 %}
+                        <span class="badge-new">New</span>
+                    {% endif %}
+                    {% if product.stock == 0 %}
+                        <div class="oos-overlay"><span class="oos-tag">Out of Stock</span></div>
+                    {% endif %}
                     <button class="quick-view-btn" onclick="openQV('{{ product.id }}')">Quick View</button>
                     <div class="quick-add">
                         {% if product.stock > 0 %}
-                        <form action="/add-to-cart/{{ product.id }}" method="POST"><button type="submit">Add to Cart</button></form>
-                        {% else %}<button class="oos" disabled>Out of Stock</button>{% endif %}
+                        <form action="/add-to-cart/{{ product.id }}" method="POST">
+                            <button type="submit">Add to Cart</button>
+                        </form>
+                        {% else %}
+                        <button class="oos" disabled>Out of Stock</button>
+                        {% endif %}
                     </div>
                 </div>
                 <div class="prod-info">
                     <div class="prod-name">{{ product.name }}</div>
-                    <div class="prod-sub">Eau De Parfum</div>
+                    <div class="prod-sub">Eau De Parfum · Unisex</div>
                     <div class="prod-bottom">
                         <span class="prod-price">Rs. {{ product.price }}</span>
-                        {% if product.stock == 0 %}<span class="stock-out">Out of Stock</span>
-                        {% elif product.stock < 5 %}<span class="stock-low">Only {{ product.stock }} left</span>{% endif %}
+                        {% if product.stock == 0 %}<span class="prod-badge-out">Sold Out</span>
+                        {% elif product.stock < 5 %}<span class="prod-badge-low">Only {{ product.stock }} left</span>
+                        {% endif %}
                     </div>
                 </div>
             </div>
             {% endfor %}
         </div>
-        {% else %}<div class="empty-state">Unisex collection coming soon.</div>{% endif %}
+        {% else %}
+        <div class="empty-state">Unisex collection coming soon.</div>
+        {% endif %}
     </div>
 </section>
 
@@ -567,23 +766,20 @@
 <div class="qv-modal" id="qvModal" onclick="closeQV(event)">
     <div class="qv-box">
         <button class="qv-close" onclick="document.getElementById('qvModal').classList.remove('open')">&times;</button>
-        <div id="qvContent" class="qv-loading">Loading...</div>
+        <div id="qvContent" class="qv-loading">Loading fragrance details...</div>
     </div>
 </div>
 
 <script>
     function parseNotes(desc) {
         if (!desc) return '<p class="qv-desc-plain">A luxurious fragrance crafted to elevate your presence.</p>';
-
         const sections = [
             { key: 'Top Notes',   icon: '◈' },
             { key: 'Heart Notes', icon: '◉' },
             { key: 'Base Notes',  icon: '◆' },
         ];
-
         const hasNotes = sections.some(s => desc.toLowerCase().includes(s.key.toLowerCase()));
         if (!hasNotes) return `<p class="qv-desc-plain">${desc}</p>`;
-
         const allKeys = sections.map(s => s.key);
         let html = '<div class="qv-notes">';
         sections.forEach((s, i) => {
@@ -593,14 +789,13 @@
                 : new RegExp(`${s.key}:\\s*(.+)$`, 'is');
             const match = desc.match(pattern);
             if (match) {
-                html += `
-                    <div class="qv-note-row">
-                        <span class="qv-note-icon">${s.icon}</span>
-                        <div>
-                            <div class="qv-note-label">${s.key}</div>
-                            <div class="qv-note-val">${match[1].trim()}</div>
-                        </div>
-                    </div>`;
+                html += `<div class="qv-note-row">
+                    <span class="qv-note-icon">${s.icon}</span>
+                    <div>
+                        <div class="qv-note-label">${s.key}</div>
+                        <div class="qv-note-val">${match[1].trim()}</div>
+                    </div>
+                </div>`;
             }
         });
         html += '</div>';
@@ -611,24 +806,22 @@
         const modal = document.getElementById('qvModal');
         const content = document.getElementById('qvContent');
         modal.classList.add('open');
+        document.body.style.overflow = 'hidden';
         content.innerHTML = '<div class="qv-loading">Loading fragrance details...</div>';
         fetch(`/api/product/${id}`)
             .then(r => r.json())
             .then(p => {
                 let stockHtml = '', disabled = '';
-                if (p.stock === 0) {
-                    stockHtml = `<div class="qv-stock-out">Out of stock</div>`;
-                    disabled = 'disabled';
-                } else if (p.stock < 5) {
-                    stockHtml = `<div class="qv-stock-low">Only ${p.stock} left in stock</div>`;
-                } else {
-                    stockHtml = `<div class="qv-stock-ok">In stock &amp; ready to ship</div>`;
-                }
-                const img = p.image && p.image.startsWith('/static/') ? p.image : '/static/uploads/default.jpg';
+                if (p.stock === 0) { stockHtml = `<div class="qv-stock-out">Out of stock</div>`; disabled = 'disabled'; }
+                else if (p.stock < 5) { stockHtml = `<div class="qv-stock-low">Only ${p.stock} left in stock</div>`; }
+                else { stockHtml = `<div class="qv-stock-ok">In stock &amp; ready to ship</div>`; }
+                const img = p.image ? p.image : '/static/uploads/default.jpg';
+                const genderLabel = p.gender === 'male' ? 'For Him' : p.gender === 'female' ? 'For Her' : 'Unisex';
                 content.innerHTML = `
                     <div class="qv-body">
-                        <div class="qv-img"><img src="${img}" alt="${p.name}"></div>
+                        <div class="qv-img"><img src="${img}" alt="${p.name}" onerror="this.src='/static/uploads/default.jpg'"></div>
                         <div class="qv-info">
+                            <span class="qv-gender-tag">${genderLabel} · Eau De Parfum</span>
                             <h2 class="qv-name">${p.name}</h2>
                             <div class="qv-price">Rs. ${p.price.toLocaleString()}</div>
                             ${parseNotes(p.description)}
@@ -641,14 +834,19 @@
                         </div>
                     </div>`;
             })
-            .catch(() => {
-                content.innerHTML = '<div class="qv-loading">Could not load product.</div>';
-            });
+            .catch(() => { content.innerHTML = '<div class="qv-loading">Could not load product.</div>'; });
     }
 
     function closeQV(e) {
-        if (e.target === document.getElementById('qvModal'))
+        if (e.target === document.getElementById('qvModal')) {
             document.getElementById('qvModal').classList.remove('open');
+            document.body.style.overflow = '';
+        }
     }
+
+    document.querySelector('.qv-close').addEventListener('click', () => {
+        document.getElementById('qvModal').classList.remove('open');
+        document.body.style.overflow = '';
+    });
 </script>
 {% endblock %}
