@@ -15,7 +15,8 @@ from sqlalchemy import func
 from app.utility import GenerateTrackingID
 from pathlib import Path
 import asyncio
-
+from supabase import create_client
+import uuid
 
 
 admin_router = APIRouter()
@@ -23,6 +24,11 @@ admin_router = APIRouter()
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 templates = Jinja2Templates(directory=os.path.join(BASE_DIR,'templates'))
 
+### create supabase client
+supabase_client = create_client(
+    os.getenv('SUPABASE_URL'),
+    os.getenv('SUPABASE_KEY')
+)
 
 @admin_router.get('/admin')
 def adminHome(request: Request, db: Session = Depends(get_db)):
@@ -203,27 +209,34 @@ def productVault(request: Request, db: Session = Depends(get_db)):
 
 
 @admin_router.post('/admin/add-product')
-def addNewProduct(request: Request, db: Session = Depends(get_db),
+async def addNewProduct(request: Request, db: Session = Depends(get_db),
                   name: str = Form(...),
                   gender: str = Form(...),
                   price: int = Form(...),
                   perf_image: UploadFile = File(...),
                   stock: int = Form(...),
                   description: str = Form(...)):
+    
     # FIX: added auth check
     if not request.session.get('admin_id'):
         return RedirectResponse(url='/admin/login', status_code=303)
 
-    BASE_DIR = Path(__file__).resolve().parent.parent
-    UPLOAD_FILE = BASE_DIR / 'static' / 'uploads'
-    UPLOAD_FILE.mkdir(parents=True, exist_ok=True)
+    # generate unique uuid for image
+    file_ext = perf_image.filename.split('.')[-1] # remove the png or jpg
+    unique_filename = f'{uuid.uuid4()}.{file_ext}' # 3h34934hf.....jpg or png
 
-    FILE_PATH = os.path.join(UPLOAD_FILE, perf_image.filename)
+    # read the file bytes
+    file_bytes = await perf_image.read()
 
-    with open(FILE_PATH, 'wb') as buffer:
-        shutil.copyfileobj(perf_image.file, buffer)
-
-    db_img_path = f'/static/uploads/{perf_image.filename}'
+    #upload to supabase storage
+    supabase_client.storage.from_(os.getenv('SUPABASE_BUCKET')).upload(
+        path=unique_filename,
+        file=file_bytes,
+        file_options={'content-type':perf_image.content_type}
+        )
+    
+    # build the image public url
+    image_url =f"{os.getenv('SUPABASE_URL')}/storage/v1/object/public/{os.getenv('SUPABASE_BUCKET')}/{unique_filename}" 
 
     gender = gender.lower()
     name = name.capitalize()
@@ -231,13 +244,15 @@ def addNewProduct(request: Request, db: Session = Depends(get_db),
     new_product = Product(
         name=name,
         price=price,
-        image=db_img_path,
+        image=image_url,
         stock=stock,
         description=description,
         gender=gender
     )
 
+    # add to db
     db.add(new_product)
+    # commit changes to db
     db.commit()
 
     return RedirectResponse(url='/admin_dashboard?msg=Product+Added', status_code=303)

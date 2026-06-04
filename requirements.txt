@@ -47,3 +47,4 @@ sqlalchemy
 psycopg2-binary
 python-dotenv
 alembic        # if you use migrations
+supabase
