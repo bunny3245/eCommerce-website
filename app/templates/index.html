@@ -205,23 +205,25 @@
     .strip-item i { color: var(--gold, #b8956a); font-size: 6px; }
     @keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
 
-    /* ── GENDER SHOWCASE (replaces old sections) ── */
+    /* ── SHOWCASE SECTIONS ── */
     .showcase { padding: 100px 0; }
     .showcase.alt { background: #faf7f2; }
     .section-wrap { max-width: 1320px; margin: 0 auto; padding: 0 40px; }
 
-    /* Section intro — eyebrow + title + link in one row */
     .section-head {
         display: flex;
         align-items: flex-end;
         justify-content: space-between;
-        margin-bottom: 48px;
+        margin-bottom: 52px;
         gap: 20px;
     }
-    .section-head-left {}
     .section-eyebrow {
         font-size: 10px; letter-spacing: 3px; text-transform: uppercase;
-        color: var(--gold, #b8956a); margin-bottom: 8px; font-weight: 600; display: block;
+        color: var(--gold, #b8956a); margin-bottom: 10px; font-weight: 600; display: flex;
+        align-items: center; gap: 8px;
+    }
+    .eyebrow-dot {
+        width: 18px; height: 1px; background: var(--gold, #b8956a); display: inline-block;
     }
     .section-title {
         font-family: var(--font-display, 'Playfair Display', serif);
@@ -229,15 +231,15 @@
         font-weight: 700;
         color: var(--ink, #1c1610);
         letter-spacing: -1px;
-        line-height: 1;
+        line-height: 1.05;
     }
     .section-desc {
         font-size: 13px;
         color: var(--ink-soft, #8a7a6a);
-        margin-top: 8px;
+        margin-top: 10px;
         font-weight: 300;
-        max-width: 340px;
-        line-height: 1.6;
+        max-width: 300px;
+        line-height: 1.7;
     }
     .view-all {
         display: inline-flex;
@@ -250,7 +252,7 @@
         text-decoration: none;
         font-weight: 500;
         border: 1px solid rgba(28,22,16,0.2);
-        padding: 10px 24px;
+        padding: 11px 26px;
         border-radius: 50px;
         transition: all 0.25s;
         white-space: nowrap;
@@ -263,16 +265,68 @@
         gap: 12px;
     }
 
-    /* ── PRODUCT GRID ── */
-    .prod-grid {
+    /* ── TOP PICKS GRID — THE SIGNATURE LAYOUT ── */
+    /* First card is FEATURED (tall), rest are normal */
+    .top-grid {
         display: grid;
-        grid-template-columns: repeat(4, 1fr);
-        gap: 24px;
+        grid-template-columns: 1.4fr repeat(3, 1fr);
+        grid-template-rows: auto auto;
+        gap: 20px;
     }
-    @media (max-width: 1100px) { .prod-grid { grid-template-columns: repeat(3, 1fr); } }
-    @media (max-width: 768px)  { .prod-grid { grid-template-columns: repeat(2, 1fr); gap: 14px; } }
 
-    /* ── PRODUCT CARD ── */
+    /* featured card spans 2 rows */
+    .prod-card.featured {
+        grid-row: span 2;
+    }
+    .prod-card.featured .prod-img-wrap {
+        aspect-ratio: unset;
+        height: 520px;
+    }
+    .prod-card.featured .prod-name { font-size: 16px; }
+    .prod-card.featured .prod-price { font-size: 1.3rem; }
+
+    /* bestseller ribbon on featured */
+    .ribbon {
+        position: absolute;
+        top: 20px; left: -2px;
+        background: var(--ink, #1c1610);
+        color: #fff;
+        font-size: 9px;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        padding: 5px 14px 5px 16px;
+        font-weight: 600;
+        z-index: 3;
+        clip-path: polygon(0 0, 100% 0, 94% 50%, 100% 100%, 0 100%);
+    }
+
+    /* rank number for non-featured cards */
+    .rank-num {
+        position: absolute;
+        bottom: 12px; left: 12px;
+        font-family: var(--font-display, 'Playfair Display', serif);
+        font-size: 11px;
+        font-weight: 700;
+        color: rgba(255,255,255,0.7);
+        background: rgba(28,22,16,0.45);
+        backdrop-filter: blur(4px);
+        padding: 3px 9px;
+        border-radius: 20px;
+        z-index: 2;
+        letter-spacing: 1px;
+    }
+
+    @media (max-width: 1100px) {
+        .top-grid { grid-template-columns: 1fr 1fr; }
+        .prod-card.featured { grid-row: span 1; }
+        .prod-card.featured .prod-img-wrap { height: auto; aspect-ratio: 1/1; }
+    }
+    @media (max-width: 768px) {
+        .top-grid { grid-template-columns: 1fr 1fr; gap: 14px; }
+        .prod-card.featured .prod-img-wrap { height: auto; }
+    }
+
+    /* ── PRODUCT CARD BASE ── */
     .prod-card {
         background: #fff;
         border-radius: 20px;
@@ -282,7 +336,7 @@
         border: 1px solid rgba(28,22,16,0.06);
     }
     .prod-card:hover {
-        transform: translateY(-8px);
+        transform: translateY(-6px);
         box-shadow: 0 24px 56px rgba(28,22,16,0.13);
     }
     .prod-img-wrap {
@@ -297,9 +351,8 @@
         transition: transform 0.55s ease;
         display: block;
     }
-    .prod-card:hover .prod-img-wrap img { transform: scale(1.07); }
+    .prod-card:hover .prod-img-wrap img { transform: scale(1.06); }
 
-    /* badges */
     .badge-new {
         position: absolute; top: 14px; left: 14px;
         background: var(--gold, #b8956a); color: #fff;
@@ -315,8 +368,6 @@
         font-size: 9px; letter-spacing: 2px; text-transform: uppercase;
         padding: 7px 16px; border-radius: 20px; font-weight: 600;
     }
-
-    /* hover overlays */
     .quick-view-btn {
         position: absolute; top: 50%; left: 50%;
         transform: translate(-50%, -50%);
@@ -341,22 +392,22 @@
     }
     .quick-add button:hover { background: var(--gold, #b8956a); }
     .quick-add button.oos { background: rgba(28,22,16,0.35); cursor: not-allowed; }
+    .quick-add button.oos:hover { background: rgba(28,22,16,0.35); }
 
-    /* card info */
-    .prod-info { padding: 18px 20px 20px; }
+    .prod-info { padding: 16px 18px 18px; }
     .prod-name {
-        font-size: 14px; font-weight: 600; color: var(--ink, #1c1610);
+        font-size: 13px; font-weight: 600; color: var(--ink, #1c1610);
         margin-bottom: 3px; letter-spacing: 0.2px;
         white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
     }
     .prod-sub {
         font-size: 10px; letter-spacing: 1px; text-transform: uppercase;
-        color: var(--ink-soft, #8a7a6a); margin-bottom: 12px; font-weight: 400;
+        color: var(--ink-soft, #8a7a6a); margin-bottom: 10px; font-weight: 400;
     }
     .prod-bottom { display: flex; justify-content: space-between; align-items: center; }
     .prod-price {
         font-family: var(--font-display, 'Playfair Display', serif);
-        font-size: 1.15rem; font-weight: 700; color: var(--gold-dark, #9a7550);
+        font-size: 1.1rem; font-weight: 700; color: var(--gold-dark, #9a7550);
     }
     .prod-badge-low {
         font-size: 9px; letter-spacing: 0.8px; text-transform: uppercase;
@@ -375,7 +426,7 @@
 
     /* ── DIVIDER BAND ── */
     .divider-band {
-        padding: 48px 0;
+        padding: 52px 0;
         background: var(--ink, #1c1610);
         display: flex;
         align-items: center;
@@ -383,10 +434,7 @@
         gap: 60px;
         flex-wrap: wrap;
     }
-    .db-item {
-        text-align: center;
-        color: rgba(253,250,246,0.5);
-    }
+    .db-item { text-align: center; }
     .db-num {
         font-family: var(--font-display, 'Playfair Display', serif);
         font-size: 2.4rem;
@@ -400,13 +448,10 @@
         font-size: 10px;
         letter-spacing: 2px;
         text-transform: uppercase;
+        color: rgba(253,250,246,0.4);
         font-weight: 400;
     }
-    .db-sep {
-        width: 1px;
-        height: 40px;
-        background: rgba(255,255,255,0.1);
-    }
+    .db-sep { width: 1px; height: 40px; background: rgba(255,255,255,0.08); }
     @media (max-width: 600px) { .db-sep { display: none; } }
 
     /* ── QUICK VIEW MODAL ── */
@@ -437,7 +482,7 @@
     }
     .qv-close:hover { background: rgba(28,22,16,0.12); }
     .qv-body { display: grid; grid-template-columns: 1fr 1fr; }
-    .qv-img { position: relative; background: #f5f0ea; border-radius: 24px 0 0 24px; overflow: hidden; }
+    .qv-img { background: #f5f0ea; border-radius: 24px 0 0 24px; overflow: hidden; }
     .qv-img img { width: 100%; height: 100%; min-height: 420px; object-fit: cover; display: block; }
     .qv-info { padding: 44px 40px; display: flex; flex-direction: column; }
     .qv-gender-tag {
@@ -458,13 +503,10 @@
         font-size: 1.5rem; color: var(--gold-dark, #9a7550);
         font-weight: 700; margin-bottom: 22px;
     }
-    /* notes */
     .qv-notes { display: flex; flex-direction: column; gap: 10px; margin-bottom: 22px; }
     .qv-note-row {
         display: flex; align-items: flex-start; gap: 12px;
-        padding: 11px 14px;
-        background: #f5f0ea;
-        border-radius: 12px;
+        padding: 11px 14px; background: #f5f0ea; border-radius: 12px;
     }
     .qv-note-icon { color: var(--gold, #b8956a); font-size: 13px; margin-top: 1px; flex-shrink: 0; }
     .qv-note-label {
@@ -479,8 +521,7 @@
     .qv-atc {
         display: block; width: 100%; margin-top: auto;
         background: var(--ink, #1c1610); color: #fff;
-        border: none; padding: 16px;
-        border-radius: 12px;
+        border: none; padding: 16px; border-radius: 12px;
         font-size: 11px; letter-spacing: 2px; text-transform: uppercase;
         cursor: pointer; font-family: var(--font-body, 'Outfit', sans-serif); font-weight: 500;
         transition: background 0.22s, transform 0.22s;
@@ -492,10 +533,11 @@
     @media (max-width: 700px) {
         .qv-body { grid-template-columns: 1fr; }
         .qv-img { border-radius: 24px 24px 0 0; }
-        .qv-img img { min-height: 280px; }
+        .qv-img img { min-height: 260px; }
         .qv-info { padding: 28px 24px; }
         .showcase { padding: 64px 0; }
         .section-head { flex-direction: column; align-items: flex-start; }
+        .top-grid { grid-template-columns: 1fr 1fr; }
     }
     @media (max-width: 600px) {
         .section-wrap { padding: 0 20px; }
@@ -563,64 +605,83 @@
 <!-- MARQUEE STRIP -->
 <div class="strip">
     <div class="strip-track">
-        <span class="strip-item"><i class="fas fa-circle"></i> Free Shipping Over Rs. 3,000</span>
+        <span class="strip-item"><i class="fas fa-circle"></i> Free Shipping Over Rs. 6,000</span>
         <span class="strip-item"><i class="fas fa-circle"></i> Authentic Luxury Fragrances</span>
         <span class="strip-item"><i class="fas fa-circle"></i> New Arrivals Every Friday</span>
         <span class="strip-item"><i class="fas fa-circle"></i> Easy Returns</span>
-        <span class="strip-item"><i class="fas fa-circle"></i> Free Shipping Over Rs. 3,000</span>
+        <span class="strip-item"><i class="fas fa-circle"></i> Free Shipping Over Rs. 6,000</span>
         <span class="strip-item"><i class="fas fa-circle"></i> Authentic Luxury Fragrances</span>
         <span class="strip-item"><i class="fas fa-circle"></i> New Arrivals Every Friday</span>
         <span class="strip-item"><i class="fas fa-circle"></i> Easy Returns</span>
     </div>
 </div>
 
-<!-- FOR HIM -->
+<!-- ══════════════════════════════════════
+     MACRO — renders one product card
+     loop_index drives featured + rank
+════════════════════════════════════════ -->
+{% macro product_card(product, loop_index, gender_label) %}
+{% set is_featured = loop_index == 1 %}
+<div class="prod-card {% if is_featured %}featured{% endif %}">
+    <div class="prod-img-wrap">
+        <img src="{{ product.image if product.image else '/static/uploads/default.jpg' }}"
+             alt="{{ product.name }}"
+             onerror="this.src='/static/uploads/default.jpg'">
+
+        {% if is_featured %}
+            <div class="ribbon">&#9733; Top Seller</div>
+        {% else %}
+            <div class="rank-num">#{{ loop_index }}</div>
+        {% endif %}
+
+        {% if product.created_at is defined and product.created_at and product.created_at.date() >= week_ago and product.stock > 0 %}
+            <span class="badge-new">New</span>
+        {% endif %}
+
+        {% if product.stock == 0 %}
+            <div class="oos-overlay"><span class="oos-tag">Out of Stock</span></div>
+        {% endif %}
+
+        <button class="quick-view-btn" onclick="openQV('{{ product.id }}')">Quick View</button>
+
+        <div class="quick-add">
+            {% if product.stock > 0 %}
+            <form action="/add-to-cart/{{ product.id }}" method="POST">
+                <button type="submit">Add to Cart</button>
+            </form>
+            {% else %}
+            <button class="oos" disabled>Out of Stock</button>
+            {% endif %}
+        </div>
+    </div>
+    <div class="prod-info">
+        <div class="prod-name">{{ product.name }}</div>
+        <div class="prod-sub">Eau De Parfum · {{ gender_label }}</div>
+        <div class="prod-bottom">
+            <span class="prod-price">Rs. {{ product.price }}</span>
+            {% if product.stock == 0 %}<span class="prod-badge-out">Sold Out</span>
+            {% elif product.stock < 5 %}<span class="prod-badge-low">Only {{ product.stock }} left</span>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endmacro %}
+
+<!-- ══ FOR HIM ══ -->
 <section class="showcase" id="him">
     <div class="section-wrap">
         <div class="section-head">
-            <div class="section-head-left">
-                <span class="section-eyebrow">Top Picks · For Him</span>
+            <div>
+                <div class="section-eyebrow"><span class="eyebrow-dot"></span> Top Picks · For Him</div>
                 <h2 class="section-title">His Signature<br>Scents</h2>
                 <p class="section-desc">Bold, deep, and enduring — fragrances built for the modern man.</p>
             </div>
             <a href="/collection?gender=male" class="view-all">Full Collection →</a>
         </div>
         {% if male_products %}
-        <div class="prod-grid">
+        <div class="top-grid">
             {% for product in male_products %}
-            <div class="prod-card">
-                <div class="prod-img-wrap">
-                    <img src="{{ product.image if product.image else '/static/uploads/default.jpg' }}"
-                         alt="{{ product.name }}"
-                         onerror="this.src='/static/uploads/default.jpg'">
-                    {% if product.created_at and product.created_at.date() >= week_ago and product.stock > 0 %}
-                        <span class="badge-new">New</span>
-                    {% endif %}
-                    {% if product.stock == 0 %}
-                        <div class="oos-overlay"><span class="oos-tag">Out of Stock</span></div>
-                    {% endif %}
-                    <button class="quick-view-btn" onclick="openQV('{{ product.id }}')">Quick View</button>
-                    <div class="quick-add">
-                        {% if product.stock > 0 %}
-                        <form action="/add-to-cart/{{ product.id }}" method="POST">
-                            <button type="submit">Add to Cart</button>
-                        </form>
-                        {% else %}
-                        <button class="oos" disabled>Out of Stock</button>
-                        {% endif %}
-                    </div>
-                </div>
-                <div class="prod-info">
-                    <div class="prod-name">{{ product.name }}</div>
-                    <div class="prod-sub">Eau De Parfum · For Him</div>
-                    <div class="prod-bottom">
-                        <span class="prod-price">Rs. {{ product.price }}</span>
-                        {% if product.stock == 0 %}<span class="prod-badge-out">Sold Out</span>
-                        {% elif product.stock < 5 %}<span class="prod-badge-low">Only {{ product.stock }} left</span>
-                        {% endif %}
-                    </div>
-                </div>
-            </div>
+                {{ product_card(product, loop.index, 'For Him') }}
             {% endfor %}
         </div>
         {% else %}
@@ -652,53 +713,21 @@
     </div>
 </div>
 
-<!-- FOR HER -->
+<!-- ══ FOR HER ══ -->
 <section class="showcase alt" id="her">
     <div class="section-wrap">
         <div class="section-head">
-            <div class="section-head-left">
-                <span class="section-eyebrow">Top Picks · For Her</span>
+            <div>
+                <div class="section-eyebrow"><span class="eyebrow-dot"></span> Top Picks · For Her</div>
                 <h2 class="section-title">Her Signature<br>Scents</h2>
                 <p class="section-desc">Soft, radiant, and unforgettable — scents that speak for themselves.</p>
             </div>
             <a href="/collection?gender=female" class="view-all">Full Collection →</a>
         </div>
         {% if female_products %}
-        <div class="prod-grid">
+        <div class="top-grid">
             {% for product in female_products %}
-            <div class="prod-card">
-                <div class="prod-img-wrap">
-                    <img src="{{ product.image if product.image else '/static/uploads/default.jpg' }}"
-                         alt="{{ product.name }}"
-                         onerror="this.src='/static/uploads/default.jpg'">
-                    {% if product.created_at and product.created_at.date() >= week_ago and product.stock > 0 %}
-                        <span class="badge-new">New</span>
-                    {% endif %}
-                    {% if product.stock == 0 %}
-                        <div class="oos-overlay"><span class="oos-tag">Out of Stock</span></div>
-                    {% endif %}
-                    <button class="quick-view-btn" onclick="openQV('{{ product.id }}')">Quick View</button>
-                    <div class="quick-add">
-                        {% if product.stock > 0 %}
-                        <form action="/add-to-cart/{{ product.id }}" method="POST">
-                            <button type="submit">Add to Cart</button>
-                        </form>
-                        {% else %}
-                        <button class="oos" disabled>Out of Stock</button>
-                        {% endif %}
-                    </div>
-                </div>
-                <div class="prod-info">
-                    <div class="prod-name">{{ product.name }}</div>
-                    <div class="prod-sub">Eau De Parfum · For Her</div>
-                    <div class="prod-bottom">
-                        <span class="prod-price">Rs. {{ product.price }}</span>
-                        {% if product.stock == 0 %}<span class="prod-badge-out">Sold Out</span>
-                        {% elif product.stock < 5 %}<span class="prod-badge-low">Only {{ product.stock }} left</span>
-                        {% endif %}
-                    </div>
-                </div>
-            </div>
+                {{ product_card(product, loop.index, 'For Her') }}
             {% endfor %}
         </div>
         {% else %}
@@ -707,53 +736,21 @@
     </div>
 </section>
 
-<!-- FOR BOTH -->
+<!-- ══ FOR BOTH ══ -->
 <section class="showcase" id="both">
     <div class="section-wrap">
         <div class="section-head">
-            <div class="section-head-left">
-                <span class="section-eyebrow">Top Picks · For Both</span>
+            <div>
+                <div class="section-eyebrow"><span class="eyebrow-dot"></span> Top Picks · For Both</div>
                 <h2 class="section-title">Scents With<br>No Boundaries</h2>
                 <p class="section-desc">Made for everyone — wear it your way.</p>
             </div>
             <a href="/collection?gender=unisex" class="view-all">Full Collection →</a>
         </div>
         {% if unisex %}
-        <div class="prod-grid">
+        <div class="top-grid">
             {% for product in unisex %}
-            <div class="prod-card">
-                <div class="prod-img-wrap">
-                    <img src="{{ product.image if product.image else '/static/uploads/default.jpg' }}"
-                         alt="{{ product.name }}"
-                         onerror="this.src='/static/uploads/default.jpg'">
-                    {% if product.created_at and product.created_at.date() >= week_ago and product.stock > 0 %}
-                        <span class="badge-new">New</span>
-                    {% endif %}
-                    {% if product.stock == 0 %}
-                        <div class="oos-overlay"><span class="oos-tag">Out of Stock</span></div>
-                    {% endif %}
-                    <button class="quick-view-btn" onclick="openQV('{{ product.id }}')">Quick View</button>
-                    <div class="quick-add">
-                        {% if product.stock > 0 %}
-                        <form action="/add-to-cart/{{ product.id }}" method="POST">
-                            <button type="submit">Add to Cart</button>
-                        </form>
-                        {% else %}
-                        <button class="oos" disabled>Out of Stock</button>
-                        {% endif %}
-                    </div>
-                </div>
-                <div class="prod-info">
-                    <div class="prod-name">{{ product.name }}</div>
-                    <div class="prod-sub">Eau De Parfum · Unisex</div>
-                    <div class="prod-bottom">
-                        <span class="prod-price">Rs. {{ product.price }}</span>
-                        {% if product.stock == 0 %}<span class="prod-badge-out">Sold Out</span>
-                        {% elif product.stock < 5 %}<span class="prod-badge-low">Only {{ product.stock }} left</span>
-                        {% endif %}
-                    </div>
-                </div>
-            </div>
+                {{ product_card(product, loop.index, 'Unisex') }}
             {% endfor %}
         </div>
         {% else %}
@@ -765,7 +762,7 @@
 <!-- QUICK VIEW MODAL -->
 <div class="qv-modal" id="qvModal" onclick="closeQV(event)">
     <div class="qv-box">
-        <button class="qv-close" onclick="document.getElementById('qvModal').classList.remove('open')">&times;</button>
+        <button class="qv-close" id="qvCloseBtn">&times;</button>
         <div id="qvContent" class="qv-loading">Loading fragrance details...</div>
     </div>
 </div>
@@ -812,9 +809,14 @@
             .then(r => r.json())
             .then(p => {
                 let stockHtml = '', disabled = '';
-                if (p.stock === 0) { stockHtml = `<div class="qv-stock-out">Out of stock</div>`; disabled = 'disabled'; }
-                else if (p.stock < 5) { stockHtml = `<div class="qv-stock-low">Only ${p.stock} left in stock</div>`; }
-                else { stockHtml = `<div class="qv-stock-ok">In stock &amp; ready to ship</div>`; }
+                if (p.stock === 0) {
+                    stockHtml = `<div class="qv-stock-out">Out of stock</div>`;
+                    disabled = 'disabled';
+                } else if (p.stock < 5) {
+                    stockHtml = `<div class="qv-stock-low">Only ${p.stock} left in stock</div>`;
+                } else {
+                    stockHtml = `<div class="qv-stock-ok">In stock &amp; ready to ship</div>`;
+                }
                 const img = p.image ? p.image : '/static/uploads/default.jpg';
                 const genderLabel = p.gender === 'male' ? 'For Him' : p.gender === 'female' ? 'For Her' : 'Unisex';
                 content.innerHTML = `
@@ -834,19 +836,24 @@
                         </div>
                     </div>`;
             })
-            .catch(() => { content.innerHTML = '<div class="qv-loading">Could not load product.</div>'; });
+            .catch(() => {
+                content.innerHTML = '<div class="qv-loading">Could not load product.</div>';
+            });
+    }
+
+    function closeModal() {
+        document.getElementById('qvModal').classList.remove('open');
+        document.body.style.overflow = '';
     }
 
     function closeQV(e) {
-        if (e.target === document.getElementById('qvModal')) {
-            document.getElementById('qvModal').classList.remove('open');
-            document.body.style.overflow = '';
-        }
+        if (e.target === document.getElementById('qvModal')) closeModal();
     }
 
-    document.querySelector('.qv-close').addEventListener('click', () => {
-        document.getElementById('qvModal').classList.remove('open');
-        document.body.style.overflow = '';
+    document.getElementById('qvCloseBtn').addEventListener('click', closeModal);
+
+    document.addEventListener('keydown', e => {
+        if (e.key === 'Escape') closeModal();
     });
 </script>
 {% endblock %}

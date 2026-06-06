@@ -40,14 +40,58 @@ BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 templates = Jinja2Templates(directory=os.path.join(BASE_DIR, 'templates'))
 app.mount('/static', StaticFiles(directory=os.path.join(BASE_DIR, 'static')), name='static')
 
-
+# home route
 @app.get('/')
 def home(request: Request, db: Session = Depends(get_db)):
     customer_id = request.session.get('customer_id')
 
-    male_products = db.query(Product).filter(Product.gender == 'male').limit(4).all()
-    female_products = db.query(Product).filter(Product.gender == 'female').limit(4).all()
-    unisex = db.query(Product).filter(Product.gender == 'unisex').limit(4).all()
+    # top selling male
+    results = db.execute(text("""
+        SELECT p.id, p.name, p.image, p.price, p.description, p.stock,
+               COUNT(oi.product_id) AS times_sold
+        FROM products p
+        JOIN order_items oi ON p.id = oi.product_id
+        WHERE p.gender = 'male'
+        GROUP BY p.id, p.name, p.image, p.price, p.description, p.stock
+        ORDER BY times_sold DESC
+        LIMIT 6
+    """))
+    topMale = results.fetchall()
+
+    if len(topMale) < 6:
+        topMale = db.query(Product).filter(Product.gender == 'male').limit(6).all()
+
+    # top selling female
+    results = db.execute(text("""
+        SELECT p.id, p.name, p.image, p.price, p.description, p.stock,
+               COUNT(oi.product_id) AS times_sold
+        FROM products p
+        JOIN order_items oi ON p.id = oi.product_id
+        WHERE p.gender = 'female'
+        GROUP BY p.id, p.name, p.image, p.price, p.description, p.stock
+        ORDER BY times_sold DESC
+        LIMIT 6
+    """))
+    topFemale = results.fetchall()
+
+    if len(topFemale) < 6:
+        topFemale = db.query(Product).filter(Product.gender == 'female').limit(6).all()
+
+    # top selling unisex
+    results = db.execute(text("""
+        SELECT p.id, p.name, p.image, p.price, p.description, p.stock,
+               COUNT(oi.product_id) AS times_sold
+        FROM products p
+        JOIN order_items oi ON p.id = oi.product_id
+        WHERE p.gender = 'unisex'
+        GROUP BY p.id, p.name, p.image, p.price, p.description, p.stock
+        ORDER BY times_sold DESC
+        LIMIT 6
+    """))
+    topBoth = results.fetchall()
+
+    if len(topBoth) < 6:
+        topBoth = db.query(Product).filter(Product.gender == 'unisex').limit(6).all()
 
     cart = db.query(Cart).filter(Cart.customer_id == customer_id).first()
     cart_count = sum(item.quantity for item in cart.items) if cart else 0
@@ -56,13 +100,12 @@ def home(request: Request, db: Session = Depends(get_db)):
     week_ago = today - timedelta(days=7)
 
     return templates.TemplateResponse(request=request, name="index.html", context={
-        'male_products': male_products,
-        'female_products': female_products,
-        'unisex': unisex,
+        'male_products': topMale,
+        'female_products': topFemale,
+        'unisex': topBoth,
         'cart_count': cart_count,
         'week_ago': week_ago
     })
-
 
 @app.get('/auths/login')
 def show_auth_page(request: Request):
@@ -309,12 +352,7 @@ def collection(request: Request, db: Session = Depends(get_db)):
         "products": products
     })
 
-
-
-# @app.get('/top-collections')
-# def topCollections(request:Request, db : Session = Depends(get_db)):
-    # try:
-
+######  -- API ----
 @app.get('/api/product/{product_id}')
 def get_product_api(product_id: int, db: Session = Depends(get_db)):
     product = db.query(Product).filter(Product.id == product_id).first()

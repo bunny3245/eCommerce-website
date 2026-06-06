@@ -143,6 +143,8 @@ async def deliverOrder(order_id: int, request: Request, db: Session = Depends(ge
         db.execute(text("UPDATE products SET stock = stock - :quantity WHERE id = :product_id"),
                    {'quantity': item.quantity, 'product_id': item.product_id})
 
+        # query to increment everytime when a stock deductions occurss
+        
     order.status = 'delivered'
     order.stock_deducted = True
     tracking_id = GenerateTrackingID()
