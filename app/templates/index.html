@@ -268,22 +268,18 @@
     /* ── TOP PICKS GRID — THE SIGNATURE LAYOUT ── */
     /* First card is FEATURED (tall), rest are normal */
     .top-grid {
-        display: grid;
-        grid-template-columns: 1.4fr repeat(3, 1fr);
-        grid-template-rows: auto auto;
-        gap: 20px;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
     }
 
-    /* featured card spans 2 rows */
     .prod-card.featured {
-        grid-row: span 2;
+    background: var(--ink, #1c1610);
+    border-color: rgba(184,149,106,0.3);
     }
-    .prod-card.featured .prod-img-wrap {
-        aspect-ratio: unset;
-        height: 520px;
-    }
-    .prod-card.featured .prod-name { font-size: 16px; }
-    .prod-card.featured .prod-price { font-size: 1.3rem; }
+    .prod-card.featured .prod-name { color: #fdfaf6; }
+    .prod-card.featured .prod-sub { color: rgba(253,250,246,0.4); }
+    .prod-card.featured .prod-price { color: var(--gold, #b8956a); }
 
     /* bestseller ribbon on featured */
     .ribbon {
