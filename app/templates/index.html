@@ -209,7 +209,6 @@
     .showcase { padding: 100px 0; }
     .showcase.alt { background: #faf7f2; }
     .section-wrap { max-width: 1320px; margin: 0 auto; padding: 0 40px; }
-
     .section-head {
         display: flex;
         align-items: flex-end;
@@ -219,12 +218,10 @@
     }
     .section-eyebrow {
         font-size: 10px; letter-spacing: 3px; text-transform: uppercase;
-        color: var(--gold, #b8956a); margin-bottom: 10px; font-weight: 600; display: flex;
-        align-items: center; gap: 8px;
+        color: var(--gold, #b8956a); margin-bottom: 10px; font-weight: 600;
+        display: flex; align-items: center; gap: 8px;
     }
-    .eyebrow-dot {
-        width: 18px; height: 1px; background: var(--gold, #b8956a); display: inline-block;
-    }
+    .eyebrow-dot { width: 18px; height: 1px; background: var(--gold, #b8956a); display: inline-block; }
     .section-title {
         font-family: var(--font-display, 'Playfair Display', serif);
         font-size: clamp(2rem, 3.5vw, 3rem);
@@ -265,66 +262,14 @@
         gap: 12px;
     }
 
-    /* ── TOP PICKS GRID — THE SIGNATURE LAYOUT ── */
-    /* First card is FEATURED (tall), rest are normal */
+    /* ── PRODUCT GRID ── */
     .top-grid {
         display: grid;
-        grid-template-columns: 1.4fr repeat(3, 1fr);
-        grid-template-rows: auto auto;
+        grid-template-columns: repeat(4, 1fr);
         gap: 20px;
     }
-
-    /* featured card spans 2 rows */
-    .prod-card.featured {
-        grid-row: span 2;
-    }
-    .prod-card.featured .prod-img-wrap {
-        aspect-ratio: unset;
-        height: 520px;
-    }
-    .prod-card.featured .prod-name { font-size: 16px; }
-    .prod-card.featured .prod-price { font-size: 1.3rem; }
-
-    /* bestseller ribbon on featured */
-    .ribbon {
-        position: absolute;
-        top: 20px; left: -2px;
-        background: var(--ink, #1c1610);
-        color: #fff;
-        font-size: 9px;
-        letter-spacing: 2px;
-        text-transform: uppercase;
-        padding: 5px 14px 5px 16px;
-        font-weight: 600;
-        z-index: 3;
-        clip-path: polygon(0 0, 100% 0, 94% 50%, 100% 100%, 0 100%);
-    }
-
-    /* rank number for non-featured cards */
-    .rank-num {
-        position: absolute;
-        bottom: 12px; left: 12px;
-        font-family: var(--font-display, 'Playfair Display', serif);
-        font-size: 11px;
-        font-weight: 700;
-        color: rgba(255,255,255,0.7);
-        background: rgba(28,22,16,0.45);
-        backdrop-filter: blur(4px);
-        padding: 3px 9px;
-        border-radius: 20px;
-        z-index: 2;
-        letter-spacing: 1px;
-    }
-
-    @media (max-width: 1100px) {
-        .top-grid { grid-template-columns: 1fr 1fr; }
-        .prod-card.featured { grid-row: span 1; }
-        .prod-card.featured .prod-img-wrap { height: auto; aspect-ratio: 1/1; }
-    }
-    @media (max-width: 768px) {
-        .top-grid { grid-template-columns: 1fr 1fr; gap: 14px; }
-        .prod-card.featured .prod-img-wrap { height: auto; }
-    }
+    @media (max-width: 1100px) { .top-grid { grid-template-columns: repeat(3, 1fr); } }
+    @media (max-width: 768px)  { .top-grid { grid-template-columns: repeat(2, 1fr); gap: 14px; } }
 
     /* ── PRODUCT CARD BASE ── */
     .prod-card {
@@ -339,6 +284,18 @@
         transform: translateY(-6px);
         box-shadow: 0 24px 56px rgba(28,22,16,0.13);
     }
+
+    /* ── FEATURED CARD — same size, visually distinct ── */
+    .prod-card.featured {
+        border: 1.5px solid rgba(184,149,106,0.45);
+        box-shadow: 0 6px 28px rgba(184,149,106,0.1);
+    }
+    .prod-card.featured .prod-info {
+        background: linear-gradient(160deg, #fffaf4 0%, #fff 100%);
+    }
+    .prod-card.featured .prod-name { font-weight: 700; }
+    .prod-card.featured .prod-price { color: var(--gold, #b8956a); }
+
     .prod-img-wrap {
         position: relative;
         aspect-ratio: 1/1;
@@ -353,11 +310,42 @@
     }
     .prod-card:hover .prod-img-wrap img { transform: scale(1.06); }
 
+    /* ribbon — only on featured */
+    .ribbon {
+        position: absolute;
+        top: 16px; left: 0;
+        background: var(--gold, #b8956a);
+        color: #fff;
+        font-size: 9px;
+        letter-spacing: 1.5px;
+        text-transform: uppercase;
+        padding: 5px 14px 5px 12px;
+        font-weight: 600;
+        z-index: 3;
+        clip-path: polygon(0 0, 100% 0, 92% 50%, 100% 100%, 0 100%);
+    }
+
+    /* rank badge — on all non-featured */
+    .rank-num {
+        position: absolute;
+        bottom: 10px; left: 10px;
+        font-family: var(--font-display, 'Playfair Display', serif);
+        font-size: 10px;
+        font-weight: 700;
+        color: rgba(255,255,255,0.75);
+        background: rgba(28,22,16,0.4);
+        backdrop-filter: blur(4px);
+        padding: 3px 8px;
+        border-radius: 20px;
+        z-index: 2;
+        letter-spacing: 1px;
+    }
+
     .badge-new {
-        position: absolute; top: 14px; left: 14px;
+        position: absolute; top: 14px; right: 14px;
         background: var(--gold, #b8956a); color: #fff;
         font-size: 9px; letter-spacing: 1.5px; text-transform: uppercase;
-        padding: 4px 12px; border-radius: 20px; font-weight: 600; z-index: 2;
+        padding: 4px 12px; border-radius: 20px; font-weight: 600; z-index: 4;
     }
     .oos-overlay {
         position: absolute; inset: 0; background: rgba(28,22,16,0.55);
@@ -437,19 +425,12 @@
     .db-item { text-align: center; }
     .db-num {
         font-family: var(--font-display, 'Playfair Display', serif);
-        font-size: 2.4rem;
-        font-weight: 700;
-        color: var(--gold, #b8956a);
-        display: block;
-        line-height: 1;
-        margin-bottom: 6px;
+        font-size: 2.4rem; font-weight: 700; color: var(--gold, #b8956a);
+        display: block; line-height: 1; margin-bottom: 6px;
     }
     .db-label {
-        font-size: 10px;
-        letter-spacing: 2px;
-        text-transform: uppercase;
-        color: rgba(253,250,246,0.4);
-        font-weight: 400;
+        font-size: 10px; letter-spacing: 2px; text-transform: uppercase;
+        color: rgba(253,250,246,0.4); font-weight: 400;
     }
     .db-sep { width: 1px; height: 40px; background: rgba(255,255,255,0.08); }
     @media (max-width: 600px) { .db-sep { display: none; } }
@@ -537,7 +518,6 @@
         .qv-info { padding: 28px 24px; }
         .showcase { padding: 64px 0; }
         .section-head { flex-direction: column; align-items: flex-start; }
-        .top-grid { grid-template-columns: 1fr 1fr; }
     }
     @media (max-width: 600px) {
         .section-wrap { padding: 0 20px; }
@@ -602,7 +582,7 @@
     </div>
 </section>
 
-<!-- MARQUEE STRIP -->
+<!-- MARQUEE -->
 <div class="strip">
     <div class="strip-track">
         <span class="strip-item"><i class="fas fa-circle"></i> Free Shipping Over Rs. 6,000</span>
@@ -616,10 +596,6 @@
     </div>
 </div>
 
-<!-- ══════════════════════════════════════
-     MACRO — renders one product card
-     loop_index drives featured + rank
-════════════════════════════════════════ -->
 {% macro product_card(product, loop_index, gender_label) %}
 {% set is_featured = loop_index == 1 %}
 <div class="prod-card {% if is_featured %}featured{% endif %}">
@@ -667,7 +643,7 @@
 </div>
 {% endmacro %}
 
-<!-- ══ FOR HIM ══ -->
+<!-- FOR HIM -->
 <section class="showcase" id="him">
     <div class="section-wrap">
         <div class="section-head">
@@ -692,28 +668,16 @@
 
 <!-- STATS BAND -->
 <div class="divider-band">
-    <div class="db-item">
-        <span class="db-num">200+</span>
-        <span class="db-label">Fragrances</span>
-    </div>
+    <div class="db-item"><span class="db-num">200+</span><span class="db-label">Fragrances</span></div>
     <div class="db-sep"></div>
-    <div class="db-item">
-        <span class="db-num">800+</span>
-        <span class="db-label">Happy Customers</span>
-    </div>
+    <div class="db-item"><span class="db-num">800+</span><span class="db-label">Happy Customers</span></div>
     <div class="db-sep"></div>
-    <div class="db-item">
-        <span class="db-num">4.8★</span>
-        <span class="db-label">Average Rating</span>
-    </div>
+    <div class="db-item"><span class="db-num">4.8★</span><span class="db-label">Average Rating</span></div>
     <div class="db-sep"></div>
-    <div class="db-item">
-        <span class="db-num">48h</span>
-        <span class="db-label">Dispatch Time</span>
-    </div>
+    <div class="db-item"><span class="db-num">48h</span><span class="db-label">Dispatch Time</span></div>
 </div>
 
-<!-- ══ FOR HER ══ -->
+<!-- FOR HER -->
 <section class="showcase alt" id="her">
     <div class="section-wrap">
         <div class="section-head">
@@ -736,7 +700,7 @@
     </div>
 </section>
 
-<!-- ══ FOR BOTH ══ -->
+<!-- FOR BOTH -->
 <section class="showcase" id="both">
     <div class="section-wrap">
         <div class="section-head">
@@ -809,14 +773,9 @@
             .then(r => r.json())
             .then(p => {
                 let stockHtml = '', disabled = '';
-                if (p.stock === 0) {
-                    stockHtml = `<div class="qv-stock-out">Out of stock</div>`;
-                    disabled = 'disabled';
-                } else if (p.stock < 5) {
-                    stockHtml = `<div class="qv-stock-low">Only ${p.stock} left in stock</div>`;
-                } else {
-                    stockHtml = `<div class="qv-stock-ok">In stock &amp; ready to ship</div>`;
-                }
+                if (p.stock === 0) { stockHtml = `<div class="qv-stock-out">Out of stock</div>`; disabled = 'disabled'; }
+                else if (p.stock < 5) { stockHtml = `<div class="qv-stock-low">Only ${p.stock} left in stock</div>`; }
+                else { stockHtml = `<div class="qv-stock-ok">In stock &amp; ready to ship</div>`; }
                 const img = p.image ? p.image : '/static/uploads/default.jpg';
                 const genderLabel = p.gender === 'male' ? 'For Him' : p.gender === 'female' ? 'For Her' : 'Unisex';
                 content.innerHTML = `
@@ -836,24 +795,17 @@
                         </div>
                     </div>`;
             })
-            .catch(() => {
-                content.innerHTML = '<div class="qv-loading">Could not load product.</div>';
-            });
+            .catch(() => { content.innerHTML = '<div class="qv-loading">Could not load product.</div>'; });
     }
 
     function closeModal() {
         document.getElementById('qvModal').classList.remove('open');
         document.body.style.overflow = '';
     }
-
     function closeQV(e) {
         if (e.target === document.getElementById('qvModal')) closeModal();
     }
-
     document.getElementById('qvCloseBtn').addEventListener('click', closeModal);
-
-    document.addEventListener('keydown', e => {
-        if (e.key === 'Escape') closeModal();
-    });
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
 </script>
 {% endblock %}

@@ -117,7 +117,9 @@ def addToCart(request: Request, product_id: int, db: Session = Depends(get_db)):
     customer_id = request.session.get('customer_id')
     if not customer_id:
         raise HTTPException(status_code=401, detail="User not logged in or session expired.")
-
+        ### redirect customer to login or register before using CART
+        # return RedirectResponse(url='/login')
+        
     cart = db.query(Cart).filter(Cart.customer_id == customer_id).first()
     if not cart:
         cart = Cart(customer_id=customer_id)
