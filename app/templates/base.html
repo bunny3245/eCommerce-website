@@ -6,7 +6,7 @@
     <title>{% block title %}Perfumania | Luxury Perfume Store{% endblock %}</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=Outfit:wght@300;400;500;600&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400&display=swap" rel="stylesheet">
     <link href="/static/style.css" rel="stylesheet">
     <link rel="icon" type="image/x-icon" href="/static/favicon/favicon.ico">
     <link rel="icon" type="image/png" sizes="16x16" href="/static/favicon/favicon-16x16.png">
@@ -16,20 +16,21 @@
     <link rel="icon" type="image/png" sizes="512x512" href="/static/favicon/android-chrome-512x512.png">
     <style>
         :root {
-            --sand:      #e8ddd0;
-            --sand-dark: #d4c4b0;
-            --warm-bg:   #f0ebe3;
-            --card-bg:   #faf7f3;
-            --gold:      #b8956a;
-            --gold-dark: #9a7550;
-            --ink:       #1c1610;
-            --ink-mid:   #4a3f32;
-            --ink-soft:  #8a7a6a;
-            --white:     #fdfaf6;
-            --border:    rgba(28,22,16,0.10);
+            --sand:         #e8ddd0;
+            --sand-dark:    #d4c4b0;
+            --warm-bg:      #f0ebe3;
+            --card-bg:      #faf7f3;
+            --gold:         #b8956a;
+            --gold-dark:    #9a7550;
+            --ink:          #1c1610;
+            --ink-mid:      #4a3f32;
+            --ink-soft:     #8a7a6a;
+            --white:        #fdfaf6;
+            --border:       rgba(28,22,16,0.10);
             --font-display: 'Playfair Display', serif;
+            --font-serif:   'Cormorant Garamond', serif;
             --font-body:    'Outfit', sans-serif;
-            --nav-h: 72px;
+            --nav-h:        76px;
         }
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
         html { scroll-behavior: smooth; }
@@ -44,11 +45,12 @@
             -webkit-font-smoothing: antialiased;
         }
 
-        /* ── NAVBAR ── */
+        /* ══════════════════════════
+           NAVBAR
+        ══════════════════════════ */
         .site-nav {
             position: fixed;
-            top: 0; left: 0;
-            width: 100%;
+            top: 0; left: 0; width: 100%;
             z-index: 1000;
             height: var(--nav-h);
             background: var(--white);
@@ -56,106 +58,133 @@
             transition: box-shadow 0.3s, background 0.3s;
         }
         .site-nav.scrolled {
-            box-shadow: 0 2px 32px rgba(28,22,16,0.10);
-            background: rgba(253,250,246,0.97);
-            backdrop-filter: blur(16px);
+            box-shadow: 0 2px 40px rgba(28,22,16,0.09);
+            background: rgba(253,250,246,0.96);
+            backdrop-filter: blur(20px);
         }
         .nav-inner {
             max-width: 1320px;
             margin: 0 auto;
             padding: 0 40px;
             height: 100%;
-            display: grid;
-            grid-template-columns: 1fr auto 1fr;
-            align-items: center;
-        }
-        .nav-brand {
-            font-family: var(--font-display);
-            font-size: 1.5rem;
-            font-weight: 700;
-            letter-spacing: 2px;
-            color: var(--ink);
-            text-decoration: none;
-            text-transform: uppercase;
-            justify-self: start;
             display: flex;
             align-items: center;
-            gap: 10px;
+            justify-content: space-between;
         }
-        .nav-brand img { height: 30px; width: 30px; object-fit: contain; }
-        .nav-brand .dot { color: var(--gold); }
+
+        /* brand */
+        .nav-brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+            flex-shrink: 0;
+        }
+        .nav-logo {
+            width: 40px; height: 40px;
+            object-fit: contain;
+            display: block;
+            transition: transform 0.35s ease;
+        }
+        .nav-brand:hover .nav-logo { transform: scale(1.08) rotate(-3deg); }
+        .nav-brand-text { display: flex; flex-direction: column; line-height: 1; }
+        .nav-brand-name {
+            font-family: var(--font-serif);
+            font-size: 1.6rem;
+            font-weight: 700;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            color: var(--ink);
+            line-height: 1;
+        }
+        .nav-brand-name em { font-style: normal; color: var(--gold); }
+        .nav-brand-sub {
+            font-family: var(--font-body);
+            font-size: 8px;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: var(--ink-soft);
+            font-weight: 400;
+            margin-top: 4px;
+        }
+
+        /* links */
         .nav-links {
             display: flex;
-            gap: 2.8rem;
+            gap: 2.6rem;
             list-style: none;
             align-items: center;
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
         }
         .nav-links a {
             font-family: var(--font-body);
-            font-size: 13px;
+            font-size: 11px;
             font-weight: 500;
-            letter-spacing: 1px;
+            letter-spacing: 2px;
             text-transform: uppercase;
-            color: var(--ink-mid);
+            color: var(--ink-soft);
             text-decoration: none;
             position: relative;
-            padding-bottom: 4px;
-            transition: color 0.2s;
+            padding-bottom: 3px;
+            transition: color 0.22s;
         }
         .nav-links a::after {
             content: '';
             position: absolute;
             bottom: 0; left: 0;
-            width: 0; height: 1.5px;
+            width: 0; height: 1px;
             background: var(--gold);
-            transition: width 0.3s ease;
+            transition: width 0.28s ease;
         }
         .nav-links a:hover { color: var(--ink); }
         .nav-links a:hover::after { width: 100%; }
+
+        /* actions */
         .nav-actions {
             display: flex;
             align-items: center;
-            gap: 20px;
-            justify-self: end;
+            gap: 4px;
+            flex-shrink: 0;
         }
         .nav-action-btn {
-            background: none;
-            border: none;
-            padding: 0;
+            background: none; border: none;
+            padding: 9px 10px;
             cursor: pointer;
-            color: var(--ink-mid);
-            font-size: 1rem;
-            transition: color 0.2s;
+            color: var(--ink-soft);
+            font-size: 15px;
+            transition: color 0.2s, background 0.2s;
             position: relative;
             text-decoration: none;
             display: flex;
             align-items: center;
+            border-radius: 10px;
         }
-        .nav-action-btn:hover { color: var(--gold); }
+        .nav-action-btn:hover { color: var(--gold); background: rgba(184,149,106,0.08); }
         .cart-badge {
             position: absolute;
-            top: -7px; right: -9px;
+            top: 4px; right: 4px;
             background: var(--gold);
             color: #fff;
-            font-size: 9px;
-            font-weight: 600;
-            width: 17px; height: 17px;
+            font-size: 8px;
+            font-weight: 700;
+            width: 14px; height: 14px;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
         }
 
-        /* Dropdown */
+        /* dropdown */
         .nav-dropdown { position: relative; }
         .nav-dropdown-menu {
             position: absolute;
-            top: calc(100% + 18px);
-            right: 0;
+            top: calc(100% + 12px); right: 0;
             background: var(--white);
             border: 1px solid var(--border);
-            border-radius: 8px;
-            box-shadow: 0 20px 60px rgba(28,22,16,0.14);
+            border-radius: 14px;
+            box-shadow: 0 24px 64px rgba(28,22,16,0.13);
             min-width: 220px;
             display: none;
             z-index: 2000;
@@ -164,35 +193,23 @@
         }
         .nav-dropdown-menu.open { display: block; animation: ddIn 0.18s ease; }
         @keyframes ddIn {
-            from { opacity: 0; transform: translateY(-8px); }
+            from { opacity: 0; transform: translateY(-6px); }
             to   { opacity: 1; transform: translateY(0); }
         }
         .dd-user-info {
-            padding: 14px 20px 12px;
+            padding: 14px 18px 12px;
             border-bottom: 1px solid var(--border);
             margin-bottom: 6px;
             background: var(--warm-bg);
         }
-        .dd-user-name {
-            font-family: var(--font-display);
-            font-size: 15px;
-            font-weight: 400;
-            color: var(--ink);
-            display: block;
-        }
+        .dd-user-name { font-family: var(--font-display); font-size: 14px; font-weight: 400; color: var(--ink); display: block; }
         .dd-user-email { font-size: 11px; color: var(--ink-soft); display: block; margin-top: 2px; }
         .dd-item {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 10px 20px;
-            font-size: 12px;
-            letter-spacing: 0.8px;
-            text-transform: uppercase;
-            color: var(--ink-mid);
-            text-decoration: none;
-            font-family: var(--font-body);
-            font-weight: 400;
+            display: flex; align-items: center; gap: 10px;
+            padding: 10px 18px;
+            font-size: 11px; letter-spacing: 1px; text-transform: uppercase;
+            color: var(--ink-mid); text-decoration: none;
+            font-family: var(--font-body); font-weight: 400;
             transition: background 0.15s, color 0.15s;
         }
         .dd-item i { font-size: 12px; color: var(--gold); width: 14px; }
@@ -201,151 +218,117 @@
         .dd-item.danger i { color: #c0392b; }
         .dd-divider { border: none; border-top: 1px solid var(--border); margin: 6px 0; }
 
-        /* Hamburger */
+        /* hamburger & mobile */
         .nav-hamburger {
             display: none;
-            background: none;
-            border: none;
-            color: var(--ink);
-            font-size: 1.3rem;
-            cursor: pointer;
-            padding: 4px;
+            background: none; border: none;
+            color: var(--ink); font-size: 1.2rem;
+            cursor: pointer; padding: 8px;
+            border-radius: 8px;
+            transition: background 0.2s;
         }
+        .nav-hamburger:hover { background: rgba(28,22,16,0.06); }
         .mobile-drawer {
             display: none;
             position: fixed;
-            top: var(--nav-h);
-            left: 0; width: 100%;
+            top: var(--nav-h); left: 0; width: 100%;
             background: var(--white);
             border-bottom: 1px solid var(--border);
             z-index: 999;
-            padding: 24px 32px 32px;
+            padding: 20px 28px 28px;
         }
-        .mobile-drawer.open { display: block; }
+        .mobile-drawer.open { display: block; animation: ddIn 0.2s ease; }
         .mobile-drawer ul { list-style: none; padding: 0; margin: 0; }
         .mobile-drawer ul a {
-            display: block;
-            padding: 14px 0;
-            font-size: 13px;
-            letter-spacing: 1.5px;
-            text-transform: uppercase;
-            color: var(--ink-mid);
-            text-decoration: none;
+            display: block; padding: 13px 0;
+            font-size: 11px; letter-spacing: 2px; text-transform: uppercase;
+            color: var(--ink-mid); text-decoration: none;
             border-bottom: 1px solid var(--border);
-            font-family: var(--font-body);
-            font-weight: 500;
+            font-family: var(--font-body); font-weight: 500;
             transition: color 0.2s;
         }
         .mobile-drawer ul a:hover { color: var(--gold); }
 
         main { min-height: 65vh; }
 
-        /* ── FOOTER ── */
+        /* ══════════════════════════
+           FOOTER
+        ══════════════════════════ */
         .site-footer {
             background: var(--ink);
-            color: rgba(253,250,246,0.45);
+            color: rgba(253,250,246,0.4);
             padding: 64px 40px 0;
             margin-top: 100px;
         }
         .footer-grid {
-            max-width: 1320px;
-            margin: 0 auto;
+            max-width: 1320px; margin: 0 auto;
             display: grid;
             grid-template-columns: 2fr 1fr 1fr 1fr;
             gap: 48px;
             padding-bottom: 48px;
-            border-bottom: 1px solid rgba(253,250,246,0.08);
+            border-bottom: 1px solid rgba(253,250,246,0.07);
         }
-        .footer-brand-wrap { }
         .footer-brand {
-            font-family: var(--font-display);
-            font-size: 1.8rem;
-            font-weight: 700;
-            letter-spacing: 3px;
-            color: var(--white);
-            text-transform: uppercase;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin-bottom: 14px;
+            display: flex; align-items: center; gap: 12px;
+            margin-bottom: 16px;
         }
-        .footer-brand img { height: 28px; width: 28px; object-fit: contain; filter: brightness(10); }
-        .footer-brand .dot { color: var(--gold); }
+        .footer-logo {
+            width: 34px; height: 34px;
+            object-fit: contain;
+            /* invert to white then tint gold */
+            filter: brightness(0) invert(1) sepia(1) saturate(1.5) hue-rotate(5deg) brightness(0.88);
+            opacity: 0.9;
+        }
+        .footer-brand-name {
+            font-family: var(--font-serif);
+            font-size: 1.5rem; font-weight: 700;
+            letter-spacing: 4px; text-transform: uppercase;
+            color: var(--white);
+        }
+        .footer-brand-name em { font-style: normal; color: var(--gold); }
         .footer-tagline {
-            font-size: 13px;
-            line-height: 1.9;
-            max-width: 240px;
-            font-weight: 300;
-            margin-bottom: 28px;
+            font-size: 13px; line-height: 1.9;
+            max-width: 240px; font-weight: 300; margin-bottom: 28px;
         }
         .footer-socials { display: flex; gap: 10px; }
         .social-btn {
-            width: 38px; height: 38px;
-            border-radius: 50%;
-            border: 1px solid rgba(253,250,246,0.15);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: rgba(253,250,246,0.45);
-            text-decoration: none;
-            font-size: 14px;
+            width: 38px; height: 38px; border-radius: 50%;
+            border: 1px solid rgba(253,250,246,0.12);
+            display: flex; align-items: center; justify-content: center;
+            color: rgba(253,250,246,0.4); text-decoration: none; font-size: 14px;
             transition: all 0.22s ease;
         }
-        .social-btn:hover {
-            border-color: var(--gold);
-            color: var(--gold);
-            background: rgba(184,149,106,0.1);
-            transform: translateY(-2px);
-        }
-        .social-btn.whatsapp:hover {
-            border-color: #25D366;
-            color: #25D366;
-            background: rgba(37,211,102,0.08);
-        }
+        .social-btn:hover { border-color: var(--gold); color: var(--gold); background: rgba(184,149,106,0.1); transform: translateY(-2px); }
+        .social-btn.whatsapp:hover { border-color: #25D366; color: #25D366; background: rgba(37,211,102,0.08); }
         .footer-col-title {
-            font-size: 10px;
-            letter-spacing: 2.5px;
-            text-transform: uppercase;
-            color: var(--white);
-            font-weight: 600;
-            margin-bottom: 20px;
-            font-family: var(--font-body);
+            font-size: 10px; letter-spacing: 2.5px; text-transform: uppercase;
+            color: var(--white); font-weight: 600; margin-bottom: 20px; font-family: var(--font-body);
         }
         .footer-links { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 12px; }
         .footer-links a {
-            color: rgba(253,250,246,0.4);
-            text-decoration: none;
-            font-size: 13px;
-            letter-spacing: 0.3px;
-            transition: color 0.2s;
-            font-weight: 300;
+            color: rgba(253,250,246,0.38); text-decoration: none;
+            font-size: 13px; letter-spacing: 0.3px; transition: color 0.2s; font-weight: 300;
         }
         .footer-links a:hover { color: var(--gold); }
         .footer-links i { margin-right: 7px; font-size: 12px; }
         .footer-bottom {
-            max-width: 1320px;
-            margin: 0 auto;
+            max-width: 1320px; margin: 0 auto;
             padding: 22px 0 30px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-size: 10px;
-            letter-spacing: 1.5px;
-            text-transform: uppercase;
-            color: rgba(253,250,246,0.25);
+            display: flex; justify-content: space-between; align-items: center;
+            font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase;
+            color: rgba(253,250,246,0.2);
         }
 
         /* RESPONSIVE */
-        @media (max-width: 1024px) {
-            .footer-grid { grid-template-columns: 1fr 1fr; gap: 36px; }
-        }
+        @media (max-width: 1024px) { .footer-grid { grid-template-columns: 1fr 1fr; gap: 36px; } }
         @media (max-width: 991px) {
             .nav-links { display: none; }
             .nav-hamburger { display: block; }
-            .nav-inner { grid-template-columns: auto 1fr auto; padding: 0 24px; }
+            .nav-inner { padding: 0 24px; }
         }
         @media (max-width: 576px) {
             .nav-inner { padding: 0 20px; }
+            .nav-brand-sub { display: none; }
             .site-footer { padding: 48px 20px 0; }
             .footer-grid { grid-template-columns: 1fr; gap: 28px; }
             .footer-bottom { flex-direction: column; gap: 8px; text-align: center; padding: 16px 0 24px; }
@@ -357,15 +340,21 @@
 
 <nav class="site-nav" id="siteNav">
     <div class="nav-inner">
+
         <a class="nav-brand" href="/">
-            <img src="/static/favicon/favicon-32x32.png" alt="Perfumania">
-            Perfumania<span class="dot">.</span>
+            <img src="/static/logo.png" alt="Perfumania" class="nav-logo">
+            <div class="nav-brand-text">
+                <span class="nav-brand-name">Perfumania<em>.</em></span>
+                <span class="nav-brand-sub">Scent that speaks for you</span>
+            </div>
         </a>
+
         <ul class="nav-links">
             <li><a href="/shop">Shop</a></li>
             <li><a href="/collection">Collections</a></li>
             <li><a href="/about">Our Story</a></li>
         </ul>
+
         <div class="nav-actions">
             <div class="nav-dropdown">
                 <button class="nav-action-btn" onclick="toggleDd(event)" aria-label="Account">
@@ -391,16 +380,19 @@
                     {% endif %}
                 </div>
             </div>
+
             <a href="/cart" class="nav-action-btn" aria-label="Cart">
                 <i class="fas fa-shopping-bag"></i>
                 {% if cart_count and cart_count > 0 %}
                     <span class="cart-badge">{{ cart_count }}</span>
                 {% endif %}
             </a>
+
             <button class="nav-hamburger" onclick="toggleDrawer()" aria-label="Menu">
                 <i class="fas fa-bars" id="hamburgerIcon"></i>
             </button>
         </div>
+
     </div>
 </nav>
 
@@ -422,10 +414,10 @@
 
 <footer class="site-footer">
     <div class="footer-grid">
-        <div class="footer-brand-wrap">
+        <div>
             <div class="footer-brand">
-                <img src="/static/favicon/favicon-32x32.png" alt="Perfumania">
-                Perfumania<span class="dot">.</span>
+                <img src="/static/logo.png" alt="Perfumania" class="footer-logo">
+                <span class="footer-brand-name">Perfumania<em>.</em></span>
             </div>
             <p class="footer-tagline">Curated fragrances for those who wear their mood. Every bottle, a memory waiting to happen.</p>
             <div class="footer-socials">
@@ -461,7 +453,7 @@
         </div>
     </div>
     <div class="footer-bottom">
-        <span>&copy; 2026 Perfumania Botanicals. All rights reserved.</span>
+        <span>&copy; 2026 Perfumania. All rights reserved.</span>
         <span>Made with intention.</span>
     </div>
 </footer>
